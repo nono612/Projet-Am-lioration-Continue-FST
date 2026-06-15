@@ -4,798 +4,974 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GREEN LAB – Amélioration Continue</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
+/* ═══════════════════════════════════════════════════════
+   VARIABLES & RESET
+═══════════════════════════════════════════════════════ */
 :root {
-  --primary: #0f1f3d;
-  --primary-mid: #1a3560;
-  --accent: #f59e0b;
-  --accent2: #fb923c;
-  --success: #10b981;
-  --danger: #ef4444;
-  --info: #3b82f6;
-  --purple: #8b5cf6;
-  --teal: #14b8a6;
-  --light: #f1f5f9;
-  --white: #ffffff;
-  --gray: #94a3b8;
-  --border: #e2e8f0;
-  --text: #1e293b;
-  --card-shadow: 0 4px 24px rgba(15,31,61,0.09);
-  --card-shadow-hover: 0 12px 40px rgba(15,31,61,0.18);
+  --navy:    #0d1b2a;
+  --blue:    #1a3a6e;
+  --accent:  #f59e0b;
+  --orange:  #ea580c;
+  --green:   #059669;
+  --red:     #dc2626;
+  --purple:  #7c3aed;
+  --teal:    #0891b2;
+  --sky:     #0284c7;
+  --gray50:  #f8fafc;
+  --gray100: #f1f5f9;
+  --gray200: #e2e8f0;
+  --gray400: #94a3b8;
+  --gray600: #475569;
+  --gray800: #1e293b;
+  --white:   #ffffff;
+  --radius:  14px;
+  --shadow:  0 4px 20px rgba(13,27,42,.08);
+  --shadow2: 0 12px 40px rgba(13,27,42,.16);
 }
-
-/* ── M colors per module ── */
---m1:#3b82f6; --m2:#ef4444; --m3:#8b5cf6; --m4:#f59e0b;
---m5:#14b8a6; --m6:#10b981; --m7:#0ea5e9; --m8:#fb923c; --m9:#a855f7;
-
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Inter',sans-serif;background:#f1f5f9;color:var(--text);line-height:1.5;}
-a{text-decoration:none;color:inherit;}
+body{font-family:'Inter',sans-serif;background:var(--gray100);color:var(--gray800);}
 
-/* ── ANIMATIONS ── */
-@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+/* ── Module accent colors ── */
+.c1{--mc:#3b82f6;} .c2{--mc:#ef4444;} .c3{--mc:#8b5cf6;}
+.c4{--mc:#f59e0b;} .c5{--mc:#14b8a6;} .c6{--mc:#10b981;}
+.c7{--mc:#0ea5e9;} .c8{--mc:#f97316;} .c9{--mc:#a855f7;}
+
+/* ═══════════════════════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════════════════════ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 @keyframes spin{to{transform:rotate(360deg)}}
-.fade-in{animation:fadeIn .35s ease both;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(245,158,11,.3)}50%{box-shadow:0 0 40px rgba(245,158,11,.6)}}
+@keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes countUp{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
 
-/* ── HEADER ── */
+/* ═══════════════════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════════════════ */
 header{
-  background:linear-gradient(135deg,#0f1f3d 0%,#1a3a6e 60%,#1e4080 100%);
-  color:#fff;padding:0 1.5rem;
+  background: linear-gradient(90deg,#0d1b2a,#162f55,#0d1b2a);
+  background-size:200% 100%;
+  animation:gradientShift 8s ease infinite;
+  color:#fff;height:66px;padding:0 2rem;
   display:flex;align-items:center;justify-content:space-between;
-  height:68px;position:sticky;top:0;z-index:200;
-  box-shadow:0 2px 20px rgba(0,0,0,0.25);
+  position:sticky;top:0;z-index:300;
+  box-shadow:0 2px 24px rgba(0,0,0,.3);
 }
-.logo{display:flex;align-items:center;gap:.6rem;font-size:1.25rem;font-weight:800;letter-spacing:.5px;}
-.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#10b981,#059669);border-radius:10px;
-  display:flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:0 2px 8px rgba(16,185,129,.4);}
-.logo-text span{color:#f59e0b;}
+.logo{
+  display:flex;align-items:center;gap:.7rem;
+  font-size:1.2rem;font-weight:900;letter-spacing:.5px;
+}
+.logo-badge{
+  background:linear-gradient(135deg,var(--accent),var(--orange));
+  color:#fff;padding:.3rem .7rem;border-radius:8px;
+  font-size:.75rem;font-weight:800;letter-spacing:1px;
+  box-shadow:0 2px 10px rgba(245,158,11,.4);
+}
+.logo-title{color:#fff;}
+.logo-title em{color:var(--accent);font-style:normal;}
 .header-right{display:flex;align-items:center;gap:.8rem;}
-.api-wrap{display:flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:.35rem .7rem;}
-.api-wrap label{font-size:.72rem;opacity:.7;white-space:nowrap;}
-#apiKey{background:none;border:none;color:#fff;font-size:.82rem;width:190px;outline:none;font-family:'Inter',sans-serif;}
-#apiKey::placeholder{opacity:.4;}
-.progress-badge{
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#fff;font-weight:700;border-radius:20px;padding:.3rem 1rem;font-size:.82rem;
-  box-shadow:0 2px 10px rgba(245,158,11,.35);white-space:nowrap;
+.api-field{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+  border-radius:9px;padding:.3rem .75rem;display:flex;align-items:center;gap:.5rem;
+  transition:border .2s;
+}
+.api-field:focus-within{border-color:rgba(245,158,11,.5);}
+.api-field span{font-size:.7rem;color:rgba(255,255,255,.45);white-space:nowrap;}
+#apiKey{background:none;border:none;color:#fff;font-size:.8rem;width:175px;outline:none;font-family:'Inter',sans-serif;}
+#apiKey::placeholder{color:rgba(255,255,255,.25);}
+.progress-pill{
+  background:linear-gradient(135deg,var(--accent),var(--orange));
+  color:#fff;font-weight:800;border-radius:20px;
+  padding:.3rem 1rem;font-size:.78rem;letter-spacing:.3px;
+  box-shadow:0 2px 12px rgba(245,158,11,.4);
 }
 
-/* ── NAV ── */
+/* ═══════════════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════════════ */
 nav{
-  background:#fff;border-bottom:1px solid var(--border);
-  display:flex;overflow-x:auto;padding:0 1rem;
-  box-shadow:0 1px 8px rgba(0,0,0,.04);
-  scrollbar-width:none;
+  background:#fff;border-bottom:1px solid var(--gray200);
+  display:flex;overflow-x:auto;padding:0 1.2rem;
+  scrollbar-width:none;gap:.2rem;
 }
 nav::-webkit-scrollbar{display:none;}
-nav button{
-  background:none;border:none;cursor:pointer;
-  padding:.7rem .95rem;font-size:.78rem;font-weight:600;color:#64748b;
-  white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;
-  font-family:'Inter',sans-serif;
+.nav-btn{
+  background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;
+  padding:.65rem .9rem;font-size:.76rem;font-weight:600;
+  color:var(--gray400);white-space:nowrap;
+  border-bottom:3px solid transparent;transition:all .2s;
+  display:flex;align-items:center;gap:.3rem;
 }
-nav button:hover:not(.active):not(.locked){color:var(--primary);background:#f8fafc;}
-nav button.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:700;}
-nav button.locked{color:#cbd5e1;cursor:not-allowed;}
-nav button.locked::after{content:' 🔒';font-size:.7rem;}
-nav button.done{color:var(--success);}
-nav button.done::after{content:' ✓';font-weight:800;}
+.nav-btn:hover:not(.nav-active):not(.nav-locked){color:var(--gray800);background:var(--gray50);}
+.nav-btn.nav-active{color:var(--mc,var(--accent));border-bottom-color:var(--mc,var(--accent));font-weight:700;}
+.nav-btn.nav-locked{color:var(--gray200);cursor:not-allowed;}
+.nav-btn.nav-done{color:var(--green);}
+.nav-btn.nav-done::after{content:' ✓';font-size:.65rem;}
+.nav-btn.nav-locked::after{content:' 🔒';font-size:.7rem;}
 
-/* ── NAV MODULE COLORS ── */
-nav button[data-module="1"].active{color:#3b82f6;border-bottom-color:#3b82f6;}
-nav button[data-module="2"].active{color:#ef4444;border-bottom-color:#ef4444;}
-nav button[data-module="3"].active{color:#8b5cf6;border-bottom-color:#8b5cf6;}
-nav button[data-module="4"].active{color:#f59e0b;border-bottom-color:#f59e0b;}
-nav button[data-module="5"].active{color:#14b8a6;border-bottom-color:#14b8a6;}
-nav button[data-module="6"].active{color:#10b981;border-bottom-color:#10b981;}
-nav button[data-module="7"].active{color:#0ea5e9;border-bottom-color:#0ea5e9;}
-nav button[data-module="8"].active{color:#fb923c;border-bottom-color:#fb923c;}
-nav button[data-module="9"].active{color:#a855f7;border-bottom-color:#a855f7;}
-
-/* ── MAIN ── */
-main{max-width:1100px;margin:0 auto;padding:1.8rem 1.2rem;}
-
-/* ── SECTION ── */
+/* ═══════════════════════════════════════════════════════
+   SECTIONS
+═══════════════════════════════════════════════════════ */
 .section{display:none;}
-.section.active{display:block;animation:fadeIn .3s ease;}
+.section.active{display:block;animation:fadeUp .3s ease both;}
+main{max-width:1100px;margin:0 auto;padding:2rem 1.2rem;}
 
-/* ── HERO BANNER ── */
+/* ═══════════════════════════════════════════════════════
+   ██ HOME PAGE ██
+═══════════════════════════════════════════════════════ */
+
+/* ─ Hero ─ */
 .hero{
-  background:linear-gradient(135deg,#0f1f3d 0%,#1a3a6e 50%,#1e4a8a 100%);
-  border-radius:20px;padding:2rem 2.2rem;color:#fff;margin-bottom:1.5rem;
-  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#0d1b2a 0%,#1a3a6e 40%,#1e3a8a 70%,#0d1b2a 100%);
+  background-size:300% 300%;
+  animation:gradientShift 12s ease infinite;
+  border-radius:20px;padding:3.5rem 3rem;
+  color:#fff;position:relative;overflow:hidden;margin-bottom:2rem;
 }
-.hero::before{
-  content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;
-  background:radial-gradient(circle,rgba(245,158,11,.2) 0%,transparent 70%);
-  border-radius:50%;
+.hero-orb1{
+  position:absolute;width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgba(245,158,11,.18),transparent 70%);
+  top:-80px;right:-60px;pointer-events:none;
 }
-.hero::after{
-  content:'';position:absolute;bottom:-60px;left:30%;width:300px;height:300px;
-  background:radial-gradient(circle,rgba(16,185,129,.1) 0%,transparent 70%);
-  border-radius:50%;
+.hero-orb2{
+  position:absolute;width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(59,130,246,.15),transparent 70%);
+  bottom:-60px;left:10%;pointer-events:none;
 }
-.hero-content{position:relative;z-index:1;}
-.hero h1{font-size:1.6rem;font-weight:800;margin-bottom:.4rem;}
-.hero h1 span{color:var(--accent);}
-.hero p{opacity:.75;font-size:.9rem;margin-bottom:1.2rem;}
-.hero-stats{display:flex;gap:1.5rem;flex-wrap:wrap;}
-.hero-stat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
-  border-radius:12px;padding:.7rem 1.1rem;backdrop-filter:blur(8px);}
-.hero-stat .stat-val{font-size:1.4rem;font-weight:800;color:var(--accent);}
-.hero-stat .stat-lbl{font-size:.72rem;opacity:.7;}
-.progress-wrap{margin-top:1.2rem;}
-.progress-label{display:flex;justify-content:space-between;font-size:.78rem;opacity:.7;margin-bottom:.4rem;}
-.progress-track{background:rgba(255,255,255,.15);border-radius:20px;height:10px;overflow:hidden;}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--success));
-  border-radius:20px;transition:width .6s cubic-bezier(.4,0,.2,1);}
-
-/* ── STUDENT NAME CARD ── */
-.name-card{
-  background:#fff;border-radius:14px;padding:1rem 1.4rem;margin-bottom:1.5rem;
-  box-shadow:var(--card-shadow);display:flex;align-items:center;gap:1rem;
-  border-left:4px solid var(--accent);
+.hero-content{position:relative;z-index:1;max-width:680px;}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);
+  color:var(--accent);border-radius:20px;padding:.3rem .9rem;
+  font-size:.75rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  margin-bottom:1.2rem;
 }
-.name-card label{font-size:.82rem;color:var(--gray);font-weight:600;white-space:nowrap;}
-.name-card input{border:1.5px solid var(--border);border-radius:8px;padding:.45rem .85rem;
-  font-size:.92rem;flex:1;max-width:320px;outline:none;font-family:'Inter',sans-serif;
-  transition:border .2s;}
-.name-card input:focus{border-color:var(--accent);}
+.hero h1{
+  font-size:2.8rem;font-weight:900;line-height:1.1;
+  margin-bottom:1rem;
+}
+.hero h1 .hl{
+  background:linear-gradient(90deg,var(--accent),#fbbf24,var(--orange));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-sub{
+  font-size:.95rem;color:rgba(255,255,255,.65);
+  line-height:1.7;margin-bottom:2rem;max-width:520px;
+}
+.hero-stats{display:flex;gap:1rem;flex-wrap:wrap;}
+.stat-box{
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:12px;padding:.8rem 1.4rem;
+  backdrop-filter:blur(10px);text-align:center;
+  transition:.2s;
+}
+.stat-box:hover{background:rgba(255,255,255,.11);}
+.stat-num{font-size:1.7rem;font-weight:800;color:var(--accent);line-height:1;}
+.stat-lbl{font-size:.68rem;color:rgba(255,255,255,.5);margin-top:.3rem;letter-spacing:.3px;text-transform:uppercase;}
 
-/* ── MODULE GRID ── */
-.module-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.1rem;}
+/* ─ Progress strip ─ */
+.progress-strip{
+  background:#fff;border-radius:14px;padding:1.2rem 1.5rem;
+  box-shadow:var(--shadow);margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:1.5rem;
+}
+.progress-strip-info{flex:1;}
+.progress-strip-label{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:.5rem;
+}
+.progress-strip-label span:first-child{font-weight:700;color:var(--gray800);font-size:.9rem;}
+.progress-pct{font-weight:800;color:var(--accent);font-size:1rem;}
+.prog-track{background:var(--gray100);border-radius:20px;height:10px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:20px;transition:width .6s cubic-bezier(.4,0,.2,1);}
+.name-field{display:flex;align-items:center;gap:.6rem;flex-shrink:0;}
+.name-field label{font-size:.78rem;color:var(--gray400);font-weight:600;white-space:nowrap;}
+.name-field input{
+  border:1.5px solid var(--gray200);border-radius:9px;
+  padding:.45rem .9rem;font-size:.85rem;outline:none;
+  font-family:'Inter',sans-serif;color:var(--gray800);
+  transition:border .2s;width:220px;background:#fff;
+}
+.name-field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(245,158,11,.1);}
 
-/* Module color map */
-.mc-1{--mc:#3b82f6;} .mc-2{--mc:#ef4444;} .mc-3{--mc:#8b5cf6;}
-.mc-4{--mc:#f59e0b;} .mc-5{--mc:#14b8a6;} .mc-6{--mc:#10b981;}
-.mc-7{--mc:#0ea5e9;} .mc-8{--mc:#fb923c;} .mc-9{--mc:#a855f7;}
+/* ─ Module cards grid ─ */
+.mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.2rem;}
 
-.module-card{
-  background:#fff;border-radius:16px;padding:1.3rem;
-  box-shadow:var(--card-shadow);cursor:pointer;
+.mod-card{
+  background:#fff;border-radius:var(--radius);
+  box-shadow:var(--shadow);cursor:pointer;
   transition:transform .25s,box-shadow .25s;
-  border-top:4px solid var(--mc,var(--primary));
   position:relative;overflow:hidden;
+  border:1.5px solid var(--gray200);
 }
-.module-card::before{
-  content:'';position:absolute;top:0;right:0;width:80px;height:80px;
-  background:radial-gradient(circle at top right,color-mix(in srgb,var(--mc,var(--primary)) 12%,transparent),transparent 70%);
+.mod-card:hover:not(.mod-locked){
+  transform:translateY(-5px);
+  box-shadow:var(--shadow2);
+  border-color:var(--mc);
 }
-.module-card:hover:not(.locked-card){transform:translateY(-4px);box-shadow:var(--card-shadow-hover);}
-.module-card.locked-card{opacity:.55;cursor:not-allowed;border-top-color:#cbd5e1;filter:grayscale(.3);}
-.module-card.done-card{border-top-color:var(--success);}
-.module-icon{font-size:2rem;margin-bottom:.6rem;display:block;}
-.module-card h3{color:var(--primary);font-size:.95rem;font-weight:700;margin-bottom:.3rem;}
-.module-card p{color:var(--gray);font-size:.78rem;line-height:1.5;}
-.module-status{
-  position:absolute;top:.9rem;right:.9rem;font-size:.7rem;font-weight:700;
-  padding:.2rem .6rem;border-radius:20px;
-}
-.status-done{background:#d1fae5;color:#065f46;}
-.status-locked{background:#f1f5f9;color:#94a3b8;}
-.status-open{background:#fef3c7;color:#92400e;}
-.module-score-bar{margin-top:.8rem;background:#f1f5f9;border-radius:20px;height:5px;overflow:hidden;}
-.module-score-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--mc,var(--accent)),var(--success));transition:width .5s;}
+.mod-card.mod-locked{opacity:.5;cursor:not-allowed;filter:grayscale(.4);}
+.mod-card.mod-done{border-color:var(--green);}
 
-/* ── CARDS ── */
-.card{
-  background:#fff;border-radius:16px;
-  box-shadow:var(--card-shadow);padding:1.6rem;
-  margin-bottom:1.4rem;
+.mod-card-top{
+  background:linear-gradient(135deg,var(--mc),color-mix(in srgb,var(--mc) 60%,#000));
+  padding:1.4rem;display:flex;align-items:center;justify-content:space-between;
 }
-.card h2{color:var(--primary);margin-bottom:.9rem;font-size:1.15rem;font-weight:700;
-  display:flex;align-items:center;gap:.5rem;}
-.card h3{color:var(--primary);margin-bottom:.6rem;font-size:.97rem;font-weight:700;}
+.mod-num{
+  font-size:.65rem;font-weight:800;letter-spacing:1px;
+  color:rgba(255,255,255,.6);text-transform:uppercase;
+}
+.mod-icon-wrap{
+  width:44px;height:44px;background:rgba(255,255,255,.15);
+  border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;
+}
+.mod-status-chip{
+  position:absolute;top:.7rem;left:.7rem;
+  font-size:.62rem;font-weight:700;padding:.2rem .55rem;
+  border-radius:20px;letter-spacing:.3px;
+}
+.chip-done{background:rgba(255,255,255,.9);color:var(--green);}
+.chip-locked{background:rgba(0,0,0,.3);color:rgba(255,255,255,.7);}
+.chip-open{background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);}
 
-/* Module header banner */
-.module-banner{
-  border-radius:14px;padding:1.2rem 1.5rem;color:#fff;margin-bottom:1.4rem;
+.mod-card-body{padding:1.1rem;}
+.mod-card-body h3{font-size:.88rem;font-weight:700;color:var(--gray800);margin-bottom:.3rem;}
+.mod-card-body p{font-size:.75rem;color:var(--gray400);line-height:1.5;}
+.mod-score-row{
+  display:flex;align-items:center;gap:.6rem;margin-top:.8rem;
+}
+.mod-score-track{flex:1;background:var(--gray100);border-radius:20px;height:5px;overflow:hidden;}
+.mod-score-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--mc),var(--green));transition:width .5s;}
+.mod-score-val{font-size:.7rem;font-weight:700;color:var(--mc);}
+
+/* ═══════════════════════════════════════════════════════
+   ██ MODULE INTERIOR ██
+═══════════════════════════════════════════════════════ */
+
+/* ─ Module page header ─ */
+.mod-header{
+  border-radius:var(--radius);margin-bottom:1.5rem;padding:0;
+  overflow:hidden;box-shadow:var(--shadow);
+}
+.mod-header-top{
+  padding:2rem 2rem 1.4rem;
+  background:linear-gradient(135deg,var(--mc-dark,#0d1b2a),var(--mc,#1a3a6e));
+  color:#fff;display:flex;align-items:center;gap:1.2rem;
+}
+.mod-header-icon{
+  width:60px;height:60px;background:rgba(255,255,255,.12);
+  border-radius:16px;display:flex;align-items:center;justify-content:center;
+  font-size:2rem;flex-shrink:0;
+  box-shadow:0 4px 15px rgba(0,0,0,.2);
+}
+.mod-header-text h2{font-size:1.3rem;font-weight:800;margin-bottom:.3rem;}
+.mod-header-text p{font-size:.83rem;color:rgba(255,255,255,.65);}
+.mod-header-steps{
+  background:#fff;padding:.8rem 2rem;
   display:flex;align-items:center;gap:1rem;
+  border-top:1px solid var(--gray200);
 }
-.module-banner .ban-icon{font-size:2.2rem;}
-.module-banner h2{font-size:1.2rem;font-weight:800;margin:0;}
-.module-banner p{font-size:.82rem;opacity:.8;margin:0;}
-.ban-m1{background:linear-gradient(135deg,#1d4ed8,#3b82f6);}
-.ban-m2{background:linear-gradient(135deg,#b91c1c,#ef4444);}
-.ban-m3{background:linear-gradient(135deg,#6d28d9,#8b5cf6);}
-.ban-m4{background:linear-gradient(135deg,#b45309,#f59e0b);}
-.ban-m5{background:linear-gradient(135deg,#0f766e,#14b8a6);}
-.ban-m6{background:linear-gradient(135deg,#047857,#10b981);}
-.ban-m7{background:linear-gradient(135deg,#0369a1,#0ea5e9);}
-.ban-m8{background:linear-gradient(135deg,#c2410c,#fb923c);}
-.ban-m9{background:linear-gradient(135deg,#7e22ce,#a855f7);}
-
-/* ── BUTTONS ── */
-.btn{
-  display:inline-flex;align-items:center;gap:.4rem;
-  padding:.55rem 1.2rem;border-radius:9px;border:none;cursor:pointer;
-  font-size:.85rem;font-weight:600;transition:all .2s;
-  font-family:'Inter',sans-serif;
+.step-item{
+  display:flex;align-items:center;gap:.4rem;
+  font-size:.72rem;color:var(--gray400);font-weight:600;
 }
-.btn:active{transform:scale(.97);}
-.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-mid));color:#fff;
-  box-shadow:0 2px 10px rgba(15,31,61,.2);}
-.btn-primary:hover{box-shadow:0 4px 18px rgba(15,31,61,.3);filter:brightness(1.1);}
-.btn-accent{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;
-  box-shadow:0 2px 10px rgba(245,158,11,.3);}
-.btn-accent:hover{box-shadow:0 4px 18px rgba(245,158,11,.4);filter:brightness(1.05);}
-.btn-success{background:linear-gradient(135deg,#059669,var(--success));color:#fff;
-  box-shadow:0 2px 10px rgba(16,185,129,.3);}
-.btn-danger{background:var(--danger);color:#fff;}
-.btn-outline{background:transparent;border:2px solid var(--border);color:var(--primary);}
-.btn-outline:hover{border-color:var(--accent);color:var(--accent);}
-.btn-sm{padding:.28rem .7rem;font-size:.75rem;}
-.btn-group{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.8rem;}
+.step-item .step-dot{
+  width:6px;height:6px;border-radius:50%;background:var(--gray200);
+}
+.step-item.done .step-dot{background:var(--green);}
+.step-item.active .step-dot{background:var(--accent);}
+.step-sep{color:var(--gray200);font-size:.7rem;}
 
-/* ── FORM ELEMENTS ── */
+/* ─ Content card ─ */
+.ccard{
+  background:#fff;border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:1.6rem;
+  margin-bottom:1.2rem;border:1px solid var(--gray200);
+}
+.ccard-title{
+  font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;
+  color:var(--gray400);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;
+}
+.ccard-title::after{content:'';flex:1;height:1px;background:var(--gray200);}
+
+/* ─ PDCA ─ */
+.pdca-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.pdca-quad{border-radius:12px;padding:1.2rem;border:2px solid;transition:box-shadow .2s;}
+.pdca-quad:focus-within{box-shadow:0 0 0 3px rgba(245,158,11,.15);}
+.pdca-quad.Q-plan{border-color:#93c5fd;background:linear-gradient(145deg,#eff6ff,#dbeafe);}
+.pdca-quad.Q-do  {border-color:#6ee7b7;background:linear-gradient(145deg,#ecfdf5,#d1fae5);}
+.pdca-quad.Q-check{border-color:#fcd34d;background:linear-gradient(145deg,#fffbeb,#fef3c7);}
+.pdca-quad.Q-act {border-color:#fca5a5;background:linear-gradient(145deg,#fff1f2,#fee2e2);}
+.pdca-quad-title{font-size:.82rem;font-weight:800;margin-bottom:.8rem;display:flex;align-items:center;gap:.4rem;}
+.pdca-quad input,.pdca-quad textarea{background:rgba(255,255,255,.7);}
+
+/* ─ Forms ─ */
 input[type=text],input[type=number],textarea,select{
-  width:100%;padding:.55rem .9rem;border-radius:9px;
-  border:1.5px solid var(--border);font-size:.88rem;
-  background:#fafbfd;margin-bottom:.6rem;color:var(--text);
+  width:100%;padding:.6rem .95rem;border-radius:9px;
+  border:1.5px solid var(--gray200);font-size:.86rem;
+  background:#fff;margin-bottom:.6rem;color:var(--gray800);
   transition:border .2s,box-shadow .2s;font-family:'Inter',sans-serif;
 }
 input:focus,textarea:focus,select:focus{
   outline:none;border-color:var(--accent);
-  box-shadow:0 0 0 3px rgba(245,158,11,.12);
+  box-shadow:0 0 0 3px rgba(245,158,11,.1);
 }
-label{font-size:.82rem;color:#475569;font-weight:600;display:block;margin-bottom:.25rem;}
+label{font-size:.78rem;color:var(--gray600);font-weight:700;display:block;margin-bottom:.28rem;text-transform:uppercase;letter-spacing:.3px;}
 textarea{resize:vertical;min-height:80px;}
 
-/* ── PROGRESS BAR ── */
-.progress-bar-wrap{background:#e2e8f0;border-radius:20px;height:10px;overflow:hidden;margin:.5rem 0;}
-.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--success));
-  border-radius:20px;transition:width .5s;}
-
-/* ── AI FEEDBACK BOX ── */
-.ai-box{
-  background:linear-gradient(135deg,#eff6ff,#f0fdf4);
-  border-left:4px solid var(--accent);border-radius:12px;
-  padding:1.1rem 1.3rem;margin-top:1rem;font-size:.88rem;
-  line-height:1.7;color:var(--text);white-space:pre-wrap;
-  box-shadow:0 2px 12px rgba(245,158,11,.08);
+/* ─ Buttons ─ */
+.btn{
+  display:inline-flex;align-items:center;gap:.35rem;padding:.55rem 1.2rem;
+  border-radius:9px;border:none;cursor:pointer;font-size:.83rem;
+  font-weight:700;font-family:'Inter',sans-serif;transition:all .2s;
 }
-.ai-box-header{display:flex;align-items:center;gap:.5rem;font-weight:700;
-  color:var(--accent);margin-bottom:.6rem;font-size:.85rem;}
-.ai-loading{
-  display:flex;align-items:center;gap:.7rem;color:var(--gray);
-  font-style:italic;padding:.8rem;
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--navy);color:#fff;box-shadow:0 2px 10px rgba(13,27,42,.2);}
+.btn-primary:hover{background:#1a3560;box-shadow:0 4px 18px rgba(13,27,42,.3);}
+.btn-gold{background:linear-gradient(135deg,var(--accent),var(--orange));color:#fff;box-shadow:0 2px 12px rgba(245,158,11,.35);}
+.btn-gold:hover{filter:brightness(1.07);box-shadow:0 4px 20px rgba(245,158,11,.45);}
+.btn-green{background:linear-gradient(135deg,#047857,var(--green));color:#fff;box-shadow:0 2px 12px rgba(5,150,105,.3);}
+.btn-green:hover{filter:brightness(1.07);}
+.btn-red{background:var(--red);color:#fff;}
+.btn-ghost{background:transparent;border:1.5px solid var(--gray200);color:var(--gray600);}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+.btn-sm{padding:.28rem .7rem;font-size:.74rem;}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.9rem;}
+
+/* ─ Alerts ─ */
+.alert{padding:.8rem 1.1rem;border-radius:10px;margin-bottom:1rem;font-size:.83rem;
+  display:flex;gap:.6rem;align-items:flex-start;line-height:1.5;}
+.alert-info{background:#eff6ff;color:#1e40af;border-left:4px solid #3b82f6;}
+.alert-success{background:#ecfdf5;color:#065f46;border-left:4px solid var(--green);}
+.alert-danger{background:#fef2f2;color:#991b1b;border-left:4px solid var(--red);}
+.alert-warning{background:#fffbeb;color:#92400e;border-left:4px solid var(--accent);}
+
+/* ─ AI Box ─ */
+.ai-wrap{
+  background:linear-gradient(135deg,#0d1b2a,#1a3560);
+  border-radius:12px;padding:1.2rem 1.4rem;margin-top:1rem;
+  color:#fff;font-size:.85rem;line-height:1.7;
 }
-.ai-loading::before{content:'';width:16px;height:16px;border:2px solid var(--accent);
-  border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+.ai-wrap-header{
+  display:flex;align-items:center;gap:.6rem;margin-bottom:.8rem;
+  font-weight:800;font-size:.78rem;color:var(--accent);
+  text-transform:uppercase;letter-spacing:.5px;
+}
+.ai-spinner{
+  width:14px;height:14px;border:2px solid rgba(245,158,11,.3);
+  border-top-color:var(--accent);border-radius:50%;
+  animation:spin .7s linear infinite;
+}
+.ai-loading-text{color:rgba(255,255,255,.5);font-style:italic;font-size:.83rem;}
 
-/* ── PDCA ── */
-.pdca-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
-.pdca-cell{border-radius:12px;padding:1.1rem;border:2px solid;transition:.2s;}
-.pdca-cell:focus-within{box-shadow:0 0 0 3px rgba(245,158,11,.15);}
-.pdca-cell.plan{border-color:#93c5fd;background:linear-gradient(135deg,#eff6ff,#dbeafe);}
-.pdca-cell.do{border-color:#6ee7b7;background:linear-gradient(135deg,#f0fdf4,#d1fae5);}
-.pdca-cell.check{border-color:#fcd34d;background:linear-gradient(135deg,#fffbeb,#fef3c7);}
-.pdca-cell.act{border-color:#fca5a5;background:linear-gradient(135deg,#fff1f2,#fee2e2);}
-.pdca-cell h4{font-size:.9rem;font-weight:700;margin-bottom:.6rem;}
-.pdca-cell input,.pdca-cell textarea{background:rgba(255,255,255,.7);}
+/* ─ Score panel ─ */
+.score-result{
+  display:flex;align-items:center;gap:1rem;
+  border-radius:12px;padding:1rem 1.4rem;margin-top:1rem;
+}
+.score-result.pass{background:#ecfdf5;border:2px solid #6ee7b7;}
+.score-result.fail{background:#fef2f2;border:2px solid #fca5a5;}
+.score-ring{
+  width:64px;height:64px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:1.1rem;border:3px solid currentColor;
+}
 
-/* ── 5S ── */
-.fivs-workspace{
+/* ─ KPI boxes ─ */
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem;margin:1rem 0;}
+.kpi-box{
+  background:var(--gray50);border-radius:12px;padding:1rem;
+  text-align:center;border:1.5px solid var(--gray200);
+}
+.kpi-val{font-size:1.8rem;font-weight:800;color:var(--accent);}
+.kpi-lbl{font-size:.7rem;color:var(--gray400);margin-top:.2rem;text-transform:uppercase;letter-spacing:.3px;}
+
+/* ─ 5S ─ */
+.ws-zone{
   display:flex;flex-wrap:wrap;gap:.5rem;
-  background:linear-gradient(135deg,#f8fafc,#f1f5f9);
-  border-radius:12px;padding:1rem;min-height:130px;
-  border:2px dashed #cbd5e1;
+  background:var(--gray50);border-radius:12px;padding:1rem;
+  min-height:120px;border:2px dashed var(--gray200);
 }
-.fivs-item{
+.ws-item{
   background:#fff;border-radius:8px;padding:.4rem .85rem;
-  font-size:.8rem;cursor:grab;border:1.5px solid var(--border);
+  font-size:.78rem;cursor:grab;border:1.5px solid var(--gray200);
   user-select:none;transition:all .2s;display:flex;align-items:center;gap:.4rem;
   box-shadow:0 1px 4px rgba(0,0,0,.05);
 }
-.fivs-item:hover{border-color:var(--accent);transform:translateY(-1px);box-shadow:0 3px 8px rgba(0,0,0,.1);}
-.fivs-categories{display:grid;grid-template-columns:repeat(5,1fr);gap:.8rem;margin-top:1rem;}
-.fivs-cat{
+.ws-item:hover{border-color:var(--accent);transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,.1);}
+.cat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.8rem;margin-top:1rem;}
+.cat-col{
   background:#fff;border-radius:12px;padding:.8rem;
-  border:2px solid var(--border);min-height:100px;transition:all .2s;
-  box-shadow:0 1px 6px rgba(0,0,0,.04);
+  border:2px solid var(--gray200);min-height:100px;transition:all .2s;
 }
-.fivs-cat h5{font-size:.75rem;margin-bottom:.5rem;text-align:center;font-weight:700;}
-.fivs-cat.drag-over{border-color:var(--accent);background:#fffbeb;transform:scale(1.02);}
-.fivs-cat .fivs-item{font-size:.72rem;margin-bottom:.3rem;cursor:default;}
+.cat-col.drag-on{border-color:var(--accent);background:#fffbeb;transform:scale(1.02);}
+.cat-col h5{font-size:.72rem;font-weight:800;margin-bottom:.5rem;text-align:center;text-transform:uppercase;letter-spacing:.4px;}
+.cat-col .ws-item{font-size:.7rem;margin-bottom:.3rem;cursor:default;}
 
-/* ── ISHIKAWA ── */
-.ishikawa-causes{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;}
-.cause-group{background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-radius:12px;
-  padding:.9rem;border:1px solid var(--border);}
-.cause-group h5{font-size:.8rem;font-weight:700;margin-bottom:.5rem;}
-.cause-tag{
-  background:linear-gradient(135deg,var(--primary),var(--primary-mid));
-  color:#fff;border-radius:20px;padding:.22rem .65rem;
-  font-size:.72rem;margin:.18rem .18rem .18rem 0;
-  display:inline-block;cursor:pointer;transition:.2s;
+/* ─ Ishikawa ─ */
+.ishi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;}
+.ishi-group{
+  background:var(--gray50);border-radius:12px;padding:.9rem;
+  border:1.5px solid var(--gray200);
 }
-.cause-tag:hover{background:linear-gradient(135deg,var(--accent),var(--accent2));}
-.fishbone-container{background:#fff;border-radius:12px;border:1.5px solid var(--border);
-  padding:1rem;overflow:auto;box-shadow:0 2px 10px rgba(0,0,0,.04);}
+.ishi-group h5{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;margin-bottom:.5rem;}
+.tag{
+  display:inline-block;background:var(--navy);color:#fff;
+  border-radius:20px;padding:.2rem .7rem;font-size:.7rem;
+  margin:.2rem .15rem;cursor:pointer;transition:.2s;
+}
+.tag:hover{background:var(--accent);color:#fff;}
+.fish-box{
+  background:#fff;border-radius:12px;border:1.5px solid var(--gray200);
+  padding:1rem;overflow:auto;margin-top:1rem;
+}
 
-/* ── PARETO ── */
-.pareto-row{display:flex;gap:.5rem;align-items:center;margin-bottom:.4rem;
-  background:#f8fafc;border-radius:8px;padding:.3rem .4rem;}
+/* ─ Pareto ─ */
+.pareto-row{
+  display:flex;gap:.5rem;align-items:center;margin-bottom:.4rem;
+  background:var(--gray50);border-radius:8px;padding:.35rem .5rem;
+}
 .pareto-row input{margin-bottom:0;background:#fff;}
 
-/* ── KANBAN ── */
-.kanban-board{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
-.kanban-col{
-  background:linear-gradient(180deg,#f8fafc,#f1f5f9);
-  border-radius:14px;padding:.9rem;min-height:320px;
-  border:2px solid var(--border);transition:.2s;
+/* ─ Kanban ─ */
+.kb-board{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+.kb-col{
+  background:var(--gray50);border-radius:14px;
+  padding:.9rem;min-height:320px;border:2px solid var(--gray200);
+  transition:border .2s,background .2s;
 }
-.kanban-col-header{
-  font-size:.85rem;color:var(--primary);font-weight:700;
-  margin-bottom:.8rem;padding-bottom:.6rem;border-bottom:2px solid var(--border);
+.kb-col.drag-on{border-color:var(--accent);background:#fffbeb;}
+.kb-col-head{
   display:flex;justify-content:space-between;align-items:center;
+  font-size:.82rem;font-weight:800;color:var(--gray800);
+  margin-bottom:.9rem;padding-bottom:.7rem;border-bottom:2px solid var(--gray200);
 }
-.wip-badge{
+.kb-col-head.col-backlog{border-bottom-color:#94a3b8;}
+.kb-col-head.col-doing{border-bottom-color:var(--accent);}
+.kb-col-head.col-done{border-bottom-color:var(--green);}
+.wip-tag{
   background:var(--accent);color:#fff;border-radius:20px;
-  padding:.1rem .55rem;font-size:.72rem;font-weight:700;
+  padding:.1rem .55rem;font-size:.7rem;font-weight:800;
 }
-.wip-over{background:var(--danger)!important;animation:pulse 1s infinite;}
-.kanban-card{
-  background:#fff;border-radius:10px;padding:.7rem .9rem;
+.wip-over{background:var(--red)!important;animation:pulse 1s infinite;}
+.kb-card{
+  background:#fff;border-radius:10px;padding:.7rem 1rem;
   margin-bottom:.6rem;cursor:grab;
-  box-shadow:0 2px 8px rgba(0,0,0,.07);
-  border-left:3px solid var(--accent);font-size:.83rem;
-  user-select:none;transition:all .2s;
+  box-shadow:0 1px 6px rgba(0,0,0,.07);
+  border-left:3px solid var(--accent);font-size:.82rem;
+  user-select:none;transition:all .2s;display:flex;justify-content:space-between;align-items:center;
 }
-.kanban-card:hover{box-shadow:0 5px 15px rgba(0,0,0,.12);transform:translateY(-1px);}
-.kanban-card.dragging{opacity:.45;transform:rotate(2deg);}
-.kanban-col.drag-over{border-color:var(--accent);background:#fffbeb;}
+.kb-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.12);transform:translateY(-1px);}
+.kb-card.dragging{opacity:.4;transform:rotate(2deg);}
+.kb-del{background:none;border:none;cursor:pointer;color:var(--gray400);font-size:.9rem;padding:.1rem .3rem;}
+.kb-del:hover{color:var(--red);}
 
-/* ── VSM ── */
-.vsm-step-row{
+/* ─ VSM ─ */
+.vsm-row{
   display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;
-  gap:.6rem;align-items:center;margin-bottom:.5rem;
-  background:#f8fafc;border-radius:8px;padding:.3rem .4rem;
+  gap:.5rem;align-items:center;margin-bottom:.5rem;
+  background:var(--gray50);border-radius:8px;padding:.35rem .5rem;
 }
-.vsm-step-row input,.vsm-step-row select{margin-bottom:0;background:#fff;}
-.vsm-kpi{
-  background:linear-gradient(135deg,#f8fafc,#f1f5f9);
-  border-radius:12px;padding:1rem;text-align:center;
-  border:1.5px solid var(--border);
+.vsm-row input,.vsm-row select{margin:0;background:#fff;}
+
+/* ─ SPC ─ */
+.spc-input-wrap{
+  background:var(--gray50);border-radius:12px;
+  padding:1.1rem;border:1.5px solid var(--gray200);margin-bottom:1rem;
 }
-.vsm-kpi .value{font-size:1.7rem;font-weight:800;color:var(--accent);}
-.vsm-kpi .kpi-label{font-size:.75rem;color:var(--gray);margin-top:.2rem;}
 
-/* ── SPC ── */
-.spc-data-area{background:#f8fafc;border-radius:12px;padding:1rem;border:1.5px solid var(--border);}
-
-/* ── SMED ── */
+/* ─ SMED ─ */
 .smed-row{
   display:grid;grid-template-columns:2fr 1fr 1fr auto;
-  gap:.6rem;align-items:center;margin-bottom:.5rem;
-  background:#f8fafc;border-radius:8px;padding:.3rem .4rem;
+  gap:.5rem;align-items:center;margin-bottom:.5rem;
+  background:var(--gray50);border-radius:8px;padding:.35rem .5rem;
 }
-.smed-row input,.smed-row select{margin-bottom:0;background:#fff;}
-.smed-internal{border-left:3px solid var(--danger);}
-.smed-external{border-left:3px solid var(--success);}
+.smed-row input,.smed-row select{margin:0;background:#fff;}
 
-/* ── QUIZ ── */
-.quiz-question{
-  background:linear-gradient(135deg,#f8fafc,#f1f5f9);
-  border-radius:14px;padding:1.3rem;margin-bottom:1.2rem;
-  border:1.5px solid var(--border);
+/* ─ Quiz ─ */
+.q-block{
+  background:#fff;border:1.5px solid var(--gray200);
+  border-radius:14px;padding:1.3rem;margin-bottom:1rem;
+  transition:border .2s;
 }
-.quiz-question h4{color:var(--primary);margin-bottom:.9rem;font-size:.95rem;font-weight:700;}
-.quiz-option{
+.q-block:has(.q-opt.selected){border-color:rgba(59,130,246,.3);}
+.q-num{
+  font-size:.7rem;font-weight:800;color:var(--accent);
+  text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem;
+}
+.q-text{font-size:.92rem;font-weight:700;color:var(--gray800);margin-bottom:.9rem;}
+.q-opt{
   display:flex;align-items:center;gap:.7rem;
   padding:.6rem 1rem;border-radius:9px;cursor:pointer;
-  margin-bottom:.4rem;border:1.5px solid var(--border);
-  background:#fff;transition:all .2s;font-size:.85rem;
+  margin-bottom:.4rem;border:1.5px solid var(--gray200);
+  background:var(--gray50);transition:all .2s;font-size:.84rem;
+  position:relative;overflow:hidden;
 }
-.quiz-option:before{content:'○';color:var(--gray);font-size:1rem;}
-.quiz-option:hover{border-color:var(--accent);background:#fffbeb;transform:translateX(3px);}
-.quiz-option.selected{border-color:var(--info);background:#eff6ff;font-weight:600;}
-.quiz-option.selected:before{content:'◉';color:var(--info);}
-.quiz-option.correct{border-color:var(--success);background:#d1fae5;font-weight:600;}
-.quiz-option.correct:before{content:'✓';color:var(--success);}
-.quiz-option.wrong{border-color:var(--danger);background:#fee2e2;}
-.quiz-option.wrong:before{content:'✗';color:var(--danger);}
-.quiz-score-box{text-align:center;padding:2.5rem 1rem;}
-.quiz-score-big{font-size:4rem;font-weight:800;
-  background:linear-gradient(135deg,var(--accent),var(--success));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.q-opt::before{
+  content:'';width:18px;height:18px;border:2px solid var(--gray200);
+  border-radius:50%;flex-shrink:0;transition:.2s;
+}
+.q-opt:hover{border-color:var(--accent);background:#fffbeb;transform:translateX(3px);}
+.q-opt:hover::before{border-color:var(--accent);}
+.q-opt.selected{border-color:#3b82f6;background:#eff6ff;font-weight:600;}
+.q-opt.selected::before{border-color:#3b82f6;background:#3b82f6;}
+.q-opt.correct{border-color:var(--green);background:#ecfdf5;font-weight:600;}
+.q-opt.correct::before{border-color:var(--green);background:var(--green);}
+.q-opt.wrong{border-color:var(--red);background:#fef2f2;}
+.q-opt.wrong::before{border-color:var(--red);}
+.quiz-score-big{
+  font-size:5rem;font-weight:900;line-height:1;
+  background:linear-gradient(135deg,var(--accent),var(--green));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
 
-/* ── CERTIFICATE ── */
-.certificate{
-  background:linear-gradient(135deg,#0f1f3d 0%,#1a3a6e 50%,#1e4080 100%);
-  color:#fff;border-radius:20px;padding:3rem 2rem;
-  text-align:center;margin-top:1.5rem;
-  box-shadow:0 8px 40px rgba(15,31,61,.3);position:relative;overflow:hidden;
+/* ─ Certificate ─ */
+.cert-wrap{
+  background:linear-gradient(135deg,#0d1b2a 0%,#1a3a6e 50%,#1e3a8a 100%);
+  border-radius:20px;padding:3.5rem 2.5rem;text-align:center;
+  color:#fff;margin-top:1.5rem;position:relative;overflow:hidden;
+  box-shadow:0 10px 50px rgba(13,27,42,.35);
 }
-.certificate::before{content:'';position:absolute;top:-60px;right:-60px;width:250px;height:250px;
-  background:radial-gradient(circle,rgba(245,158,11,.15) 0%,transparent 70%);border-radius:50%;}
-.certificate::after{content:'';position:absolute;bottom:-80px;left:-40px;width:300px;height:300px;
-  background:radial-gradient(circle,rgba(16,185,129,.1) 0%,transparent 70%);border-radius:50%;}
-.certificate-inner{position:relative;z-index:1;}
-.certificate h1{font-size:1.8rem;font-weight:800;
+.cert-orb1{position:absolute;width:280px;height:280px;border-radius:50%;
+  background:radial-gradient(circle,rgba(245,158,11,.12),transparent 70%);
+  top:-80px;right:-80px;pointer-events:none;}
+.cert-orb2{position:absolute;width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(16,185,129,.1),transparent 70%);
+  bottom:-60px;left:5%;pointer-events:none;}
+.cert-inner{position:relative;z-index:1;}
+.cert-seal{
+  width:80px;height:80px;background:linear-gradient(135deg,var(--accent),var(--orange));
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:2.5rem;margin:0 auto 1.2rem;
+  box-shadow:0 4px 20px rgba(245,158,11,.4);
+  animation:glow 2.5s ease infinite;
+}
+.cert-title{
+  font-size:1.6rem;font-weight:900;letter-spacing:1px;
   background:linear-gradient(90deg,var(--accent),#fbbf24);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem;}
-.certificate .student-name{font-size:2rem;font-weight:800;margin:.8rem 0;
-  text-shadow:0 2px 10px rgba(0,0,0,.2);}
-.cert-modules{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin:1rem 0;}
-.cert-module{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
-  border-radius:20px;padding:.3rem .9rem;font-size:.78rem;backdrop-filter:blur(4px);}
-.cert-divider{width:60px;height:3px;background:linear-gradient(90deg,var(--accent),var(--success));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:.3rem;
+}
+.cert-sub{font-size:.78rem;color:rgba(255,255,255,.45);letter-spacing:.5px;margin-bottom:1.5rem;}
+.cert-name{font-size:2.2rem;font-weight:800;margin:.5rem 0 .3rem;}
+.cert-line{width:70px;height:3px;background:linear-gradient(90deg,var(--accent),var(--green));
   border-radius:3px;margin:.8rem auto;}
-
-/* ── ALERTS ── */
-.alert{padding:.8rem 1.1rem;border-radius:10px;margin-bottom:1rem;font-size:.85rem;
-  display:flex;align-items:flex-start;gap:.6rem;}
-.alert-info{background:#eff6ff;color:#1e40af;border-left:4px solid var(--info);}
-.alert-success{background:#d1fae5;color:#065f46;border-left:4px solid var(--success);}
-.alert-danger{background:#fee2e2;color:#991b1b;border-left:4px solid var(--danger);}
-.alert-warning{background:#fef3c7;color:#92400e;border-left:4px solid var(--accent);}
-
-/* ── SCORE PANEL ── */
-.score-panel{
-  display:flex;align-items:center;gap:1rem;
-  border-radius:12px;padding:.9rem 1.2rem;margin-top:1rem;
-  border:2px solid;
+.cert-chips{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin:1rem 0;}
+.cert-chip{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  border-radius:20px;padding:.28rem .9rem;font-size:.74rem;
 }
-.score-panel.pass{background:#d1fae5;border-color:var(--success);}
-.score-panel.fail{background:#fee2e2;border-color:var(--danger);}
-.score-circle{
-  width:60px;height:60px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-weight:800;font-size:1rem;flex-shrink:0;
-  border:3px solid currentColor;
+.cert-stats{
+  display:flex;gap:2rem;justify-content:center;margin:1.2rem 0;flex-wrap:wrap;
 }
+.cert-stat .val{font-size:1.6rem;font-weight:800;color:var(--accent);}
+.cert-stat .lbl{font-size:.7rem;color:rgba(255,255,255,.4);margin-top:.1rem;}
 
-/* ── KPI GRID ── */
-.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1rem;}
-
-/* ── SCROLLBAR ── */
+/* ─ Scrollbar ─ */
 ::-webkit-scrollbar{width:6px;height:6px;}
 ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px;}
-::-webkit-scrollbar-track{background:transparent;}
 
-/* ── RESPONSIVE ── */
+/* ─ Responsive ─ */
 @media(max-width:768px){
-  .pdca-grid{grid-template-columns:1fr;}
-  .fivs-categories{grid-template-columns:repeat(2,1fr);}
-  .kanban-board{grid-template-columns:1fr;}
-  .vsm-step-row{grid-template-columns:1fr 1fr;}
-  .ishikawa-causes{grid-template-columns:1fr;}
+  .pdca-wrap{grid-template-columns:1fr;}
+  .cat-grid{grid-template-columns:repeat(2,1fr);}
+  .kb-board{grid-template-columns:1fr;}
+  .vsm-row{grid-template-columns:1fr 1fr;}
+  .ishi-grid{grid-template-columns:1fr;}
   .smed-row{grid-template-columns:1fr 1fr;}
-  nav button{padding:.6rem .7rem;font-size:.72rem;}
-  .hero h1{font-size:1.3rem;}
-  .hero-stats{gap:.8rem;}
-  .kpi-grid{grid-template-columns:1fr 1fr;}
+  .hero h1{font-size:2rem;}
+  .hero{padding:2.2rem 1.5rem;}
+  .kpi-row{grid-template-columns:1fr 1fr;}
+  nav .nav-btn{padding:.55rem .65rem;font-size:.7rem;}
   header{padding:0 1rem;}
-  #apiKey{width:130px;}
+  #apiKey{width:120px;}
+  .progress-strip{flex-direction:column;align-items:stretch;}
+  .name-field{flex-direction:column;align-items:flex-start;}
+  .name-field input{width:100%;}
 }
 </style>
 </head>
 <body>
 
+<!-- ══════════════ HEADER ══════════════ -->
 <header>
   <div class="logo">
-    <div class="logo-icon">🌿</div>
-    <div class="logo-text">GREEN<span>LAB</span></div>
+    <div class="logo-badge">GL</div>
+    <div class="logo-title">GREEN<em>LAB</em></div>
   </div>
   <div class="header-right">
-    <div class="api-wrap">
-      <label for="apiKey">🔑 Clé API :</label>
+    <div class="api-field">
+      <span>Clé API</span>
       <input type="password" id="apiKey" placeholder="sk-ant-api03-..." oninput="saveKey()">
     </div>
-    <div class="progress-badge" id="globalBadge">0 / 9 modules</div>
+    <div class="progress-pill" id="globalBadge">0 / 9 modules</div>
   </div>
 </header>
 
+<!-- ══════════════ NAV ══════════════ -->
 <nav id="mainNav">
-  <button onclick="showSection('home')" class="active" data-section="home">🏠 Accueil</button>
-  <button onclick="goModule(1)" data-module="1" data-section="m1">🔄 PDCA</button>
-  <button onclick="goModule(2)" data-module="2" data-section="m2">🧹 5S</button>
-  <button onclick="goModule(3)" data-module="3" data-section="m3">🐟 Ishikawa</button>
-  <button onclick="goModule(4)" data-module="4" data-section="m4">📊 Pareto</button>
-  <button onclick="goModule(5)" data-module="5" data-section="m5">📋 Kanban</button>
-  <button onclick="goModule(6)" data-module="6" data-section="m6">🗺️ VSM</button>
-  <button onclick="goModule(7)" data-module="7" data-section="m7">📈 SPC</button>
-  <button onclick="goModule(8)" data-module="8" data-section="m8">⏱️ SMED</button>
-  <button onclick="goModule(9)" data-module="9" data-section="m9">🎓 Quiz Final</button>
+  <button class="nav-btn nav-active" onclick="showSection('home')" data-section="home">🏠 Accueil</button>
+  <button class="nav-btn c1" onclick="goModule(1)" data-module="1" data-section="m1">🔄 PDCA</button>
+  <button class="nav-btn c2" onclick="goModule(2)" data-module="2" data-section="m2">🧹 5S</button>
+  <button class="nav-btn c3" onclick="goModule(3)" data-module="3" data-section="m3">🐟 Ishikawa</button>
+  <button class="nav-btn c4" onclick="goModule(4)" data-module="4" data-section="m4">📊 Pareto</button>
+  <button class="nav-btn c5" onclick="goModule(5)" data-module="5" data-section="m5">📋 Kanban</button>
+  <button class="nav-btn c6" onclick="goModule(6)" data-module="6" data-section="m6">🗺️ VSM</button>
+  <button class="nav-btn c7" onclick="goModule(7)" data-module="7" data-section="m7">📈 SPC</button>
+  <button class="nav-btn c8" onclick="goModule(8)" data-module="8" data-section="m8">⏱️ SMED</button>
+  <button class="nav-btn c9" onclick="goModule(9)" data-module="9" data-section="m9">🎓 Quiz Final</button>
 </nav>
 
 <main>
 
-<!-- ══ HOME ══ -->
+<!-- ══════════════ HOME ══════════════ -->
 <div id="home" class="section active">
+  <!-- Hero -->
   <div class="hero">
+    <div class="hero-orb1"></div>
+    <div class="hero-orb2"></div>
     <div class="hero-content">
-      <h1>🌿 GREEN<span>LAB</span> – Lab d'Amélioration Continue</h1>
-      <p>Parcours pédagogique interactif · Lean · Six Sigma · Kaizen · PDCA · Génie Industriel</p>
+      <div class="hero-tag">🎓 Génie Industriel · Lean · Six Sigma</div>
+      <h1>Lab d'<span class="hl">Amélioration</span><br>Continue</h1>
+      <p class="hero-sub">Parcours pédagogique interactif — maîtrisez les outils Lean et Six Sigma à travers 9 modules pratiques avec intelligence artificielle intégrée.</p>
       <div class="hero-stats">
-        <div class="hero-stat">
-          <div class="stat-val" id="statDone">0</div>
+        <div class="stat-box">
+          <div class="stat-num" id="statDone">0</div>
           <div class="stat-lbl">Modules validés</div>
         </div>
-        <div class="hero-stat">
-          <div class="stat-val">9</div>
-          <div class="stat-lbl">Modules au total</div>
+        <div class="stat-box">
+          <div class="stat-num">9</div>
+          <div class="stat-lbl">Total modules</div>
         </div>
-        <div class="hero-stat">
-          <div class="stat-val" id="statScore">–</div>
+        <div class="stat-box">
+          <div class="stat-num" id="statAvg">–</div>
           <div class="stat-lbl">Score moyen</div>
         </div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-label">
-          <span>Progression globale</span>
-          <span id="progressText">0%</span>
-        </div>
-        <div class="progress-track">
-          <div class="progress-fill" id="globalBar" style="width:0%"></div>
+        <div class="stat-box">
+          <div class="stat-num">60%</div>
+          <div class="stat-lbl">Score requis</div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="name-card">
-    <label for="studentName">👤 Votre nom complet :</label>
-    <input type="text" id="studentName" placeholder="Ex: Jean Dupont" oninput="saveName()">
-    <span style="font-size:.78rem;color:var(--gray);">Apparaîtra sur le certificat</span>
+  <!-- Progress + Name -->
+  <div class="progress-strip">
+    <div class="progress-strip-info">
+      <div class="progress-strip-label">
+        <span>Progression globale</span>
+        <span class="progress-pct" id="progressText">0%</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="globalBar" style="width:0%"></div></div>
+    </div>
+    <div class="name-field">
+      <label for="studentName">Votre nom</label>
+      <input type="text" id="studentName" placeholder="Prénom Nom" oninput="saveName()">
+    </div>
   </div>
 
-  <div class="module-grid" id="moduleGrid"></div>
+  <!-- Module grid -->
+  <div class="mod-grid" id="moduleGrid"></div>
 </div>
 
-<!-- ══ MODULE 1 – PDCA ══ -->
+<!-- ══════════════ M1 – PDCA ══════════════ -->
 <div id="m1" class="section">
-  <div class="module-banner ban-m1">
-    <div class="ban-icon">🔄</div>
-    <div><h2>Module 1 – Cycle PDCA Interactif</h2>
-    <p>Décrivez un problème réel, complétez les 4 quadrants. L'IA évalue la qualité de votre analyse.</p></div>
+  <div class="mod-header">
+    <div class="mod-header-top" style="--mc:#3b82f6;--mc-dark:#1d4ed8;">
+      <div class="mod-header-icon">🔄</div>
+      <div class="mod-header-text">
+        <h2>Module 1 — Cycle PDCA Interactif</h2>
+        <p>Saisissez un problème industriel réel et remplissez les 4 quadrants. L'IA analyse la qualité de votre démarche.</p>
+      </div>
+    </div>
   </div>
-  <div class="card">
-    <h2>Problème à analyser</h2>
-    <label>Décrivez votre problème industriel :</label>
-    <input type="text" id="pdcaProblem" placeholder="Ex: Taux de rebuts élevé sur ligne d'assemblage (8%)" oninput="savePDCA()">
+  <div class="ccard">
+    <div class="ccard-title">Problème à résoudre</div>
+    <label>Description du problème</label>
+    <input type="text" id="pdcaProblem" placeholder="Ex : Taux de rebuts élevé sur ligne d'assemblage (8%)" oninput="savePDCA()">
   </div>
-  <div class="pdca-grid">
-    <div class="pdca-cell plan card">
-      <h4>🔵 PLAN – Planifier</h4>
-      <label>Objectif SMART :</label>
+  <div class="pdca-wrap">
+    <div class="pdca-quad Q-plan ccard">
+      <div class="pdca-quad-title">🔵 PLAN — Planifier</div>
+      <label>Objectif SMART</label>
       <textarea id="pdcaPlan1" placeholder="Réduire le taux de rebuts de 8% à 3% en 3 mois" oninput="savePDCA()"></textarea>
-      <label>Actions prévues :</label>
-      <textarea id="pdcaPlan2" placeholder="Analyser les causes, former les opérateurs, ajuster les paramètres machine..." oninput="savePDCA()"></textarea>
+      <label>Actions prévues</label>
+      <textarea id="pdcaPlan2" placeholder="Analyser les causes, former les opérateurs..." oninput="savePDCA()"></textarea>
     </div>
-    <div class="pdca-cell do card">
-      <h4>🟢 DO – Réaliser</h4>
-      <label>Actions mises en œuvre :</label>
+    <div class="pdca-quad Q-do ccard">
+      <div class="pdca-quad-title">🟢 DO — Réaliser</div>
+      <label>Actions mises en œuvre</label>
       <textarea id="pdcaDo1" placeholder="Formation réalisée le 15/03, paramètres ajustés..." oninput="savePDCA()"></textarea>
-      <label>Ressources mobilisées :</label>
-      <textarea id="pdcaDo2" placeholder="2 opérateurs formés, technicien qualité, 3 jours d'intervention..." oninput="savePDCA()"></textarea>
+      <label>Ressources mobilisées</label>
+      <textarea id="pdcaDo2" placeholder="2 opérateurs, technicien qualité, 3 jours..." oninput="savePDCA()"></textarea>
     </div>
-    <div class="pdca-cell check card">
-      <h4>🟡 CHECK – Vérifier</h4>
-      <label>Résultats mesurés :</label>
-      <textarea id="pdcaCheck1" placeholder="Taux rebuts = 4.2% après 4 semaines (objectif : 3%)" oninput="savePDCA()"></textarea>
-      <label>Indicateurs de performance :</label>
-      <textarea id="pdcaCheck2" placeholder="KPI1 : taux rebuts, KPI2 : temps de cycle, KPI3 : satisfaction client" oninput="savePDCA()"></textarea>
+    <div class="pdca-quad Q-check ccard">
+      <div class="pdca-quad-title">🟡 CHECK — Vérifier</div>
+      <label>Résultats mesurés</label>
+      <textarea id="pdcaCheck1" placeholder="Taux rebuts = 4.2% après 4 semaines" oninput="savePDCA()"></textarea>
+      <label>Indicateurs (KPIs)</label>
+      <textarea id="pdcaCheck2" placeholder="KPI1 : taux rebuts, KPI2 : temps cycle..." oninput="savePDCA()"></textarea>
     </div>
-    <div class="pdca-cell act card">
-      <h4>🔴 ACT – Agir</h4>
-      <label>Standardisation des actions :</label>
-      <textarea id="pdcaAct1" placeholder="Mise à jour de la gamme opératoire, nouvelle procédure QC-07..." oninput="savePDCA()"></textarea>
-      <label>Prochain cycle PDCA :</label>
-      <textarea id="pdcaAct2" placeholder="Objectif suivant : réduire à 1.5%, étudier la cause 'matière première'..." oninput="savePDCA()"></textarea>
+    <div class="pdca-quad Q-act ccard">
+      <div class="pdca-quad-title">🔴 ACT — Agir</div>
+      <label>Standardisation</label>
+      <textarea id="pdcaAct1" placeholder="Mise à jour gamme opératoire, procédure QC-07..." oninput="savePDCA()"></textarea>
+      <label>Prochain cycle</label>
+      <textarea id="pdcaAct2" placeholder="Objectif suivant : 1.5%, étudier matière première..." oninput="savePDCA()"></textarea>
     </div>
   </div>
-  <div class="card" style="margin-top:1rem;">
-    <div class="btn-group">
-      <button class="btn btn-accent" onclick="analyzePDCA()">🤖 Feedback IA</button>
-      <button class="btn btn-success" onclick="validateModule(1, scorePDCA)">✅ Valider le module</button>
+  <div class="ccard">
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="analyzePDCA()">🤖 Feedback IA</button>
+      <button class="btn btn-green" onclick="validateModule(1,scorePDCA)">✅ Valider le module</button>
     </div>
-    <div id="pdcaAI" style="margin-top:1rem;"></div>
-    <div id="pdcaScore" style="margin-top:.5rem;"></div>
+    <div id="pdcaAI"></div>
+    <div id="pdcaScore"></div>
   </div>
 </div>
 
-<!-- ══ MODULE 2 – 5S ══ -->
+<!-- ══════════════ M2 – 5S ══════════════ -->
 <div id="m2" class="section">
-  <div class="module-banner ban-m2">
-    <div class="ban-icon">🧹</div>
-    <div><h2>Module 2 – Simulation 5S</h2>
-    <p>Faites glisser chaque élément de l'atelier vers la bonne catégorie 5S.</p></div>
+  <div class="mod-header">
+    <div class="mod-header-top" style="--mc:#ef4444;--mc-dark:#b91c1c;">
+      <div class="mod-header-icon">🧹</div>
+      <div class="mod-header-text">
+        <h2>Module 2 — Simulation 5S</h2>
+        <p>Glissez chaque élément vers la catégorie 5S correcte. Score automatique à la vérification.</p>
+      </div>
+    </div>
   </div>
-  <div class="card">
+  <div class="ccard">
+    <div class="ccard-title">Rappel 5S</div>
     <div class="alert alert-info">
-      <b>Rappel :</b> Seiri (Éliminer) · Seiton (Ranger) · Seiso (Nettoyer) · Seiketsu (Standardiser) · Shitsuke (Respecter)
+      <span><b>Seiri</b> Éliminer &nbsp;·&nbsp; <b>Seiton</b> Ranger &nbsp;·&nbsp; <b>Seiso</b> Nettoyer &nbsp;·&nbsp; <b>Seiketsu</b> Standardiser &nbsp;·&nbsp; <b>Shitsuke</b> Respecter</span>
     </div>
-    <h3>Éléments de l'atelier (à classer) :</h3>
-    <div class="fivs-workspace" id="fiveS-source"></div>
-    <h3 style="margin-top:1.2rem;">Catégories 5S :</h3>
-    <div class="fivs-categories" id="fiveS-cats"></div>
-    <div class="btn-group">
-      <button class="btn btn-accent" onclick="check5S()">📊 Vérifier</button>
-      <button class="btn btn-outline" onclick="reset5S()">🔄 Recommencer</button>
-      <button class="btn btn-success" onclick="validateModule(2, score5S)">✅ Valider</button>
+    <div class="ccard-title">Éléments à classer</div>
+    <div class="ws-zone" id="fiveS-source"></div>
+    <div class="ccard-title" style="margin-top:1.2rem;">Catégories 5S</div>
+    <div class="cat-grid" id="fiveS-cats"></div>
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="check5S()">📊 Vérifier</button>
+      <button class="btn btn-ghost" onclick="reset5S()">🔄 Recommencer</button>
+      <button class="btn btn-green" onclick="validateModule(2,score5S)">✅ Valider</button>
     </div>
-    <div id="fiveS-result" style="margin-top:1rem;"></div>
+    <div id="fiveS-result" style="margin-top:.8rem;"></div>
   </div>
 </div>
 
-<!-- ══ MODULE 3 – ISHIKAWA ══ -->
+<!-- ══════════════ M3 – ISHIKAWA ══════════════ -->
 <div id="m3" class="section">
-  <div class="module-banner ban-m3">
-    <div class="ban-icon">🐟</div>
-    <div><h2>Module 3 – Diagramme Ishikawa (5M)</h2>
-    <p>Construisez votre diagramme causes-effets. L'IA suggère des causes additionnelles.</p></div>
+  <div class="mod-header">
+    <div class="mod-header-top" style="--mc:#8b5cf6;--mc-dark:#6d28d9;">
+      <div class="mod-header-icon">🐟</div>
+      <div class="mod-header-text">
+        <h2>Module 3 — Diagramme Ishikawa (5M)</h2>
+        <p>Construisez votre arête de poisson. L'IA suggère des causes additionnelles selon votre problème.</p>
+      </div>
+    </div>
   </div>
-  <div class="card">
+  <div class="ccard">
+    <div class="ccard-title">Effet / Problème principal</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
       <div>
-        <label>Effet / Problème :</label>
-        <input type="text" id="ishiEffect" placeholder="Ex: Pièces non conformes sur ligne B">
-        <button class="btn btn-accent btn-sm" onclick="aiIshikawa()">🤖 Suggestions IA</button>
+        <label>Décrivez l'effet indésirable</label>
+        <input type="text" id="ishiEffect" placeholder="Ex : Pièces non conformes sur ligne B">
+        <button class="btn btn-gold btn-sm" onclick="aiIshikawa()">🤖 Suggestions IA</button>
       </div>
       <div id="ishiAI"></div>
     </div>
   </div>
-  <div class="card">
-    <h3>Saisir les causes par catégorie (5M) :</h3>
-    <div class="ishikawa-causes" id="ishiCauses"></div>
-    <div class="fishbone-container" style="margin-top:1rem;">
+  <div class="ccard">
+    <div class="ccard-title">Causes par catégorie 5M</div>
+    <div class="ishi-grid" id="ishiCauses"></div>
+    <div class="fish-box">
       <svg id="fishbone-svg" width="800" height="280" viewBox="0 0 800 280"></svg>
     </div>
-    <div class="btn-group">
+    <div class="btn-row">
       <button class="btn btn-primary" onclick="drawFishbone()">🐟 Générer le diagramme</button>
-      <button class="btn btn-success" onclick="validateModule(3, scoreIshikawa)">✅ Valider</button>
+      <button class="btn btn-green" onclick="validateModule(3,scoreIshikawa)">✅ Valider</button>
     </div>
-    <div id="ishiScore" style="margin-top:.5rem;"></div>
+    <div id="ishiScore"></div>
   </div>
 </div>
 
-<!-- ══ MODULE 4 – PARETO ══ -->
+<!-- ══════════════ M4 – PARETO ══════════════ -->
 <div id="m4" class="section">
-  <div class="module-banner ban-m4">
-    <div class="ban-icon">📊</div>
-    <div><h2>Module 4 – Analyse de Pareto</h2>
-    <p>Saisissez vos défauts, générez le diagramme 80/20 et obtenez une interprétation IA.</p></div>
-  </div>
-  <div class="card">
-    <h2>Données de défauts</h2>
-    <div id="paretoRows"></div>
-    <div class="btn-group">
-      <button class="btn btn-outline btn-sm" onclick="addParetoRow()">+ Ajouter</button>
-      <button class="btn btn-accent" onclick="generatePareto()">📊 Générer le Pareto</button>
-      <button class="btn btn-primary" onclick="aiPareto()">🤖 Interprétation IA</button>
-      <button class="btn btn-success" onclick="validateModule(4, scorePareto)">✅ Valider</button>
+  <div class="mod-header">
+    <div class="mod-header-top" style="--mc:#f59e0b;--mc-dark:#b45309;">
+      <div class="mod-header-icon">📊</div>
+      <div class="mod-header-text">
+        <h2>Module 4 — Analyse de Pareto</h2>
+        <p>Saisissez vos défauts, générez le diagramme 80/20 et obtenez une interprétation IA.</p>
+      </div>
     </div>
   </div>
-  <div class="card">
-    <canvas id="paretoChart" height="300"></canvas>
-    <div id="paretoAI" style="margin-top:1rem;"></div>
-    <div id="paretoScore" style="margin-top:.5rem;"></div>
+  <div class="ccard">
+    <div class="ccard-title">Données de défauts</div>
+    <div id="paretoRows"></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost btn-sm" onclick="addParetoRow()">+ Ajouter</button>
+      <button class="btn btn-gold" onclick="generatePareto()">📊 Générer le Pareto</button>
+      <button class="btn btn-primary" onclick="aiPareto()">🤖 Interprétation IA</button>
+      <button class="btn btn-green" onclick="validateModule(4,scorePareto)">✅ Valider</button>
+    </div>
+  </div>
+  <div class="ccard">
+    <canvas id="paretoChart" height="280"></canvas>
+    <div id="paretoAI"></div>
+    <div id="paretoScore"></div>
   </div>
 </div>
 
-<!-- ══ MODULE 5 – KANBAN ══ -->
+<!-- ══════════════ M5 – KANBAN ══════════════ -->
 <div id="m5" class="section">
-  <div class="module-banner ban-m5">
-    <div class="ban-icon">📋</div>
-    <div><h2>Module 5 – Tableau Kanban</h2>
-    <p>Gérez vos tâches par drag & drop. Configurez la limite WIP et évitez la surcharge.</p></div>
+  <div class="mod-header">
+    <div class="mod-header-top" style="--mc:#14b8a6;--mc-dark:#0f766e;">
+      <div class="mod-header-icon">📋</div>
+      <div class="mod-header-text">
+        <h2>Module 5 — Tableau Kanban</h2>
+        <p>Drag & drop des cartes entre colonnes. Limitez le WIP et évitez la surcharge d'en-cours.</p>
+      </div>
+    </div>
   </div>
-  <div class="card">
-    <div style="display:flex;align-items:flex-end;gap:1rem;flex-wrap:wrap;margin-bottom:1.2rem;padding:1rem;background:#f8fafc;border-radius:12px;border:1.5px solid var(--border);">
+  <div class="ccard">
+    <div style="display:flex;align-items:flex-end;gap:1.2rem;flex-wrap:wrap;padding:.9rem;background:var(--gray50);border-radius:12px;border:1.5px solid var(--gray200);margin-bottom:1.2rem;">
       <div>
-        <label>Limite WIP :</label>
+        <label>Limite WIP</label>
         <input type="number" id="wipLimit" value="3" min="1" max="10" style="width:80px;margin:0;" onchange="updateKanban()">
       </div>
-      <div style="flex:1;min-width:200px;">
-        <label>Nouvelle tâche :</label>
+      <div style="flex:1;min-width:180px;">
+        <label>Nouvelle tâche</label>
         <div style="display:flex;gap:.5rem;">
           <input type="text" id="newTaskName" placeholder="Nom de la tâche..." style="margin:0;flex:1;">
-          <button class="btn btn-accent" onclick="addKanbanTask()">+ Ajouter</button>
+          <button class="btn btn-gold" onclick="addKanbanTask()">+ Ajouter</button>
         </div>
       </div>
     </div>
-    <div class="kanban-board" id="kanbanBoard"></div>
-    <div class="btn-group">
-      <button class="btn btn-success" onclick="validateModule(5, scoreKanban)">✅ Valider le module</button>
+    <div class="kb-board" id="kanbanBoard"></div>
+    <div class="btn-row">
+      <button class="btn btn-green" onclick="validateModule(5,scoreKanban)">✅ Valider le module</button>
     </div>
-    <div id="kanbanScore" style="margin-top:.5rem;"></div>
+    <div id="kanbanScore"></div>
   </div>
 </div>
 
-<!-- ══ MODULE 6 – VSM ══ -->
+<!-- ══════════════ M6 – VSM ══════════════ -->
 <div id="m6" class="section">
-  <div class="module-banner ban-m6">
-    <div class="ban-icon">🗺️</div>
-    <div><h2>Module 6 – VSM Simplifié</h2>
-    <p>Cartographiez votre flux de valeur et calculez le taux de valeur ajoutée.</p></div>
+  <div class="mod-header">
+    <div class="mod-header-top" style="--mc:#10b981;--mc-dark:#047857;">
+      <div class="mod-header-icon">🗺️</div>
+      <div class="mod-header-text">
+        <h2>Module 6 — VSM Simplifié</h2>
+        <p>Cartographiez votre flux de valeur, calculez le taux VA et visualisez les gaspillages.</p>
+      </div>
+    </div>
   </div>
-  <div class="card">
-    <h2>Étapes du processus</h2>
+  <div class="ccard">
+    <div class="ccard-title">Étapes du processus</div>
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:.5rem;padding:.3rem .5rem;margin-bottom:.3rem;">
+      <span style="font-size:.7rem;font-weight:800;color:var(--gray400);text-transform:uppercase;">Étape</span>
+      <span style="font-size:.7rem;font-weight:800;color:var(--gray400);text-transform:uppercase;">Cycle (min)</span>
+      <span style="font-size:.7rem;font-weight:800;color:var(--gray400);text-transform:uppercase;">Attente (min)</span>
+      <span style="font-size:.7rem;font-weight:800;color:var(--gray400);text-transform:uppercase;">Valeur Ajoutée</span>
+      <span></span>
+    </div>
     <div id="vsmSteps"></div>
-    <div class="btn-group">
-      <button class="btn btn-outline btn-sm" onclick="addVSMStep()">+ Étape</button>
-      <button class="btn btn-accent" onclick="calcVSM()">📊 Calculer & Visualiser</button>
-      <button class="btn btn-success" onclick="validateModule(6, scoreVSM)">✅ Valider</button>
+    <div class="btn-row">
+      <button class="btn btn-ghost btn-sm" onclick="addVSMStep()">+ Étape</button>
+      <button class="btn btn-gold" onclick="calcVSM()">📊 Calculer & Visualiser</button>
+      <button class="btn btn-green" onclick="validateModule(6,scoreVSM)">✅ Valider</button>
     </div>
   </div>
-  <div class="card" id="vsmResult" style="display:none;">
-    <h3>Résultats VSM</h3>
-    <div class="vsm-result" id="vsmKPIs"></div>
-    <canvas id="vsmChart" height="200" style="margin-top:1rem;"></canvas>
-    <div id="vsmScore" style="margin-top:.5rem;"></div>
+  <div class="ccard" id="vsmResult" style="display:none;">
+    <div class="ccard-title">Résultats VSM</div>
+    <div class="kpi-row" id="vsmKPIs"></div>
+    <canvas id="vsmChart" height="200"></canvas>
+    <div id="vsmScore"></div>
   </div>
 </div>
 
-<!-- ══ MODULE 7 – SPC ══ -->
+<!-- ══════════════ M7 – SPC ══════════════ -->
 <div id="m7" class="section">
-  <div class="module-banner ban-m7">
-    <div class="ban-icon">📈</div>
-    <div><h2>Module 7 – Carte de Contrôle SPC</h2>
-    <p>Tracez la carte de contrôle. L'IA détecte les anomalies et violations des règles de Nelson.</p></div>
-  </div>
-  <div class="card">
-    <h2>Données de mesures</h2>
-    <div class="spc-data-area">
-      <label>Entrez vos mesures (séparées par des virgules) :</label>
-      <textarea id="spcData" rows="3" placeholder="Ex: 10.2, 10.5, 10.1, 9.8, 10.7, 11.2, 10.3, 9.9, 10.6, 10.4, 9.7, 10.8, 11.5, 10.2, 10.1, 9.6, 10.9, 10.3, 10.5, 9.8"></textarea>
+  <div class="mod-header">
+    <div class="mod-header-top" style="--mc:#0ea5e9;--mc-dark:#0369a1;">
+      <div class="mod-header-icon">📈</div>
+      <div class="mod-header-text">
+        <h2>Module 7 — Carte de Contrôle SPC</h2>
+        <p>Tracez la carte de contrôle avec UCL/LCL. L'IA détecte les violations des règles de Nelson.</p>
+      </div>
     </div>
-    <div class="btn-group">
-      <button class="btn btn-accent" onclick="generateSPC()">📈 Tracer la carte</button>
+  </div>
+  <div class="ccard">
+    <div class="ccard-title">Saisie des mesures</div>
+    <div class="spc-input-wrap">
+      <label>Mesures séparées par des virgules (min. 10 points)</label>
+      <textarea id="spcData" rows="3" placeholder="Ex : 10.2, 10.5, 10.1, 9.8, 10.7, 11.2, 10.3, 9.9, 10.6, 10.4, 9.7, 10.8, 11.5, 10.2, 10.1"></textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="generateSPC()">📈 Tracer la carte</button>
       <button class="btn btn-primary" onclick="aiSPC()">🤖 Analyse IA</button>
-      <button class="btn btn-success" onclick="validateModule(7, scoreSPC)">✅ Valider</button>
+      <button class="btn btn-green" onclick="validateModule(7,scoreSPC)">✅ Valider</button>
     </div>
   </div>
-  <div class="card">
-    <canvas id="spcChart" height="280"></canvas>
+  <div class="ccard">
+    <canvas id="spcChart" height="260"></canvas>
     <div id="spcStats" style="margin-top:1rem;"></div>
-    <div id="spcAI" style="margin-top:1rem;"></div>
-    <div id="spcScore" style="margin-top:.5rem;"></div>
+    <div id="spcAI"></div>
+    <div id="spcScore"></div>
   </div>
 </div>
 
-<!-- ══ MODULE 8 – SMED ══ -->
+<!-- ══════════════ M8 – SMED ══════════════ -->
 <div id="m8" class="section">
-  <div class="module-banner ban-m8">
-    <div class="ban-icon">⏱️</div>
-    <div><h2>Module 8 – SMED Simulator</h2>
-    <p>Classez les tâches en internes/externes et calculez le gain de temps potentiel.</p></div>
+  <div class="mod-header">
+    <div class="mod-header-top" style="--mc:#f97316;--mc-dark:#c2410c;">
+      <div class="mod-header-icon">⏱️</div>
+      <div class="mod-header-text">
+        <h2>Module 8 — SMED Simulator</h2>
+        <p>Classez chaque tâche en interne/externe et calculez le gain de temps potentiel.</p>
+      </div>
+    </div>
   </div>
-  <div class="card">
-    <h2>Tâches de changement de série</h2>
-    <div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:.6rem;margin-bottom:.6rem;padding:.4rem .5rem;">
-      <span style="font-size:.75rem;font-weight:700;color:var(--gray);text-transform:uppercase;">Tâche</span>
-      <span style="font-size:.75rem;font-weight:700;color:var(--gray);text-transform:uppercase;">Durée (min)</span>
-      <span style="font-size:.75rem;font-weight:700;color:var(--gray);text-transform:uppercase;">Type</span>
+  <div class="ccard">
+    <div class="ccard-title">Tâches de changement de série</div>
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:.5rem;padding:.3rem .5rem;margin-bottom:.3rem;">
+      <span style="font-size:.7rem;font-weight:800;color:var(--gray400);text-transform:uppercase;">Tâche</span>
+      <span style="font-size:.7rem;font-weight:800;color:var(--gray400);text-transform:uppercase;">Durée (min)</span>
+      <span style="font-size:.7rem;font-weight:800;color:var(--gray400);text-transform:uppercase;">Type</span>
       <span></span>
     </div>
     <div id="smedRows"></div>
-    <div class="btn-group">
-      <button class="btn btn-outline btn-sm" onclick="addSMEDRow()">+ Tâche</button>
-      <button class="btn btn-accent" onclick="calcSMED()">⏱️ Calculer le gain</button>
-      <button class="btn btn-success" onclick="validateModule(8, scoreSMED)">✅ Valider</button>
+    <div class="btn-row">
+      <button class="btn btn-ghost btn-sm" onclick="addSMEDRow()">+ Tâche</button>
+      <button class="btn btn-gold" onclick="calcSMED()">⏱️ Calculer le gain</button>
+      <button class="btn btn-green" onclick="validateModule(8,scoreSMED)">✅ Valider</button>
     </div>
     <div id="smedResult" style="margin-top:1rem;"></div>
   </div>
 </div>
 
-<!-- ══ MODULE 9 – QUIZ ══ -->
+<!-- ══════════════ M9 – QUIZ ══════════════ -->
 <div id="m9" class="section">
-  <div class="module-banner ban-m9">
-    <div class="ban-icon">🎓</div>
-    <div><h2>Quiz Final – Validation du Parcours</h2>
-    <p>10 questions générées par l'IA. Score minimum 70% pour valider et obtenir votre certificat.</p></div>
+  <div class="mod-header">
+    <div class="mod-header-top" style="--mc:#a855f7;--mc-dark:#7e22ce;">
+      <div class="mod-header-icon">🎓</div>
+      <div class="mod-header-text">
+        <h2>Quiz Final — Validation du Parcours</h2>
+        <p>10 questions générées dynamiquement par l'IA. Score minimum 70% pour obtenir votre certificat.</p>
+      </div>
+    </div>
   </div>
-  <div class="card">
+  <div class="ccard">
     <div id="quizArea">
-      <div class="alert alert-warning">⚠️ <span><b>Clé API requise</b> — Entrez votre clé Claude en haut de la page. Sans clé, un quiz de démonstration sera utilisé.</span></div>
-      <button class="btn btn-accent" style="margin-top:.5rem;" onclick="generateQuiz()">🤖 Générer le Quiz IA</button>
+      <div class="alert alert-warning">⚠️ <span><b>Clé API requise</b> — Sans clé, un quiz de démonstration sera utilisé.</span></div>
+      <button class="btn btn-gold" style="margin-top:.5rem;" onclick="generateQuiz()">🤖 Générer le Quiz IA</button>
     </div>
     <div id="quizScore" style="margin-top:1rem;"></div>
   </div>
@@ -805,985 +981,599 @@ textarea{resize:vertical;min-height:80px;}
 </main>
 
 <script>
-// ══════════════════════════════════════════
-// GLOBAL STATE
-// ══════════════════════════════════════════
-const MODULES = [
-  { id:1, name:'PDCA Interactif', icon:'🔄', desc:'Cycle Plan-Do-Check-Act avec feedback IA' },
-  { id:2, name:'5S Simulation', icon:'🧹', desc:'Classez les éléments d\'atelier dans les bonnes catégories' },
-  { id:3, name:'Ishikawa (5M)', icon:'🐟', desc:'Diagramme causes-effets avec suggestions IA' },
-  { id:4, name:'Analyse de Pareto', icon:'📊', desc:'Générez le diagramme 80/20 avec interprétation IA' },
-  { id:5, name:'Kanban Board', icon:'📋', desc:'Tableau Kanban interactif avec limites WIP' },
-  { id:6, name:'VSM Simplifié', icon:'🗺️', desc:'Value Stream Mapping et taux de valeur ajoutée' },
-  { id:7, name:'Carte de Contrôle SPC', icon:'📈', desc:'Cartes de contrôle et détection anomalies IA' },
-  { id:8, name:'SMED Simulator', icon:'⏱️', desc:'Changement de série rapide et gain de temps' },
-  { id:9, name:'Quiz Final IA', icon:'🎓', desc:'QCM dynamique généré par IA – 70% requis' }
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+const MODULES=[
+  {id:1,name:'PDCA Interactif',icon:'🔄',desc:'Cycle Plan-Do-Check-Act avec feedback IA'},
+  {id:2,name:'5S Simulation',icon:'🧹',desc:'Classez les éléments dans les bonnes catégories'},
+  {id:3,name:'Ishikawa (5M)',icon:'🐟',desc:'Diagramme causes-effets + suggestions IA'},
+  {id:4,name:'Analyse de Pareto',icon:'📊',desc:'Diagramme 80/20 avec interprétation IA'},
+  {id:5,name:'Kanban Board',icon:'📋',desc:'Tableau Kanban interactif avec limites WIP'},
+  {id:6,name:'VSM Simplifié',icon:'🗺️',desc:'Value Stream Mapping et taux valeur ajoutée'},
+  {id:7,name:'Carte de Contrôle SPC',icon:'📈',desc:'Cartes de contrôle et règles de Nelson IA'},
+  {id:8,name:'SMED Simulator',icon:'⏱️',desc:'Changement de série rapide, calcul du gain'},
+  {id:9,name:'Quiz Final IA',icon:'🎓',desc:'QCM dynamique IA – 70% requis + certificat'}
 ];
 
-let state = JSON.parse(localStorage.getItem('greenlab_state') || '{}');
-state.scores = state.scores || {};
-state.completed = state.completed || [];
-state.studentName = state.studentName || '';
-state.kanban = state.kanban || {
-  backlog: ['Définir le problème', 'Analyser les données', 'Former l\'équipe'],
-  doing: ['Cartographier le flux'],
-  done: ['Identifier les gaspillages']
+let state=JSON.parse(localStorage.getItem('greenlab_v2')||'{}');
+state.scores=state.scores||{};
+state.completed=state.completed||[];
+state.studentName=state.studentName||'';
+state.kanban=state.kanban||{
+  backlog:['Définir le problème','Analyser les données','Former l\'équipe'],
+  doing:['Cartographier le flux'],done:['Identifier les gaspillages']
 };
-state.pdca = state.pdca || {};
-state.vsmSteps = state.vsmSteps || null;
-state.smedRows = state.smedRows || null;
-state.paretoData = state.paretoData || null;
+state.pdca=state.pdca||{};
+state.vsmSteps=state.vsmSteps||null;
+state.smedRows=state.smedRows||null;
+state.paretoData=state.paretoData||null;
 
-let paretoChartInst = null;
-let spcChartInst = null;
-let vsmChartInst = null;
-let quizAnswers = {};
-let quizData = [];
+let paretoC=null,spcC=null,vsmC=null,quizAnswers={},quizData=[];
 
-function saveState() { localStorage.setItem('greenlab_state', JSON.stringify(state)); }
-function saveName() { state.studentName = document.getElementById('studentName').value; saveState(); }
-function saveKey() { /* key only in memory */ }
-function getKey() { return document.getElementById('apiKey').value.trim(); }
+function save(){localStorage.setItem('greenlab_v2',JSON.stringify(state));}
+function saveName(){state.studentName=document.getElementById('studentName').value;save();}
+function saveKey(){}
+function getKey(){return document.getElementById('apiKey').value.trim();}
 
-// ══════════════════════════════════════════
-// NAVIGATION
-// ══════════════════════════════════════════
-function showSection(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+/* ── Navigation ── */
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  document.querySelectorAll('nav button').forEach(b => {
-    b.classList.toggle('active', b.dataset.section === id || (id==='home' && b.dataset.section==='home'));
+  document.querySelectorAll('.nav-btn').forEach(b=>{
+    const active=(b.dataset.section===id)||(id==='home'&&b.dataset.section==='home');
+    b.classList.toggle('nav-active',active);
   });
 }
-
-function goModule(n) {
-  if (n > 1 && !state.completed.includes(n-1)) {
-    alert(`🔒 Complétez le Module ${n-1} pour débloquer ce module.`);
-    return;
+function goModule(n){
+  if(n>1&&!state.completed.includes(n-1)){
+    alert(`🔒 Complétez le Module ${n-1} pour débloquer ce module.`);return;
   }
   showSection('m'+n);
-  if (n===2) init5S();
-  if (n===3) initIshikawa();
-  if (n===4) initPareto();
-  if (n===5) initKanban();
-  if (n===6) initVSM();
-  if (n===8) initSMED();
+  if(n===2)init5S();if(n===3)initIshikawa();
+  if(n===4)initPareto();if(n===5)initKanban();
+  if(n===6)initVSM();if(n===8)initSMED();
 }
-
-function updateNav() {
-  document.querySelectorAll('nav button[data-module]').forEach(b => {
-    const n = +b.dataset.module;
-    b.classList.remove('locked','done');
-    if (state.completed.includes(n)) b.classList.add('done');
-    else if (n > 1 && !state.completed.includes(n-1)) b.classList.add('locked');
+function updateNav(){
+  document.querySelectorAll('.nav-btn[data-module]').forEach(b=>{
+    const n=+b.dataset.module;
+    b.classList.remove('nav-locked','nav-done');
+    if(state.completed.includes(n))b.classList.add('nav-done');
+    else if(n>1&&!state.completed.includes(n-1))b.classList.add('nav-locked');
   });
-  const done = state.completed.length;
-  document.getElementById('globalBadge').textContent = done + ' / 9 modules';
-  document.getElementById('globalBar').style.width = (done/9*100)+'%';
-  document.getElementById('progressText').textContent = Math.round(done/9*100)+'%';
-  const statDone = document.getElementById('statDone');
-  if (statDone) statDone.textContent = done;
-  const statScore = document.getElementById('statScore');
-  if (statScore) {
-    const scores = Object.values(state.scores);
-    statScore.textContent = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length)+'%' : '–';
-  }
-  renderHomeGrid();
+  const done=state.completed.length;
+  document.getElementById('globalBadge').textContent=done+' / 9 modules';
+  document.getElementById('globalBar').style.width=(done/9*100)+'%';
+  document.getElementById('progressText').textContent=Math.round(done/9*100)+'%';
+  const sd=document.getElementById('statDone');if(sd)sd.textContent=done;
+  const sa=document.getElementById('statAvg');
+  if(sa){const sc=Object.values(state.scores);sa.textContent=sc.length?Math.round(sc.reduce((a,b)=>a+b,0)/sc.length)+'%':'–';}
+  renderGrid();
 }
 
-// ══════════════════════════════════════════
-// HOME GRID
-// ══════════════════════════════════════════
-function renderHomeGrid() {
-  const g = document.getElementById('moduleGrid');
-  g.innerHTML = '';
-  if (state.studentName) document.getElementById('studentName').value = state.studentName;
-  MODULES.forEach(m => {
-    const done = state.completed.includes(m.id);
-    const locked = m.id > 1 && !state.completed.includes(m.id-1);
-    const score = state.scores[m.id] !== undefined ? state.scores[m.id] : null;
-    const div = document.createElement('div');
-    div.className = `module-card mc-${m.id}` + (locked?' locked-card':'') + (done?' done-card':'');
-    div.innerHTML = `
-      <span class="module-status ${done?'status-done':locked?'status-locked':'status-open'}">
-        ${done?'✓ Validé':locked?'🔒 Verrouillé':'→ Disponible'}
-      </span>
-      <span class="module-icon">${m.icon}</span>
-      <h3>M${m.id} · ${m.name}</h3>
-      <p>${m.desc}</p>
-      ${score!==null?`
-        <div class="module-score-bar" style="margin-top:.7rem;">
-          <div class="module-score-fill" style="width:${score}%"></div>
+/* ── Home Grid ── */
+function renderGrid(){
+  const g=document.getElementById('moduleGrid');g.innerHTML='';
+  if(state.studentName)document.getElementById('studentName').value=state.studentName;
+  MODULES.forEach(m=>{
+    const done=state.completed.includes(m.id);
+    const locked=m.id>1&&!state.completed.includes(m.id-1);
+    const score=state.scores[m.id]!==undefined?state.scores[m.id]:null;
+    const d=document.createElement('div');
+    d.className='mod-card c'+m.id+(locked?' mod-locked':'')+(done?' mod-done':'');
+    d.innerHTML=`
+      <div class="mod-card-top">
+        <div>
+          <div class="mod-num">Module ${m.id}</div>
+          <span class="mod-status-chip ${done?'chip-done':locked?'chip-locked':'chip-open'}">${done?'✓ Validé':locked?'🔒 Verrouillé':'→ Disponible'}</span>
         </div>
-        <div style="font-size:.72rem;color:var(--gray);margin-top:.3rem;">${score}% obtenu</div>
-      `:''}
-    `;
-    if (!locked) div.onclick = () => goModule(m.id);
-    g.appendChild(div);
+        <div class="mod-icon-wrap">${m.icon}</div>
+      </div>
+      <div class="mod-card-body">
+        <h3>${m.name}</h3>
+        <p>${m.desc}</p>
+        ${score!==null?`<div class="mod-score-row"><div class="mod-score-track"><div class="mod-score-fill" style="width:${score}%"></div></div><span class="mod-score-val">${score}%</span></div>`:''}
+      </div>`;
+    if(!locked)d.onclick=()=>goModule(m.id);
+    g.appendChild(d);
   });
 }
 
-// ══════════════════════════════════════════
-// MODULE VALIDATION
-// ══════════════════════════════════════════
-function validateModule(n, scoreFn) {
-  const score = scoreFn();
-  state.scores[n] = score;
-  const pass = score >= (n===9?70:60);
-  if (pass && !state.completed.includes(n)) { state.completed.push(n); state.completed.sort((a,b)=>a-b); }
-  saveState(); updateNav();
-  const el = document.getElementById('m'+n);
-  let box = el.querySelector('.score-panel');
-  if (!box) { box = document.createElement('div'); box.className='score-panel'; el.querySelector('.card:last-child').appendChild(box); }
-  box.className = 'score-panel ' + (pass?'pass':'fail');
-  box.innerHTML = `
-    <div class="score-circle" style="color:${pass?'var(--success)':'var(--danger)'};">${score}%</div>
+/* ── Validation ── */
+function validateModule(n,scoreFn){
+  const score=scoreFn();
+  state.scores[n]=score;
+  const pass=score>=(n===9?70:60);
+  if(pass&&!state.completed.includes(n)){state.completed.push(n);state.completed.sort((a,b)=>a-b);}
+  save();updateNav();
+  const el=document.getElementById('m'+n);
+  let box=el.querySelector('.score-result');
+  if(!box){box=document.createElement('div');el.querySelector('.ccard:last-child').appendChild(box);}
+  box.className='score-result '+(pass?'pass':'fail');
+  box.innerHTML=`
+    <div class="score-ring" style="color:${pass?'var(--green)':'var(--red)'};">${score}%</div>
     <div>
-      <div style="font-weight:700;font-size:1rem;color:${pass?'var(--success)':'var(--danger)'};">${pass?'✅ Module validé !':'❌ Score insuffisant'}</div>
-      <div style="font-size:.82rem;color:var(--gray);margin-top:.2rem;">Score : ${score}% — Minimum requis : ${n===9?70:60}%</div>
-      ${!pass?`<div style="font-size:.82rem;color:var(--danger);margin-top:.2rem;">Complétez mieux les champs et réessayez.</div>`:''}
-      ${pass && n<9?`<div style="font-size:.82rem;color:var(--success);margin-top:.2rem;">🎉 Module ${n+1} maintenant débloqué !</div>`:''}
-    </div>
-  `;
-  if (pass && n===9) showCertificate();
+      <div style="font-weight:800;font-size:1rem;color:${pass?'var(--green)':'var(--red)'};">${pass?'✅ Module validé !':'❌ Score insuffisant'}</div>
+      <div style="font-size:.8rem;color:var(--gray400);margin-top:.2rem;">Score : ${score}% — Minimum : ${n===9?70:60}%</div>
+      ${!pass?'<div style="font-size:.8rem;color:var(--red);margin-top:.2rem;">Complétez mieux les champs et réessayez.</div>':''}
+      ${pass&&n<9?`<div style="font-size:.8rem;color:var(--green);margin-top:.2rem;">🎉 Module ${n+1} débloqué !</div>`:''}
+    </div>`;
+  if(pass&&n===9)showCertificate();
 }
 
-// ══════════════════════════════════════════
-// AI API CALL
-// ══════════════════════════════════════════
-async function callClaude(prompt, elId) {
-  const key = getKey();
-  if (!key) { document.getElementById(elId).innerHTML = '<div class="alert alert-danger">⚠️ Veuillez entrer votre clé API Claude en haut de la page.</div>'; return null; }
-  const el = document.getElementById(elId);
-  el.innerHTML = '<div class="ai-loading">Analyse en cours...</div>';
-  try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1024,
-        messages: [{ role: 'user', content: prompt }]
-      })
+/* ── AI Call ── */
+async function callClaude(prompt,elId){
+  const key=getKey();
+  const el=document.getElementById(elId);
+  if(!key){el.innerHTML='<div class="alert alert-danger">⚠️ Clé API Claude requise.</div>';return null;}
+  el.innerHTML='<div class="ai-wrap"><div class="ai-wrap-header"><div class="ai-spinner"></div>Analyse en cours...</div><div class="ai-loading-text">L\'IA traite votre demande...</div></div>';
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'x-api-key':key,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1024,messages:[{role:'user',content:prompt}]})
     });
-    if (!resp.ok) { const e = await resp.json(); el.innerHTML = `<div class="alert alert-danger">Erreur API : ${e.error?.message||resp.statusText}</div>`; return null; }
-    const data = await resp.json();
-    const text = data.content[0].text;
-    el.innerHTML = `<div class="ai-box"><div class="ai-box-header">🤖 Analyse de l'IA</div>${text.replace(/\n/g,'<br>')}</div>`;
+    if(!resp.ok){const e=await resp.json();el.innerHTML=`<div class="alert alert-danger">Erreur API : ${e.error?.message||resp.statusText}</div>`;return null;}
+    const data=await resp.json();
+    const text=data.content[0].text;
+    el.innerHTML=`<div class="ai-wrap"><div class="ai-wrap-header">🤖 Analyse de l'IA</div>${text.replace(/\n/g,'<br>')}</div>`;
     return text;
-  } catch(e) {
-    el.innerHTML = `<div class="alert alert-danger">Erreur réseau : ${e.message}</div>`;
-    return null;
-  }
+  }catch(e){el.innerHTML=`<div class="alert alert-danger">Erreur réseau : ${e.message}</div>`;return null;}
 }
 
-// ══════════════════════════════════════════
-// MODULE 1 – PDCA
-// ══════════════════════════════════════════
-function savePDCA() {
-  state.pdca = {
-    problem: document.getElementById('pdcaProblem').value,
-    plan1: document.getElementById('pdcaPlan1').value,
-    plan2: document.getElementById('pdcaPlan2').value,
-    do1: document.getElementById('pdcaDo1').value,
-    do2: document.getElementById('pdcaDo2').value,
-    check1: document.getElementById('pdcaCheck1').value,
-    check2: document.getElementById('pdcaCheck2').value,
-    act1: document.getElementById('pdcaAct1').value,
-    act2: document.getElementById('pdcaAct2').value
-  };
-  saveState();
+/* ══ M1 – PDCA ══ */
+function savePDCA(){
+  state.pdca={
+    problem:document.getElementById('pdcaProblem').value,
+    plan1:document.getElementById('pdcaPlan1').value,plan2:document.getElementById('pdcaPlan2').value,
+    do1:document.getElementById('pdcaDo1').value,do2:document.getElementById('pdcaDo2').value,
+    check1:document.getElementById('pdcaCheck1').value,check2:document.getElementById('pdcaCheck2').value,
+    act1:document.getElementById('pdcaAct1').value,act2:document.getElementById('pdcaAct2').value
+  };save();
 }
-
-function loadPDCA() {
-  const p = state.pdca;
-  if (!p) return;
-  ['problem','plan1','plan2','do1','do2','check1','check2','act1','act2'].forEach(k => {
-    const el = document.getElementById('pdca'+k.charAt(0).toUpperCase()+k.slice(1));
-    if (el && p[k]) el.value = p[k];
+function loadPDCA(){
+  const p=state.pdca;if(!p)return;
+  ['Problem','Plan1','Plan2','Do1','Do2','Check1','Check2','Act1','Act2'].forEach(k=>{
+    const el=document.getElementById('pdca'+k);if(el&&p[k.toLowerCase()])el.value=p[k.toLowerCase()];
   });
 }
-
-async function analyzePDCA() {
-  const p = state.pdca;
-  const prompt = `Tu es un expert Lean Six Sigma. Évalue ce cycle PDCA d'un étudiant ingénieur et donne un feedback constructif en français.
-
-Problème : ${p.problem||'Non renseigné'}
-PLAN – Objectif : ${p.plan1||'Vide'} | Actions : ${p.plan2||'Vide'}
-DO – Actions : ${p.do1||'Vide'} | Ressources : ${p.do2||'Vide'}
-CHECK – Résultats : ${p.check1||'Vide'} | KPIs : ${p.check2||'Vide'}
-ACT – Standardisation : ${p.act1||'Vide'} | Prochain cycle : ${p.act2||'Vide'}
-
-Fournis :
-1. Points forts (2-3 points)
-2. Points à améliorer (2-3 points)
-3. Score global estimé sur 100
-4. Un conseil actionnable pour améliorer l'analyse`;
-  await callClaude(prompt, 'pdcaAI');
+async function analyzePDCA(){
+  const p=state.pdca;
+  const prompt=`Tu es expert Lean Six Sigma. Évalue ce cycle PDCA d'un étudiant ingénieur. Feedback constructif en français.\n\nProblème : ${p.problem||'Non renseigné'}\nPLAN – Objectif : ${p.plan1||'Vide'} | Actions : ${p.plan2||'Vide'}\nDO – Actions : ${p.do1||'Vide'} | Ressources : ${p.do2||'Vide'}\nCHECK – Résultats : ${p.check1||'Vide'} | KPIs : ${p.check2||'Vide'}\nACT – Standardisation : ${p.act1||'Vide'} | Prochain cycle : ${p.act2||'Vide'}\n\nFournis :\n1. Points forts (2-3)\n2. Points à améliorer (2-3)\n3. Score /100\n4. Conseil actionnable`;
+  await callClaude(prompt,'pdcaAI');
+}
+function scorePDCA(){
+  const p=state.pdca;let s=0;
+  if(p.problem&&p.problem.length>20)s+=20;
+  if(p.plan1&&p.plan1.length>20)s+=15;if(p.plan2&&p.plan2.length>20)s+=10;
+  if(p.do1&&p.do1.length>20)s+=15;if(p.do2&&p.do2.length>10)s+=5;
+  if(p.check1&&p.check1.length>20)s+=15;if(p.check2&&p.check2.length>10)s+=5;
+  if(p.act1&&p.act1.length>20)s+=10;if(p.act2&&p.act2.length>10)s+=5;
+  return Math.min(100,s);
 }
 
-function scorePDCA() {
-  const p = state.pdca;
-  let s = 0;
-  if (p.problem && p.problem.length > 20) s += 20;
-  if (p.plan1 && p.plan1.length > 20) s += 15; if (p.plan2 && p.plan2.length > 20) s += 10;
-  if (p.do1 && p.do1.length > 20) s += 15; if (p.do2 && p.do2.length > 10) s += 5;
-  if (p.check1 && p.check1.length > 20) s += 15; if (p.check2 && p.check2.length > 10) s += 5;
-  if (p.act1 && p.act1.length > 20) s += 10; if (p.act2 && p.act2.length > 10) s += 5;
-  return Math.min(100, s);
-}
-
-// ══════════════════════════════════════════
-// MODULE 2 – 5S
-// ══════════════════════════════════════════
-const FIVE_S_ITEMS = [
-  { id:'a', name:'Marteau rouillé inutilisé', emoji:'🔨', correct:'seiri' },
-  { id:'b', name:'Huile de coupe périmée', emoji:'🛢️', correct:'seiri' },
-  { id:'c', name:'Clé à molette manquante', emoji:'🔧', correct:'seiton' },
-  { id:'d', name:'Chiffons souillés sur le sol', emoji:'🧻', correct:'seiso' },
-  { id:'e', name:'Procédure de maintenance', emoji:'📄', correct:'seiketsu' },
-  { id:'f', name:'EPI non portés', emoji:'🥽', correct:'shitsuke' },
-  { id:'g', name:'Pièces obsolètes sur l\'étagère', emoji:'📦', correct:'seiri' },
-  { id:'h', name:'Plan de nettoyage affiché', emoji:'📋', correct:'seiketsu' },
-  { id:'i', name:'Machine à nettoyer quotidiennement', emoji:'⚙️', correct:'seiso' },
-  { id:'j', name:'Formation sécurité non suivie', emoji:'📚', correct:'shitsuke' },
-  { id:'k', name:'Outil à sa place marquée', emoji:'✂️', correct:'seiton' },
-  { id:'l', name:'Audit 5S hebdomadaire', emoji:'✔️', correct:'shitsuke' }
+/* ══ M2 – 5S ══ */
+const FS_ITEMS=[
+  {id:'a',name:'Marteau rouillé inutilisé',emoji:'🔨',correct:'seiri'},
+  {id:'b',name:'Huile de coupe périmée',emoji:'🛢️',correct:'seiri'},
+  {id:'c',name:'Clé à molette manquante',emoji:'🔧',correct:'seiton'},
+  {id:'d',name:'Chiffons souillés au sol',emoji:'🧻',correct:'seiso'},
+  {id:'e',name:'Procédure de maintenance',emoji:'📄',correct:'seiketsu'},
+  {id:'f',name:'EPI non portés',emoji:'🥽',correct:'shitsuke'},
+  {id:'g',name:'Pièces obsolètes étagère',emoji:'📦',correct:'seiri'},
+  {id:'h',name:'Plan de nettoyage affiché',emoji:'📋',correct:'seiketsu'},
+  {id:'i',name:'Machine à nettoyer/jour',emoji:'⚙️',correct:'seiso'},
+  {id:'j',name:'Formation sécu non suivie',emoji:'📚',correct:'shitsuke'},
+  {id:'k',name:'Outil à sa place marquée',emoji:'✂️',correct:'seiton'},
+  {id:'l',name:'Audit 5S hebdomadaire',emoji:'✔️',correct:'shitsuke'}
 ];
-
-const FIVE_S_CATS = [
-  { id:'seiri', name:'Seiri', label:'Éliminer', color:'#e74c3c' },
-  { id:'seiton', name:'Seiton', label:'Ranger', color:'#3498db' },
-  { id:'seiso', name:'Seiso', label:'Nettoyer', color:'#27ae60' },
-  { id:'seiketsu', name:'Seiketsu', label:'Standardiser', color:'#f39c12' },
-  { id:'shitsuke', name:'Shitsuke', label:'Respecter', color:'#9b59b6' }
+const FS_CATS=[
+  {id:'seiri',name:'Seiri',label:'Éliminer',color:'#dc2626'},
+  {id:'seiton',name:'Seiton',label:'Ranger',color:'#2563eb'},
+  {id:'seiso',name:'Seiso',label:'Nettoyer',color:'#059669'},
+  {id:'seiketsu',name:'Seiketsu',label:'Standardiser',color:'#d97706'},
+  {id:'shitsuke',name:'Shitsuke',label:'Respecter',color:'#7c3aed'}
 ];
-
-let fiveSPlaced = {};
-let dragging5S = null;
-
-function init5S() {
-  fiveSPlaced = {};
-  const src = document.getElementById('fiveS-source');
-  src.innerHTML = '';
-  FIVE_S_ITEMS.forEach(item => {
-    const div = document.createElement('div');
-    div.className = 'fivs-item'; div.draggable = true;
-    div.dataset.id = item.id; div.id = '5s-item-'+item.id;
-    div.innerHTML = `${item.emoji} ${item.name}`;
-    div.addEventListener('dragstart', e => { dragging5S = item.id; div.classList.add('dragging'); });
-    div.addEventListener('dragend', () => div.classList.remove('dragging'));
-    src.appendChild(div);
+let fs5Placed={},drag5S=null;
+function init5S(){
+  fs5Placed={};
+  const src=document.getElementById('fiveS-source');src.innerHTML='';
+  FS_ITEMS.forEach(item=>{
+    const d=document.createElement('div');d.className='ws-item';d.draggable=true;
+    d.id='5s-'+item.id;d.innerHTML=`${item.emoji} ${item.name}`;
+    d.addEventListener('dragstart',()=>{drag5S=item.id;d.classList.add('dragging');});
+    d.addEventListener('dragend',()=>d.classList.remove('dragging'));
+    src.appendChild(d);
   });
-  const cats = document.getElementById('fiveS-cats');
-  cats.innerHTML = '';
-  FIVE_S_CATS.forEach(cat => {
-    const div = document.createElement('div');
-    div.className = 'fivs-cat'; div.id = '5s-cat-'+cat.id;
-    div.innerHTML = `<h5 style="color:${cat.color}">${cat.name}<br><small style="font-weight:400;">${cat.label}</small></h5>`;
-    div.addEventListener('dragover', e => { e.preventDefault(); div.classList.add('drag-over'); });
-    div.addEventListener('dragleave', () => div.classList.remove('drag-over'));
-    div.addEventListener('drop', e => {
-      e.preventDefault(); div.classList.remove('drag-over');
-      if (!dragging5S) return;
-      fiveSPlaced[dragging5S] = cat.id;
-      const src = document.getElementById('fiveS-source');
-      const itemEl = document.getElementById('5s-item-'+dragging5S);
-      if (itemEl) { itemEl.draggable = false; div.appendChild(itemEl); }
-      dragging5S = null;
+  const cats=document.getElementById('fiveS-cats');cats.innerHTML='';
+  FS_CATS.forEach(cat=>{
+    const d=document.createElement('div');d.className='cat-col';d.id='cat-'+cat.id;
+    d.innerHTML=`<h5 style="color:${cat.color}">${cat.name}<br><small style="font-weight:400;text-transform:none;">${cat.label}</small></h5>`;
+    d.addEventListener('dragover',e=>{e.preventDefault();d.classList.add('drag-on');});
+    d.addEventListener('dragleave',()=>d.classList.remove('drag-on'));
+    d.addEventListener('drop',e=>{
+      e.preventDefault();d.classList.remove('drag-on');
+      if(!drag5S)return;
+      fs5Placed[drag5S]=cat.id;
+      const el=document.getElementById('5s-'+drag5S);
+      if(el){el.draggable=false;d.appendChild(el);}
+      drag5S=null;
     });
-    cats.appendChild(div);
+    cats.appendChild(d);
   });
-  document.getElementById('fiveS-result').innerHTML = '';
+  document.getElementById('fiveS-result').innerHTML='';
 }
-
-function check5S() {
-  let correct = 0, total = FIVE_S_ITEMS.length;
-  FIVE_S_ITEMS.forEach(item => {
-    const el = document.getElementById('5s-item-'+item.id);
-    if (el) {
-      const placed = fiveSPlaced[item.id];
-      if (placed === item.correct) { el.style.background='#eafaf1'; el.style.borderColor='var(--success)'; correct++; }
-      else if (placed) { el.style.background='#fdf2f0'; el.style.borderColor='var(--danger)'; }
-    }
+function check5S(){
+  let ok=0;
+  FS_ITEMS.forEach(item=>{
+    const el=document.getElementById('5s-'+item.id);if(!el)return;
+    const placed=fs5Placed[item.id];
+    if(placed===item.correct){el.style.background='#ecfdf5';el.style.borderColor='#059669';ok++;}
+    else if(placed){el.style.background='#fef2f2';el.style.borderColor='#dc2626';}
   });
-  const pct = Math.round(correct/total*100);
-  document.getElementById('fiveS-result').innerHTML = `
-    <div class="alert ${pct>=60?'alert-success':'alert-danger'}">
-      <b>Résultat : ${correct}/${total} (${pct}%)</b><br>
-      ${pct>=60?'Bonne classification !':'Certains éléments sont mal classés. Vérifiez les définitions 5S.'}
-    </div>`;
-  state.scores[2] = pct; saveState();
+  const pct=Math.round(ok/FS_ITEMS.length*100);
+  document.getElementById('fiveS-result').innerHTML=`<div class="alert ${pct>=60?'alert-success':'alert-danger'}"><b>Résultat : ${ok}/${FS_ITEMS.length} (${pct}%)</b> — ${pct>=60?'Bonne classification !':'Certains éléments sont mal classés.'}</div>`;
+  state.scores[2]=pct;save();
 }
+function reset5S(){init5S();}
+function score5S(){return state.scores[2]||0;}
 
-function reset5S() { init5S(); }
-function score5S() { return state.scores[2] || 0; }
-
-// ══════════════════════════════════════════
-// MODULE 3 – ISHIKAWA
-// ══════════════════════════════════════════
-const ISHI_CATS = ['Matière','Méthode','Main-d\'œuvre','Machines','Milieu'];
-let ishiData = { Matière:[], Méthode:[], 'Main-d\'œuvre':[], Machines:[], Milieu:[] };
-
-function initIshikawa() {
-  const c = document.getElementById('ishiCauses');
-  c.innerHTML = '';
-  ISHI_CATS.forEach(cat => {
-    const div = document.createElement('div');
-    div.className = 'cause-group';
-    div.innerHTML = `<h5>${cat}</h5>
-      <div style="display:flex;gap:.4rem;margin-bottom:.4rem;">
-        <input type="text" id="ishi-${cat}" placeholder="Ajouter une cause..." style="margin:0;flex:1;font-size:.8rem;">
-        <button class="btn btn-accent btn-sm" onclick="addIshiCause('${cat}')">+</button>
-      </div>
-      <div id="ishi-tags-${cat}"></div>`;
-    c.appendChild(div);
-  });
-  renderIshiTags();
+/* ══ M3 – ISHIKAWA ══ */
+const ISHI_CATS=['Matière','Méthode','Main-d\'œuvre','Machines','Milieu'];
+let ishiData={Matière:[],Méthode:[],'Main-d\'œuvre':[],Machines:[],Milieu:[]};
+function initIshikawa(){
+  const c=document.getElementById('ishiCauses');c.innerHTML='';
+  ISHI_CATS.forEach(cat=>{
+    const d=document.createElement('div');d.className='ishi-group';
+    d.innerHTML=`<h5>${cat}</h5>
+      <div style="display:flex;gap:.4rem;margin-bottom:.5rem;">
+        <input type="text" id="ishi-${cat}" placeholder="Cause..." style="margin:0;flex:1;font-size:.78rem;">
+        <button class="btn btn-gold btn-sm" onclick="addIshiCause('${cat}')">+</button>
+      </div><div id="itags-${cat}"></div>`;
+    c.appendChild(d);
+  });renderIshiTags();
 }
-
-function addIshiCause(cat) {
-  const inp = document.getElementById('ishi-'+cat);
-  const val = inp.value.trim();
-  if (!val) return;
-  if (!ishiData[cat]) ishiData[cat] = [];
-  ishiData[cat].push(val);
-  inp.value = '';
-  renderIshiTags();
+function addIshiCause(cat){
+  const inp=document.getElementById('ishi-'+cat);
+  const v=inp.value.trim();if(!v)return;
+  if(!ishiData[cat])ishiData[cat]=[];
+  ishiData[cat].push(v);inp.value='';renderIshiTags();
 }
-
-function renderIshiTags() {
-  ISHI_CATS.forEach(cat => {
-    const el = document.getElementById('ishi-tags-'+cat);
-    if (!el) return;
-    el.innerHTML = (ishiData[cat]||[]).map((c,i) =>
-      `<span class="cause-tag" onclick="removeIshiCause('${cat}',${i})">${c} ×</span>`
-    ).join('');
+function renderIshiTags(){
+  ISHI_CATS.forEach(cat=>{
+    const el=document.getElementById('itags-'+cat);if(!el)return;
+    el.innerHTML=(ishiData[cat]||[]).map((c,i)=>`<span class="tag" onclick="ishiData['${cat}'].splice(${i},1);renderIshiTags()">${c} ×</span>`).join('');
   });
 }
-
-function removeIshiCause(cat, i) {
-  ishiData[cat].splice(i,1);
-  renderIshiTags();
+async function aiIshikawa(){
+  const effect=document.getElementById('ishiEffect').value;
+  if(!effect){alert('Entrez d\'abord le problème.');return;}
+  const key=getKey();
+  const el=document.getElementById('ishiAI');
+  if(!key){el.innerHTML='<div class="alert alert-danger">Clé API requise.</div>';return;}
+  el.innerHTML='<div class="ai-wrap"><div class="ai-wrap-header"><div class="ai-spinner"></div>Suggestions en cours...</div></div>';
+  const prompt=`Pour le problème: "${effect}", suggère 3 causes par catégorie 5M. JSON strict uniquement: {"Matière":["...","...","..."],"Méthode":[...],"Main-d'œuvre":[...],"Machines":[...],"Milieu":[...]}`;
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':key,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:800,messages:[{role:'user',content:prompt}]})});
+    const data=await resp.json();const text=data.content[0].text;
+    const m=text.match(/\{[\s\S]*\}/);
+    if(m){
+      const sug=JSON.parse(m[0]);
+      Object.keys(sug).forEach(cat=>{if(ishiData[cat])sug[cat].forEach(c=>{if(!ishiData[cat].includes(c))ishiData[cat].push(c);});});
+      renderIshiTags();el.innerHTML='<div class="alert alert-success">✅ Suggestions ajoutées !</div>';
+    }else{el.innerHTML=`<div class="ai-wrap"><div class="ai-wrap-header">🤖 IA</div>${text.replace(/\n/g,'<br>')}</div>`;}
+  }catch(e){el.innerHTML=`<div class="alert alert-danger">${e.message}</div>`;}
 }
-
-async function aiIshikawa() {
-  const effect = document.getElementById('ishiEffect').value;
-  if (!effect) { alert('Entrez d\'abord le problème/effet.'); return; }
-  const prompt = `Tu es expert Lean. Pour le problème : "${effect}", suggère 3 causes potentielles pour chacune des 5 catégories 5M (Matière, Méthode, Main-d'œuvre, Machines, Milieu) dans le contexte industrie/production. Réponds en JSON strict : {"Matière":["...","...","..."],"Méthode":[...],"Main-d'œuvre":[...],"Machines":[...],"Milieu":[...]}`;
-  const el = document.getElementById('ishiAI');
-  el.innerHTML = '<div class="ai-loading">Génération des suggestions...</div>';
-  const key = getKey();
-  if (!key) { el.innerHTML = '<div class="alert alert-danger">Clé API requise.</div>'; return; }
-  try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST',
-      headers:{'x-api-key':key,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:800,messages:[{role:'user',content:prompt}]})
-    });
-    const data = await resp.json();
-    const text = data.content[0].text;
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      const suggestions = JSON.parse(jsonMatch[0]);
-      Object.keys(suggestions).forEach(cat => {
-        if (ishiData[cat]) {
-          suggestions[cat].forEach(c => { if (!ishiData[cat].includes(c)) ishiData[cat].push(c); });
-        }
-      });
-      renderIshiTags();
-      el.innerHTML = '<div class="alert alert-success">✅ Suggestions IA ajoutées au diagramme !</div>';
-    } else {
-      el.innerHTML = `<div class="ai-box"><div class="ai-box-header">🤖 Analyse de l'IA</div>${text.replace(/\n/g,'<br>')}</div>`;
-    }
-  } catch(e) { el.innerHTML = `<div class="alert alert-danger">Erreur : ${e.message}</div>`; }
-}
-
-function drawFishbone() {
-  const svg = document.getElementById('fishbone-svg');
-  const effect = document.getElementById('ishiEffect').value || 'Problème';
-  const W=800, H=280, spine=H/2;
-  let html = '';
-  html += `<line x1="50" y1="${spine}" x2="700" y2="${spine}" stroke="#1a2f4e" stroke-width="3"/>`;
-  html += `<polygon points="700,${spine} 690,${spine-8} 690,${spine+8}" fill="#1a2f4e"/>`;
-  html += `<rect x="710" y="${spine-22}" width="80" height="44" rx="6" fill="#f39c12"/>`;
-  html += `<text x="750" y="${spine+5}" text-anchor="middle" font-size="11" font-weight="bold" fill="white">${effect.substring(0,15)}</text>`;
-  const catColors = ['#3498db','#e74c3c','#27ae60','#9b59b6','#f39c12'];
-  const catX = [120, 240, 360, 480, 600];
-  const top = [true, false, true, false, true];
-  ISHI_CATS.forEach((cat, i) => {
-    const x = catX[i], isTop = top[i];
-    const yEnd = isTop ? spine-70 : spine+70;
-    html += `<line x1="${x}" y1="${spine}" x2="${x}" y2="${yEnd}" stroke="${catColors[i]}" stroke-width="2"/>`;
-    html += `<text x="${x}" y="${isTop?spine-80:spine+90}" text-anchor="middle" font-size="11" font-weight="bold" fill="${catColors[i]}">${cat}</text>`;
-    (ishiData[cat]||[]).slice(0,3).forEach((cause,j) => {
-      const cx = x - 35 + j*10;
-      const cy = isTop ? spine - 25 - j*18 : spine + 25 + j*18;
-      const ex = x - 15 + j*5;
-      const ey = isTop ? spine - 10 - j*5 : spine + 10 + j*5;
-      html += `<line x1="${cx}" y1="${cy}" x2="${ex}" y2="${ey}" stroke="${catColors[i]}" stroke-width="1.5" stroke-dasharray="3,2"/>`;
-      html += `<text x="${cx-5}" y="${cy+(isTop?-4:12)}" font-size="9" fill="#333" text-anchor="middle">${cause.substring(0,18)}</text>`;
+function drawFishbone(){
+  const svg=document.getElementById('fishbone-svg');
+  const effect=document.getElementById('ishiEffect').value||'Problème';
+  const H=280,spine=H/2;let html='';
+  html+=`<line x1="50" y1="${spine}" x2="700" y2="${spine}" stroke="#0d1b2a" stroke-width="3"/>`;
+  html+=`<polygon points="700,${spine} 688,${spine-9} 688,${spine+9}" fill="#0d1b2a"/>`;
+  html+=`<rect x="710" y="${spine-24}" width="82" height="48" rx="8" fill="#f59e0b"/>`;
+  html+=`<text x="751" y="${spine+6}" text-anchor="middle" font-size="11" font-weight="bold" fill="white">${effect.substring(0,14)}</text>`;
+  const colors=['#3b82f6','#ef4444','#8b5cf6','#10b981','#f97316'];
+  const xs=[120,240,360,480,600],tops=[true,false,true,false,true];
+  ISHI_CATS.forEach((cat,i)=>{
+    const x=xs[i],top=tops[i],yEnd=top?spine-75:spine+75;
+    html+=`<line x1="${x}" y1="${spine}" x2="${x}" y2="${yEnd}" stroke="${colors[i]}" stroke-width="2.5"/>`;
+    html+=`<text x="${x}" y="${top?spine-85:spine+95}" text-anchor="middle" font-size="11" font-weight="bold" fill="${colors[i]}">${cat}</text>`;
+    (ishiData[cat]||[]).slice(0,3).forEach((cause,j)=>{
+      const cx=x-30+j*8,cy=top?spine-20-j*17:spine+20+j*17,ex=x-10+j*4,ey=top?spine-8-j*4:spine+8+j*4;
+      html+=`<line x1="${cx}" y1="${cy}" x2="${ex}" y2="${ey}" stroke="${colors[i]}" stroke-width="1.5" stroke-dasharray="3,2"/>`;
+      html+=`<text x="${cx-3}" y="${cy+(top?-5:13)}" font-size="9" fill="#475569" text-anchor="middle">${cause.substring(0,16)}</text>`;
     });
   });
-  svg.innerHTML = html;
+  svg.innerHTML=html;
+}
+function scoreIshikawa(){
+  let tot=0;ISHI_CATS.forEach(c=>tot+=(ishiData[c]||[]).length);
+  const eff=document.getElementById('ishiEffect').value;
+  let s=0;if(eff&&eff.length>5)s+=20;s+=Math.min(80,tot*8);return Math.min(100,s);
 }
 
-function scoreIshikawa() {
-  let total = 0;
-  ISHI_CATS.forEach(c => total += (ishiData[c]||[]).length);
-  const effect = document.getElementById('ishiEffect').value;
-  let s = 0;
-  if (effect && effect.length > 5) s += 20;
-  s += Math.min(80, total * 8);
-  return Math.min(100, s);
-}
-
-// ══════════════════════════════════════════
-// MODULE 4 – PARETO
-// ══════════════════════════════════════════
-let paretoRows = [
-  { name:'Défaut de soudure', count:45 },
-  { name:'Mauvais alignement', count:30 },
-  { name:'Rayures surface', count:15 },
-  { name:'Dimensions hors tolérance', count:8 },
-  { name:'Autres défauts', count:5 }
+/* ══ M4 – PARETO ══ */
+let paretoRows=[
+  {name:'Défaut de soudure',count:45},{name:'Mauvais alignement',count:30},
+  {name:'Rayures surface',count:15},{name:'Dimensions hors tolérance',count:8},{name:'Autres défauts',count:5}
 ];
-
-function initPareto() {
-  if (state.paretoData) paretoRows = state.paretoData;
-  renderParetoRows();
-}
-
-function renderParetoRows() {
-  const c = document.getElementById('paretoRows');
-  c.innerHTML = '<div style="display:grid;grid-template-columns:1fr auto auto;gap:.5rem;margin-bottom:.4rem;"><span style="font-size:.8rem;font-weight:700;color:var(--gray);">Défaut</span><span style="font-size:.8rem;font-weight:700;color:var(--gray);">Fréquence</span><span></span></div>';
-  paretoRows.forEach((r,i) => {
-    const div = document.createElement('div');
-    div.className = 'pareto-row';
-    div.innerHTML = `
-      <input type="text" value="${r.name}" placeholder="Nom du défaut" style="margin:0;flex:1;" onchange="paretoRows[${i}].name=this.value">
-      <input type="number" value="${r.count}" min="0" style="width:90px;margin:0;" onchange="paretoRows[${i}].count=+this.value">
-      <button class="btn btn-danger btn-sm" onclick="removeParetoRow(${i})">×</button>
-    `;
-    c.appendChild(div);
+function initPareto(){if(state.paretoData)paretoRows=state.paretoData;renderParetoRows();}
+function renderParetoRows(){
+  const c=document.getElementById('paretoRows');
+  c.innerHTML='<div style="display:grid;grid-template-columns:1fr auto auto;gap:.5rem;margin-bottom:.4rem;padding:.2rem .5rem;"><span style="font-size:.7rem;font-weight:800;color:var(--gray400);text-transform:uppercase;">Défaut</span><span style="font-size:.7rem;font-weight:800;color:var(--gray400);text-transform:uppercase;">Fréquence</span><span></span></div>';
+  paretoRows.forEach((r,i)=>{
+    const d=document.createElement('div');d.className='pareto-row';
+    d.innerHTML=`<input type="text" value="${r.name}" placeholder="Nom défaut" style="margin:0;flex:1;" onchange="paretoRows[${i}].name=this.value"><input type="number" value="${r.count}" min="0" style="width:90px;margin:0;" onchange="paretoRows[${i}].count=+this.value"><button class="btn btn-red btn-sm" onclick="paretoRows.splice(${i},1);renderParetoRows()">×</button>`;
+    c.appendChild(d);
   });
-  state.paretoData = paretoRows; saveState();
+  state.paretoData=paretoRows;save();
 }
-
-function addParetoRow() { paretoRows.push({name:'',count:0}); renderParetoRows(); }
-function removeParetoRow(i) { paretoRows.splice(i,1); renderParetoRows(); }
-
-function generatePareto() {
-  const sorted = [...paretoRows].sort((a,b)=>b.count-a.count);
-  const total = sorted.reduce((s,r)=>s+r.count,0);
-  let cumul = 0;
-  const labels = sorted.map(r=>r.name);
-  const counts = sorted.map(r=>r.count);
-  const cumulPct = sorted.map(r=>{ cumul+=r.count; return Math.round(cumul/total*100); });
-
-  if (paretoChartInst) paretoChartInst.destroy();
-  const ctx = document.getElementById('paretoChart').getContext('2d');
-  paretoChartInst = new Chart(ctx, {
-    data: {
-      labels,
-      datasets: [
-        { type:'bar', label:'Fréquence', data:counts, backgroundColor:'rgba(26,47,78,0.8)', yAxisID:'y' },
-        { type:'line', label:'Cumulé %', data:cumulPct, borderColor:'#f39c12', backgroundColor:'rgba(243,156,18,0.1)', fill:true, yAxisID:'y1', tension:0.3, pointRadius:5 }
-      ]
-    },
-    options: {
-      responsive:true,
-      plugins:{ legend:{display:true}, tooltip:{ callbacks:{label:ctx=>ctx.datasetIndex===0?`${ctx.raw} occurrences`:`${ctx.raw}% cumulé`} } },
-      scales: {
-        y:{ position:'left', title:{display:true,text:'Fréquence'} },
-        y1:{ position:'right', min:0, max:100, title:{display:true,text:'% Cumulé'}, grid:{drawOnChartArea:false},
-          ticks:{ callback:v=>v+'%' }
-        }
-      }
-    }
-  });
-  const vital = sorted.filter((_,i)=>cumulPct[i]<=80).length || 1;
-  document.getElementById('paretoAI').innerHTML = `<div class="alert alert-info"><b>Analyse 80/20 :</b> Les ${vital} premiers défauts représentent 80% des occurrences. Concentrez vos efforts sur : <b>${sorted.slice(0,vital).map(r=>r.name).join(', ')}</b>.</div>`;
+function addParetoRow(){paretoRows.push({name:'',count:0});renderParetoRows();}
+function generatePareto(){
+  const sorted=[...paretoRows].sort((a,b)=>b.count-a.count);
+  const total=sorted.reduce((s,r)=>s+r.count,0);
+  let cumul=0;const cumulPct=sorted.map(r=>{cumul+=r.count;return Math.round(cumul/total*100);});
+  if(paretoC)paretoC.destroy();
+  const ctx=document.getElementById('paretoChart').getContext('2d');
+  paretoC=new Chart(ctx,{data:{labels:sorted.map(r=>r.name),datasets:[
+    {type:'bar',label:'Fréquence',data:sorted.map(r=>r.count),backgroundColor:'rgba(13,27,42,.8)',borderRadius:6,yAxisID:'y'},
+    {type:'line',label:'Cumulé %',data:cumulPct,borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,.08)',fill:true,yAxisID:'y1',tension:.3,pointRadius:5,pointBackgroundColor:'#f59e0b'}
+  ]},options:{responsive:true,plugins:{legend:{display:true}},scales:{y:{position:'left',title:{display:true,text:'Fréquence'}},y1:{position:'right',min:0,max:100,title:{display:true,text:'% Cumulé'},grid:{drawOnChartArea:false},ticks:{callback:v=>v+'%'}}}}});
+  const vital=sorted.filter((_,i)=>cumulPct[i]<=80).length||1;
+  document.getElementById('paretoAI').innerHTML=`<div class="alert alert-info"><b>Règle 80/20 :</b> Concentrez-vous sur <b>${sorted.slice(0,vital).map(r=>r.name).join(', ')}</b> (${vital} défaut${vital>1?'s':''} = ~80% des occurrences).</div>`;
 }
-
-async function aiPareto() {
-  const sorted = [...paretoRows].sort((a,b)=>b.count-a.count);
-  const total = sorted.reduce((s,r)=>s+r.count,0);
-  const prompt = `Tu es expert Lean Six Sigma. Analyse ce diagramme de Pareto et fournis une interprétation professionnelle en français :
-
-Données de défauts (triées par fréquence) :
-${sorted.map((r,i)=>` ${i+1}. ${r.name} : ${r.count} occurrences (${Math.round(r.count/total*100)}%)`).join('\n')}
-
-Total : ${total} défauts
-
-Fournis :
-1. Identification des "vitaux peu nombreux" (règle 80/20)
-2. Actions prioritaires recommandées
-3. Outils Lean/6σ à appliquer sur les causes principales
-4. Estimation du gain potentiel si les 2 premiers défauts sont éliminés`;
-  await callClaude(prompt, 'paretoAI');
+async function aiPareto(){
+  const sorted=[...paretoRows].sort((a,b)=>b.count-a.count);
+  const total=sorted.reduce((s,r)=>s+r.count,0);
+  const prompt=`Expert Lean Six Sigma. Analyse ce diagramme de Pareto:\n${sorted.map((r,i)=>`${i+1}. ${r.name}: ${r.count} (${Math.round(r.count/total*100)}%)`).join('\n')}\nTotal: ${total} défauts\n\n1. Vitaux peu nombreux (80/20)\n2. Actions prioritaires\n3. Outils Lean recommandés\n4. Gain potentiel`;
+  await callClaude(prompt,'paretoAI');
 }
+function scorePareto(){if(!paretoC)return 0;let s=0;if(paretoRows.length>=3)s+=40;if(paretoRows.length>=5)s+=20;if(paretoC)s+=40;return Math.min(100,s);}
 
-function scorePareto() {
-  if (!paretoChartInst) return 0;
-  let s = 0;
-  if (paretoRows.length >= 3) s += 40;
-  if (paretoRows.length >= 5) s += 20;
-  if (paretoChartInst) s += 40;
-  return Math.min(100, s);
-}
-
-// ══════════════════════════════════════════
-// MODULE 5 – KANBAN
-// ══════════════════════════════════════════
-let dragTask = null, dragFrom = null;
-
-function initKanban() { renderKanban(); }
-
-function renderKanban() {
-  const board = document.getElementById('kanbanBoard');
-  const wip = +document.getElementById('wipLimit').value || 3;
-  const cols = [
-    { id:'backlog', name:'📋 Backlog', limit:null },
-    { id:'doing', name:'⚙️ En cours', limit:wip },
-    { id:'done', name:'✅ Terminé', limit:null }
-  ];
-  board.innerHTML = '';
-  cols.forEach(col => {
-    const tasks = state.kanban[col.id] || [];
-    const over = col.limit && tasks.length > col.limit;
-    const div = document.createElement('div');
-    div.className = 'kanban-col'; div.dataset.col = col.id;
-    div.innerHTML = `<div class="kanban-col-header">${col.name} ${col.limit?`<span class="wip-badge ${over?'wip-over':''}">${tasks.length}/${col.limit}</span>`:''}</div>`;
-    if (over) { const a=document.createElement('div'); a.className='alert alert-danger'; a.style.fontSize='.78rem'; a.textContent='⚠️ Limite WIP dépassée !'; div.appendChild(a); }
-    tasks.forEach((t,i) => {
-      const card = document.createElement('div');
-      card.className = 'kanban-card'; card.draggable = true;
-      card.innerHTML = `${t} <button onclick="removeKanbanTask('${col.id}',${i})" style="float:right;background:none;border:none;cursor:pointer;color:var(--gray);">×</button>`;
-      card.addEventListener('dragstart', () => { dragTask=t; dragFrom=col.id; card.classList.add('dragging'); });
-      card.addEventListener('dragend', () => card.classList.remove('dragging'));
-      div.appendChild(card);
+/* ══ M5 – KANBAN ══ */
+let dragTask=null,dragFrom=null;
+function initKanban(){renderKanban();}
+function renderKanban(){
+  const board=document.getElementById('kanbanBoard');
+  const wip=+document.getElementById('wipLimit').value||3;
+  const cols=[{id:'backlog',name:'📋 Backlog',cls:'col-backlog',limit:null},{id:'doing',name:'⚙️ En cours',cls:'col-doing',limit:wip},{id:'done',name:'✅ Terminé',cls:'col-done',limit:null}];
+  board.innerHTML='';
+  cols.forEach(col=>{
+    const tasks=state.kanban[col.id]||[];
+    const over=col.limit&&tasks.length>col.limit;
+    const d=document.createElement('div');d.className='kb-col';d.dataset.col=col.id;
+    d.innerHTML=`<div class="kb-col-head ${col.cls}">${col.name}${col.limit?`<span class="wip-tag${over?' wip-over':''}">${tasks.length}/${col.limit}</span>`:''}</div>${over?'<div class="alert alert-danger" style="font-size:.75rem;margin-bottom:.5rem;">⚠️ Limite WIP dépassée !</div>':''}`;
+    tasks.forEach((t,i)=>{
+      const card=document.createElement('div');card.className='kb-card';card.draggable=true;
+      card.innerHTML=`<span>${t}</span><button class="kb-del" onclick="removeKanbanTask('${col.id}',${i})">×</button>`;
+      card.addEventListener('dragstart',()=>{dragTask=t;dragFrom=col.id;card.classList.add('dragging');});
+      card.addEventListener('dragend',()=>card.classList.remove('dragging'));
+      d.appendChild(card);
     });
-    div.addEventListener('dragover', e => { e.preventDefault(); div.classList.add('drag-over'); });
-    div.addEventListener('dragleave', () => div.classList.remove('drag-over'));
-    div.addEventListener('drop', e => {
-      e.preventDefault(); div.classList.remove('drag-over');
-      if (!dragTask || dragFrom===col.id) return;
-      state.kanban[dragFrom] = state.kanban[dragFrom].filter(t=>t!==dragTask);
-      state.kanban[col.id].push(dragTask);
-      dragTask=null; dragFrom=null; saveState(); renderKanban();
-    });
-    board.appendChild(div);
+    d.addEventListener('dragover',e=>{e.preventDefault();d.classList.add('drag-on');});
+    d.addEventListener('dragleave',()=>d.classList.remove('drag-on'));
+    d.addEventListener('drop',e=>{e.preventDefault();d.classList.remove('drag-on');if(!dragTask||dragFrom===col.id)return;state.kanban[dragFrom]=state.kanban[dragFrom].filter(t=>t!==dragTask);state.kanban[col.id].push(dragTask);dragTask=null;dragFrom=null;save();renderKanban();});
+    board.appendChild(d);
   });
 }
-
-function addKanbanTask() {
-  const n = document.getElementById('newTaskName').value.trim();
-  if (!n) return;
-  state.kanban.backlog.push(n);
-  document.getElementById('newTaskName').value = '';
-  saveState(); renderKanban();
+function addKanbanTask(){const n=document.getElementById('newTaskName').value.trim();if(!n)return;state.kanban.backlog.push(n);document.getElementById('newTaskName').value='';save();renderKanban();}
+function removeKanbanTask(col,i){state.kanban[col].splice(i,1);save();renderKanban();}
+function updateKanban(){renderKanban();}
+function scoreKanban(){
+  const total=Object.values(state.kanban).flat().length;
+  const done=(state.kanban.done||[]).length;
+  if(total<3)return 0;let s=40;
+  if(total>=5)s+=20;if(done>=1)s+=20;if(done/total>=.2)s+=20;return Math.min(100,s);
 }
 
-function removeKanbanTask(col, i) {
-  state.kanban[col].splice(i,1);
-  saveState(); renderKanban();
-}
-
-function updateKanban() { renderKanban(); }
-
-function scoreKanban() {
-  const total = Object.values(state.kanban).flat().length;
-  const done = (state.kanban.done||[]).length;
-  if (total < 3) return 0;
-  const movePct = done/total*100;
-  let s = 40;
-  if (total >= 5) s += 20;
-  if (done >= 1) s += 20;
-  if (movePct >= 20) s += 20;
-  return Math.min(100, s);
-}
-
-// ══════════════════════════════════════════
-// MODULE 6 – VSM
-// ══════════════════════════════════════════
-let vsmSteps = [
-  { name:'Réception matière', cycle:15, wait:120, va:false },
-  { name:'Découpe', cycle:8, wait:30, va:true },
-  { name:'Soudure', cycle:12, wait:60, va:true },
-  { name:'Contrôle qualité', cycle:5, wait:10, va:false },
-  { name:'Expédition', cycle:3, wait:0, va:false }
+/* ══ M6 – VSM ══ */
+let vsmSteps=[
+  {name:'Réception matière',cycle:15,wait:120,va:false},
+  {name:'Découpe',cycle:8,wait:30,va:true},
+  {name:'Soudure',cycle:12,wait:60,va:true},
+  {name:'Contrôle qualité',cycle:5,wait:10,va:false},
+  {name:'Expédition',cycle:3,wait:0,va:false}
 ];
-
-function initVSM() {
-  if (state.vsmSteps) vsmSteps = state.vsmSteps;
-  renderVSMSteps();
-}
-
-function renderVSMSteps() {
-  const c = document.getElementById('vsmSteps');
-  c.innerHTML = `<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:.6rem;margin-bottom:.4rem;">
-    <span style="font-size:.8rem;font-weight:700;color:var(--gray);">Étape</span>
-    <span style="font-size:.8rem;font-weight:700;color:var(--gray);">Cycle (min)</span>
-    <span style="font-size:.8rem;font-weight:700;color:var(--gray);">Attente (min)</span>
-    <span style="font-size:.8rem;font-weight:700;color:var(--gray);">Valeur Ajoutée</span>
-    <span></span>
-  </div>`;
-  vsmSteps.forEach((s,i) => {
-    const div = document.createElement('div');
-    div.className = 'vsm-step-row';
-    div.innerHTML = `
-      <input type="text" value="${s.name}" placeholder="Nom de l'étape" style="margin:0;" onchange="vsmSteps[${i}].name=this.value;saveVSM()">
-      <input type="number" value="${s.cycle}" min="0" style="margin:0;" onchange="vsmSteps[${i}].cycle=+this.value;saveVSM()">
-      <input type="number" value="${s.wait}" min="0" style="margin:0;" onchange="vsmSteps[${i}].wait=+this.value;saveVSM()">
-      <select style="margin:0;" onchange="vsmSteps[${i}].va=this.value==='true';saveVSM()">
-        <option value="true" ${s.va?'selected':''}>✅ Oui</option>
-        <option value="false" ${!s.va?'selected':''}>❌ Non</option>
-      </select>
-      <button class="btn btn-danger btn-sm" onclick="vsmSteps.splice(${i},1);saveVSM();renderVSMSteps()">×</button>
-    `;
-    c.appendChild(div);
+function initVSM(){if(state.vsmSteps)vsmSteps=state.vsmSteps;renderVSMSteps();}
+function renderVSMSteps(){
+  const c=document.getElementById('vsmSteps');c.innerHTML='';
+  vsmSteps.forEach((s,i)=>{
+    const d=document.createElement('div');d.className='vsm-row';
+    d.innerHTML=`<input type="text" value="${s.name}" placeholder="Étape" style="margin:0;" onchange="vsmSteps[${i}].name=this.value;saveVSM()"><input type="number" value="${s.cycle}" min="0" style="margin:0;" onchange="vsmSteps[${i}].cycle=+this.value;saveVSM()"><input type="number" value="${s.wait}" min="0" style="margin:0;" onchange="vsmSteps[${i}].wait=+this.value;saveVSM()"><select style="margin:0;" onchange="vsmSteps[${i}].va=this.value==='true';saveVSM()"><option value="true" ${s.va?'selected':''}>✅ Oui</option><option value="false" ${!s.va?'selected':''}>❌ Non</option></select><button class="btn btn-red btn-sm" onclick="vsmSteps.splice(${i},1);saveVSM();renderVSMSteps()">×</button>`;
+    c.appendChild(d);
   });
 }
-
-function addVSMStep() { vsmSteps.push({name:'',cycle:0,wait:0,va:false}); saveVSM(); renderVSMSteps(); }
-function saveVSM() { state.vsmSteps = vsmSteps; saveState(); }
-
-function calcVSM() {
-  const totalCycle = vsmSteps.reduce((s,r)=>s+r.cycle,0);
-  const totalWait = vsmSteps.reduce((s,r)=>s+r.wait,0);
-  const vaCycle = vsmSteps.filter(r=>r.va).reduce((s,r)=>s+r.cycle,0);
-  const leadTime = totalCycle + totalWait;
-  const vaRatio = leadTime > 0 ? Math.round(vaCycle/leadTime*100) : 0;
-  document.getElementById('vsmResult').style.display = 'block';
-  document.getElementById('vsmKPIs').innerHTML = `
-    <div class="vsm-kpi"><div class="value">${totalCycle} min</div><div class="kpi-label">Temps de cycle total</div></div>
-    <div class="vsm-kpi"><div class="value">${leadTime} min</div><div class="kpi-label">Lead Time total</div></div>
-    <div class="vsm-kpi"><div class="value" style="color:${vaRatio>=30?'var(--success)':'var(--danger)'};">${vaRatio}%</div><div class="kpi-label">Taux de Valeur Ajoutée</div></div>
-  `;
-  if (vsmChartInst) vsmChartInst.destroy();
-  const ctx = document.getElementById('vsmChart').getContext('2d');
-  vsmChartInst = new Chart(ctx, {
-    type:'bar',
-    data:{
-      labels: vsmSteps.map(s=>s.name),
-      datasets:[
-        { label:'Temps de cycle (VA)', data:vsmSteps.map(s=>s.va?s.cycle:0), backgroundColor:'rgba(39,174,96,0.8)' },
-        { label:'Temps de cycle (NVA)', data:vsmSteps.map(s=>!s.va?s.cycle:0), backgroundColor:'rgba(231,76,60,0.6)' },
-        { label:'Temps d\'attente', data:vsmSteps.map(s=>s.wait), backgroundColor:'rgba(243,156,18,0.5)' }
-      ]
-    },
-    options:{ responsive:true, scales:{ x:{stacked:true}, y:{stacked:true, title:{display:true,text:'Minutes'}} } }
-  });
+function addVSMStep(){vsmSteps.push({name:'',cycle:0,wait:0,va:false});saveVSM();renderVSMSteps();}
+function saveVSM(){state.vsmSteps=vsmSteps;save();}
+function calcVSM(){
+  const tCycle=vsmSteps.reduce((s,r)=>s+r.cycle,0);
+  const tWait=vsmSteps.reduce((s,r)=>s+r.wait,0);
+  const vaCycle=vsmSteps.filter(r=>r.va).reduce((s,r)=>s+r.cycle,0);
+  const lt=tCycle+tWait;
+  const vaR=lt>0?Math.round(vaCycle/lt*100):0;
+  document.getElementById('vsmResult').style.display='block';
+  document.getElementById('vsmKPIs').innerHTML=`
+    <div class="kpi-box"><div class="kpi-val">${tCycle} min</div><div class="kpi-lbl">Temps de cycle total</div></div>
+    <div class="kpi-box"><div class="kpi-val">${lt} min</div><div class="kpi-lbl">Lead Time total</div></div>
+    <div class="kpi-box"><div class="kpi-val" style="color:${vaR>=30?'var(--green)':'var(--red)'};">${vaR}%</div><div class="kpi-lbl">Taux Valeur Ajoutée</div></div>`;
+  if(vsmC)vsmC.destroy();
+  const ctx=document.getElementById('vsmChart').getContext('2d');
+  vsmC=new Chart(ctx,{type:'bar',data:{labels:vsmSteps.map(s=>s.name),datasets:[{label:'VA',data:vsmSteps.map(s=>s.va?s.cycle:0),backgroundColor:'rgba(5,150,105,.8)',borderRadius:4},{label:'NVA',data:vsmSteps.map(s=>!s.va?s.cycle:0),backgroundColor:'rgba(220,38,38,.6)',borderRadius:4},{label:'Attente',data:vsmSteps.map(s=>s.wait),backgroundColor:'rgba(245,158,11,.5)',borderRadius:4}]},options:{responsive:true,scales:{x:{stacked:true},y:{stacked:true,title:{display:true,text:'Minutes'}}}}});
 }
+function scoreVSM(){if(vsmSteps.length<3)return 0;let s=40;if(vsmSteps.length>=4)s+=20;if(vsmSteps.some(v=>v.va))s+=20;if(vsmC)s+=20;return Math.min(100,s);}
 
-function scoreVSM() {
-  if (vsmSteps.length < 3) return 0;
-  let s = 40;
-  if (vsmSteps.length >= 4) s += 20;
-  if (vsmSteps.some(v=>v.va)) s += 20;
-  if (vsmChartInst) s += 20;
-  return Math.min(100, s);
-}
-
-// ══════════════════════════════════════════
-// MODULE 7 – SPC
-// ══════════════════════════════════════════
-let spcValues = [];
-
-function generateSPC() {
-  const raw = document.getElementById('spcData').value;
-  spcValues = raw.split(/[,;\s]+/).map(v=>parseFloat(v.trim())).filter(v=>!isNaN(v));
-  if (spcValues.length < 5) { alert('Entrez au moins 5 mesures.'); return; }
-
-  const n = spcValues.length;
-  const mean = spcValues.reduce((s,v)=>s+v,0)/n;
-  const std = Math.sqrt(spcValues.reduce((s,v)=>s+(v-mean)**2,0)/(n-1));
-  const ucl = mean + 3*std, lcl = mean - 3*std;
-
-  const outPts = spcValues.filter(v=>v>ucl||v<lcl).length;
-  document.getElementById('spcStats').innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;">
-      <div class="vsm-kpi"><div class="value">${mean.toFixed(3)}</div><div class="kpi-label">Moyenne (X̄)</div></div>
-      <div class="vsm-kpi"><div class="value">${std.toFixed(3)}</div><div class="kpi-label">Écart-type (σ)</div></div>
-      <div class="vsm-kpi"><div class="value" style="color:var(--danger)">${ucl.toFixed(3)}</div><div class="kpi-label">UCL (X̄+3σ)</div></div>
-      <div class="vsm-kpi"><div class="value" style="color:var(--danger)">${lcl.toFixed(3)}</div><div class="kpi-label">LCL (X̄-3σ)</div></div>
+/* ══ M7 – SPC ══ */
+let spcVals=[];
+function generateSPC(){
+  spcVals=document.getElementById('spcData').value.split(/[,;\s]+/).map(v=>parseFloat(v)).filter(v=>!isNaN(v));
+  if(spcVals.length<5){alert('Entrez au moins 5 mesures.');return;}
+  const n=spcVals.length,mean=spcVals.reduce((s,v)=>s+v,0)/n;
+  const std=Math.sqrt(spcVals.reduce((s,v)=>s+(v-mean)**2,0)/(n-1));
+  const ucl=mean+3*std,lcl=mean-3*std;
+  const outPts=spcVals.filter(v=>v>ucl||v<lcl).length;
+  document.getElementById('spcStats').innerHTML=`
+    <div class="kpi-row" style="grid-template-columns:repeat(4,1fr);">
+      <div class="kpi-box"><div class="kpi-val">${mean.toFixed(3)}</div><div class="kpi-lbl">Moyenne X̄</div></div>
+      <div class="kpi-box"><div class="kpi-val">${std.toFixed(3)}</div><div class="kpi-lbl">Écart-type σ</div></div>
+      <div class="kpi-box"><div class="kpi-val" style="color:var(--red);">${ucl.toFixed(3)}</div><div class="kpi-lbl">UCL (X̄+3σ)</div></div>
+      <div class="kpi-box"><div class="kpi-val" style="color:var(--red);">${lcl.toFixed(3)}</div><div class="kpi-lbl">LCL (X̄−3σ)</div></div>
     </div>
-    ${outPts>0?`<div class="alert alert-danger" style="margin-top:.5rem;"><b>⚠️ ${outPts} point(s) hors limites de contrôle !</b></div>`:'<div class="alert alert-success" style="margin-top:.5rem;">✅ Tous les points sont dans les limites.</div>'}
-  `;
-
-  if (spcChartInst) spcChartInst.destroy();
-  const ctx = document.getElementById('spcChart').getContext('2d');
-  const colors = spcValues.map(v=>(v>ucl||v<lcl)?'rgba(231,76,60,0.9)':'rgba(26,47,78,0.8)');
-  spcChartInst = new Chart(ctx, {
-    type:'line',
-    data:{
-      labels: spcValues.map((_,i)=>'#'+(i+1)),
-      datasets:[
-        { label:'Mesures', data:spcValues, borderColor:'rgba(26,47,78,0.9)', backgroundColor:colors, pointBackgroundColor:colors, pointRadius:5, fill:false, tension:.2 },
-        { label:'Moyenne', data:Array(n).fill(mean), borderColor:'#27ae60', borderDash:[5,5], pointRadius:0, fill:false },
-        { label:'UCL', data:Array(n).fill(ucl), borderColor:'#e74c3c', borderDash:[8,4], pointRadius:0, fill:false },
-        { label:'LCL', data:Array(n).fill(lcl), borderColor:'#e74c3c', borderDash:[8,4], pointRadius:0, fill:false }
-      ]
-    },
-    options:{ responsive:true, plugins:{legend:{display:true}} }
-  });
+    ${outPts>0?`<div class="alert alert-danger" style="margin-top:.6rem;"><b>⚠️ ${outPts} point(s) hors limites !</b></div>`:'<div class="alert alert-success" style="margin-top:.6rem;">✅ Tous les points dans les limites.</div>'}`;
+  if(spcC)spcC.destroy();
+  const ctx=document.getElementById('spcChart').getContext('2d');
+  const colors=spcVals.map(v=>(v>ucl||v<lcl)?'rgba(220,38,38,.9)':'rgba(13,27,42,.8)');
+  spcC=new Chart(ctx,{type:'line',data:{labels:spcVals.map((_,i)=>'#'+(i+1)),datasets:[
+    {label:'Mesures',data:spcVals,borderColor:'rgba(13,27,42,.9)',backgroundColor:colors,pointBackgroundColor:colors,pointRadius:5,fill:false,tension:.2},
+    {label:'Moyenne',data:Array(n).fill(mean),borderColor:'#059669',borderDash:[5,5],pointRadius:0,fill:false},
+    {label:'UCL',data:Array(n).fill(ucl),borderColor:'#dc2626',borderDash:[8,4],pointRadius:0,fill:false},
+    {label:'LCL',data:Array(n).fill(lcl),borderColor:'#dc2626',borderDash:[8,4],pointRadius:0,fill:false}
+  ]},options:{responsive:true,plugins:{legend:{display:true}}}});
 }
-
-async function aiSPC() {
-  if (spcValues.length === 0) { alert('Générez d\'abord la carte de contrôle.'); return; }
-  const n = spcValues.length;
-  const mean = spcValues.reduce((s,v)=>s+v,0)/n;
-  const std = Math.sqrt(spcValues.reduce((s,v)=>s+(v-mean)**2,0)/(n-1));
-  const ucl = mean + 3*std, lcl = mean - 3*std;
-  const outPts = spcValues.map((v,i)=>({val:v,idx:i+1,out:v>ucl||v<lcl})).filter(p=>p.out);
-
-  const prompt = `Tu es expert en Contrôle Statistique des Procédés (SPC/MSP). Analyse cette carte de contrôle et détecte les violations des règles de Nelson en français.
-
-Données : ${spcValues.join(', ')}
-Moyenne (X̄) = ${mean.toFixed(3)}
-Écart-type (σ) = ${std.toFixed(3)}
-UCL = ${ucl.toFixed(3)}, LCL = ${lcl.toFixed(3)}
-Points hors limites : ${outPts.length > 0 ? outPts.map(p=>`Point #${p.idx} (${p.val})`).join(', ') : 'Aucun'}
-
-Analyse :
-1. Règle de Nelson 1 : points hors ±3σ
-2. Règle 2 : 9 points consécutifs du même côté de la moyenne
-3. Règle 3 : 6 points consécutifs en montée ou descente
-4. Règle 4 : 14 points alternant haut/bas
-5. Interprétation globale du procédé (stable/instable/dérivé)
-6. Recommandations d'actions correctives`;
-  await callClaude(prompt, 'spcAI');
+async function aiSPC(){
+  if(!spcVals.length){alert('Tracez d\'abord la carte.');return;}
+  const n=spcVals.length,mean=spcVals.reduce((s,v)=>s+v,0)/n;
+  const std=Math.sqrt(spcVals.reduce((s,v)=>s+(v-mean)**2,0)/(n-1));
+  const ucl=mean+3*std,lcl=mean-3*std;
+  const outPts=spcVals.map((v,i)=>({v,i:i+1,out:v>ucl||v<lcl})).filter(p=>p.out);
+  const prompt=`Expert SPC. Analyse cette carte de contrôle en français.\n\nDonnées: ${spcVals.join(', ')}\nX̄=${mean.toFixed(3)}, σ=${std.toFixed(3)}, UCL=${ucl.toFixed(3)}, LCL=${lcl.toFixed(3)}\nPoints hors limites: ${outPts.length?outPts.map(p=>`#${p.i}(${p.v})`).join(', '):'Aucun'}\n\n1. Règle Nelson 1 (±3σ)\n2. Règle 2 (9 consécutifs même côté)\n3. Règle 3 (6 monotones)\n4. Interprétation globale\n5. Actions correctives`;
+  await callClaude(prompt,'spcAI');
 }
+function scoreSPC(){if(!spcVals.length)return 0;let s=0;if(spcVals.length>=10)s+=40;if(spcVals.length>=15)s+=20;if(spcC)s+=40;return Math.min(100,s);}
 
-function scoreSPC() {
-  if (spcValues.length === 0) return 0;
-  let s = 0;
-  if (spcValues.length >= 10) s += 40;
-  if (spcValues.length >= 15) s += 20;
-  if (spcChartInst) s += 40;
-  return Math.min(100, s);
-}
-
-// ══════════════════════════════════════════
-// MODULE 8 – SMED
-// ══════════════════════════════════════════
-let smedRows = [
-  { name:'Arrêt machine', dur:5, type:'interne' },
-  { name:'Retrait outil précédent', dur:8, type:'interne' },
-  { name:'Nettoyage machine', dur:12, type:'interne' },
-  { name:'Préparation outil suivant', dur:15, type:'externe' },
-  { name:'Montage nouvel outil', dur:10, type:'interne' },
-  { name:'Réglage et calage', dur:20, type:'interne' },
-  { name:'Premier essai', dur:8, type:'interne' },
-  { name:'Commande pièce de rechange', dur:10, type:'externe' }
+/* ══ M8 – SMED ══ */
+let smedRows=[
+  {name:'Arrêt machine',dur:5,type:'interne'},{name:'Retrait outil précédent',dur:8,type:'interne'},
+  {name:'Nettoyage machine',dur:12,type:'interne'},{name:'Préparation outil suivant',dur:15,type:'externe'},
+  {name:'Montage nouvel outil',dur:10,type:'interne'},{name:'Réglage et calage',dur:20,type:'interne'},
+  {name:'Premier essai',dur:8,type:'interne'},{name:'Commande pièce rechange',dur:10,type:'externe'}
 ];
-
-function initSMED() {
-  if (state.smedRows) smedRows = state.smedRows;
-  renderSMEDRows();
-}
-
-function renderSMEDRows() {
-  const c = document.getElementById('smedRows');
-  c.innerHTML = '';
-  smedRows.forEach((r,i) => {
-    const div = document.createElement('div');
-    div.className = 'smed-row';
-    div.innerHTML = `
-      <input type="text" value="${r.name}" placeholder="Nom de la tâche" style="margin:0;" onchange="smedRows[${i}].name=this.value;saveSMED()">
-      <input type="number" value="${r.dur}" min="0" style="margin:0;" onchange="smedRows[${i}].dur=+this.value;saveSMED()">
-      <select style="margin:0;" onchange="smedRows[${i}].type=this.value;saveSMED()">
-        <option value="interne" ${r.type==='interne'?'selected':''}>Interne</option>
-        <option value="externe" ${r.type==='externe'?'selected':''}>Externe</option>
-      </select>
-      <button class="btn btn-danger btn-sm" onclick="smedRows.splice(${i},1);saveSMED();renderSMEDRows()">×</button>
-    `;
-    c.appendChild(div);
+function initSMED(){if(state.smedRows)smedRows=state.smedRows;renderSMEDRows();}
+function renderSMEDRows(){
+  const c=document.getElementById('smedRows');c.innerHTML='';
+  smedRows.forEach((r,i)=>{
+    const d=document.createElement('div');d.className='smed-row';
+    d.innerHTML=`<input type="text" value="${r.name}" placeholder="Tâche" style="margin:0;" onchange="smedRows[${i}].name=this.value;saveSMED()"><input type="number" value="${r.dur}" min="0" style="margin:0;" onchange="smedRows[${i}].dur=+this.value;saveSMED()"><select style="margin:0;" onchange="smedRows[${i}].type=this.value;saveSMED()"><option value="interne" ${r.type==='interne'?'selected':''}>Interne</option><option value="externe" ${r.type==='externe'?'selected':''}>Externe</option></select><button class="btn btn-red btn-sm" onclick="smedRows.splice(${i},1);saveSMED();renderSMEDRows()">×</button>`;
+    c.appendChild(d);
   });
 }
-
-function addSMEDRow() { smedRows.push({name:'',dur:0,type:'interne'}); saveSMED(); renderSMEDRows(); }
-function saveSMED() { state.smedRows = smedRows; saveState(); }
-
-function calcSMED() {
-  const totalInternal = smedRows.filter(r=>r.type==='interne').reduce((s,r)=>s+r.dur,0);
-  const totalExternal = smedRows.filter(r=>r.type==='externe').reduce((s,r)=>s+r.dur,0);
-  const total = totalInternal + totalExternal;
-  const extConvert = smedRows.filter(r=>r.type==='interne' && r.dur > 0)
-    .sort((a,b)=>b.dur-a.dur).slice(0,2).reduce((s,r)=>s+r.dur,0);
-  const newInternal = totalInternal - extConvert;
-  const gain = extConvert;
-  const gainPct = total > 0 ? Math.round(gain/total*100) : 0;
-
-  document.getElementById('smedResult').innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem;">
-      <div class="vsm-kpi"><div class="value">${total} min</div><div class="kpi-label">Temps total actuel</div></div>
-      <div class="vsm-kpi"><div class="value" style="color:var(--success);">${newInternal} min</div><div class="kpi-label">Après optimisation SMED</div></div>
-      <div class="vsm-kpi"><div class="value" style="color:var(--accent);">${gainPct}%</div><div class="kpi-label">Gain potentiel</div></div>
+function addSMEDRow(){smedRows.push({name:'',dur:0,type:'interne'});saveSMED();renderSMEDRows();}
+function saveSMED(){state.smedRows=smedRows;save();}
+function calcSMED(){
+  const tInt=smedRows.filter(r=>r.type==='interne').reduce((s,r)=>s+r.dur,0);
+  const total=smedRows.reduce((s,r)=>s+r.dur,0);
+  const toConvert=smedRows.filter(r=>r.type==='interne').sort((a,b)=>b.dur-a.dur).slice(0,2);
+  const gain=toConvert.reduce((s,r)=>s+r.dur,0);
+  const gainPct=total>0?Math.round(gain/total*100):0;
+  document.getElementById('smedResult').innerHTML=`
+    <div class="kpi-row">
+      <div class="kpi-box"><div class="kpi-val">${total} min</div><div class="kpi-lbl">Temps total actuel</div></div>
+      <div class="kpi-box"><div class="kpi-val" style="color:var(--green);">${tInt-gain} min</div><div class="kpi-lbl">Après optimisation</div></div>
+      <div class="kpi-box"><div class="kpi-val" style="color:var(--accent);">${gainPct}%</div><div class="kpi-lbl">Gain potentiel</div></div>
     </div>
-    <div class="alert alert-info">
-      <b>📋 Plan d'action SMED :</b><br>
-      • <b>Tâches internes (machine arrêtée) :</b> ${smedRows.filter(r=>r.type==='interne').map(r=>r.name).join(', ')}<br>
-      • <b>Tâches externes (machine en marche) :</b> ${smedRows.filter(r=>r.type==='externe').map(r=>r.name).join(', ')}<br>
-      • <b>À externaliser en priorité :</b> ${smedRows.filter(r=>r.type==='interne').sort((a,b)=>b.dur-a.dur).slice(0,2).map(r=>r.name).join(', ')}
-    </div>
-  `;
-  state.scores[8] = Math.min(100, 40 + (smedRows.length>=5?20:0) + (gainPct>0?40:0));
-  saveState();
+    <div class="alert alert-info" style="margin-top:.6rem;"><b>Plan d'action :</b> Externaliser en priorité : <b>${toConvert.map(r=>r.name).join(', ')}</b></div>`;
+  state.scores[8]=Math.min(100,40+(smedRows.length>=5?20:0)+(gainPct>0?40:0));save();
 }
+function scoreSMED(){return state.scores[8]||0;}
 
-function scoreSMED() { return state.scores[8] || 0; }
-
-// ══════════════════════════════════════════
-// MODULE 9 – QUIZ
-// ══════════════════════════════════════════
-const FALLBACK_QUIZ = [
-  { q:"Que signifie l'acronyme PDCA ?", opts:["Plan-Do-Check-Act","Process-Design-Control-Assess","Plan-Deploy-Check-Adjust","Prepare-Define-Control-Adjust"], correct:0 },
-  { q:"Dans le 5S, 'Seiri' signifie :", opts:["Ranger","Éliminer","Nettoyer","Respecter"], correct:1 },
-  { q:"Le diagramme d'Ishikawa est aussi appelé :", opts:["Diagramme de Gantt","Diagramme en arête de poisson","Diagramme de flux","Diagramme de Venn"], correct:1 },
-  { q:"La règle de Pareto (80/20) stipule que :", opts:["80% des efforts donnent 20% des résultats","20% des causes produisent 80% des effets","80% des défauts viennent de 20% des produits","20% du temps produit 80% des pièces"], correct:1 },
-  { q:"Dans un tableau Kanban, WIP signifie :", opts:["Work In Progress","Work Is Possible","Workflow Integration Process","Work In Planning"], correct:0 },
-  { q:"La VSM mesure :", opts:["La vitesse des machines","La valeur ajoutée par heure","Le flux de valeur et les gaspillages","Les stocks de matières premières"], correct:2 },
-  { q:"Dans une carte de contrôle SPC, UCL signifie :", opts:["Upper Control Limit","Unit Control Level","Upper Cost Line","Uniform Check Level"], correct:0 },
-  { q:"En SMED, convertir une tâche interne en externe signifie :", opts:["La supprimer","L'effectuer machine en marche","L'automatiser","La déplacer à un autre poste"], correct:1 },
-  { q:"Le Lean Management vise principalement à :", opts:["Maximiser la production","Éliminer les gaspillages","Réduire les effectifs","Augmenter les stocks"], correct:1 },
-  { q:"Le 'Kaizen' désigne :", opts:["Un outil de contrôle qualité","L'amélioration continue par petits pas","Une méthode de planification","Un type de diagramme de flux"], correct:1 }
+/* ══ M9 – QUIZ ══ */
+const FALLBACK=[
+  {q:"Que signifie PDCA ?",opts:["Plan-Do-Check-Act","Process-Design-Control-Assess","Plan-Deploy-Check-Adjust","Prepare-Define-Control-Adjust"],correct:0},
+  {q:"Dans le 5S, 'Seiri' signifie :",opts:["Ranger","Éliminer","Nettoyer","Respecter"],correct:1},
+  {q:"Le diagramme d'Ishikawa est surnommé :",opts:["Diagramme de Gantt","Arête de poisson","Diagramme de flux","Matrice SWOT"],correct:1},
+  {q:"La règle de Pareto 80/20 : 20% des causes produisent…",opts:["20% des effets","50% des effets","80% des effets","100% des effets"],correct:2},
+  {q:"WIP dans Kanban signifie :",opts:["Work In Progress","Work Is Possible","Workflow Integration Process","Work In Planning"],correct:0},
+  {q:"La VSM identifie principalement :",opts:["La vitesse des machines","Les gaspillages dans le flux","Les stocks de matières","Le taux de rendement"],correct:1},
+  {q:"UCL dans une carte de contrôle SPC :",opts:["Upper Control Limit","Unit Control Level","Upper Cost Line","Uniform Check Level"],correct:0},
+  {q:"En SMED, une tâche externe s'effectue :",opts:["Machine à l'arrêt","Machine en marche","Par un prestataire","En automatique"],correct:1},
+  {q:"Le Lean Management vise à :",opts:["Maximiser la production","Réduire les effectifs","Éliminer les gaspillages","Augmenter les stocks"],correct:2},
+  {q:"'Kaizen' désigne :",opts:["Un contrôle qualité","L'amélioration continue","Une méthode de planification","Un type d'audit"],correct:1}
 ];
-
-async function generateQuiz() {
-  const key = getKey();
-  document.getElementById('quizArea').innerHTML = '<div class="ai-loading">Génération du quiz en cours...</div>';
-  if (!key) {
-    quizData = FALLBACK_QUIZ;
-    renderQuiz();
-    return;
-  }
-  const prompt = `Génère un QCM de 10 questions en français sur ces thèmes (Lean, Six Sigma, PDCA, 5S, Ishikawa, Pareto, Kanban, VSM, SPC, SMED) pour étudiants ingénieurs.
-Réponds UNIQUEMENT en JSON valide, sans texte avant ni après :
-[
-  {"q":"Question ?","opts":["A","B","C","D"],"correct":0},
-  ...
-]
-L'index "correct" est 0-based. Varie les thèmes, les niveaux de difficulté. 10 questions exactement.`;
-  try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST',
-      headers:{'x-api-key':key,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:prompt}]})
-    });
-    const data = await resp.json();
-    const text = data.content[0].text;
-    const jsonMatch = text.match(/\[[\s\S]*\]/);
-    if (jsonMatch) {
-      quizData = JSON.parse(jsonMatch[0]);
-      renderQuiz();
-    } else { quizData = FALLBACK_QUIZ; renderQuiz(); }
-  } catch(e) { quizData = FALLBACK_QUIZ; renderQuiz(); }
+async function generateQuiz(){
+  const key=getKey();
+  document.getElementById('quizArea').innerHTML='<div class="ai-wrap"><div class="ai-wrap-header"><div class="ai-spinner"></div>Génération du quiz IA...</div></div>';
+  if(!key){quizData=FALLBACK;renderQuiz();return;}
+  const prompt=`Génère 10 questions QCM en français sur Lean/Six Sigma/PDCA/5S/Ishikawa/Pareto/Kanban/VSM/SPC/SMED pour ingénieurs. JSON uniquement:\n[{"q":"?","opts":["A","B","C","D"],"correct":0},...]\n10 questions exactes, index correct 0-based.`;
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':key,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:prompt}]})});
+    const data=await resp.json();const text=data.content[0].text;
+    const m=text.match(/\[[\s\S]*\]/);
+    quizData=m?JSON.parse(m[0]):FALLBACK;renderQuiz();
+  }catch(e){quizData=FALLBACK;renderQuiz();}
 }
-
-function renderQuiz() {
-  quizAnswers = {};
-  let html = '<form id="quizForm">';
-  quizData.forEach((q,qi) => {
-    html += `<div class="quiz-question">
-      <h4>${qi+1}. ${q.q}</h4>`;
-    q.opts.forEach((opt,oi) => {
-      html += `<div class="quiz-option" id="qopt-${qi}-${oi}" onclick="selectQuizOpt(${qi},${oi})">${opt}</div>`;
-    });
-    html += '</div>';
+function renderQuiz(){
+  quizAnswers={};let html='';
+  quizData.forEach((q,qi)=>{
+    html+=`<div class="q-block"><div class="q-num">Question ${qi+1} / ${quizData.length}</div><div class="q-text">${q.q}</div>`;
+    q.opts.forEach((opt,oi)=>{html+=`<div class="q-opt" id="qo-${qi}-${oi}" onclick="pickQ(${qi},${oi})">${opt}</div>`;});
+    html+='</div>';
   });
-  html += '</form>';
-  html += '<button class="btn btn-accent" onclick="submitQuiz()">📊 Soumettre le Quiz</button>';
-  document.getElementById('quizArea').innerHTML = html;
+  html+='<button class="btn btn-gold" onclick="submitQuiz()">📊 Soumettre le Quiz</button>';
+  document.getElementById('quizArea').innerHTML=html;
 }
-
-function selectQuizOpt(qi, oi) {
-  quizAnswers[qi] = oi;
-  quizData[qi].opts.forEach((_,i) => {
-    document.getElementById(`qopt-${qi}-${i}`).classList.toggle('selected', i===oi);
-  });
+function pickQ(qi,oi){
+  quizAnswers[qi]=oi;
+  quizData[qi].opts.forEach((_,i)=>document.getElementById(`qo-${qi}-${i}`).classList.toggle('selected',i===oi));
 }
-
-function submitQuiz() {
-  let correct = 0;
-  quizData.forEach((q,qi) => {
-    const ans = quizAnswers[qi];
-    q.opts.forEach((_,oi) => {
-      const el = document.getElementById(`qopt-${qi}-${oi}`);
-      if (!el) return;
-      if (oi === q.correct) el.classList.add('correct');
-      else if (ans === oi) el.classList.add('wrong');
+function submitQuiz(){
+  let ok=0;
+  quizData.forEach((q,qi)=>{
+    const ans=quizAnswers[qi];
+    q.opts.forEach((_,oi)=>{
+      const el=document.getElementById(`qo-${qi}-${oi}`);if(!el)return;
+      if(oi===q.correct)el.classList.add('correct');
+      else if(ans===oi)el.classList.add('wrong');
     });
-    if (ans === q.correct) correct++;
+    if(ans===q.correct)ok++;
   });
-  const pct = Math.round(correct/quizData.length*100);
-  const pass = pct >= 70;
-  document.getElementById('quizScore').innerHTML = `
-    <div class="quiz-score-box">
+  const pct=Math.round(ok/quizData.length*100),pass=pct>=70;
+  document.getElementById('quizScore').innerHTML=`
+    <div style="text-align:center;padding:2rem;">
       <div class="quiz-score-big">${pct}%</div>
-      <div style="font-size:1.1rem;font-weight:700;color:${pass?'var(--success)':'var(--danger)'};">${pass?'🎉 Félicitations ! Parcours validé !':'❌ Score insuffisant – 70% requis'}</div>
-      <div style="color:var(--gray);font-size:.9rem;margin-top:.5rem;">${correct} / ${quizData.length} bonnes réponses</div>
+      <div style="font-size:1.1rem;font-weight:800;color:${pass?'var(--green)':'var(--red)'};margin:.6rem 0;">${pass?'🎉 Félicitations ! Parcours validé !':'❌ Score insuffisant – 70% requis'}</div>
+      <div style="color:var(--gray400);font-size:.88rem;">${ok} / ${quizData.length} bonnes réponses</div>
     </div>`;
-  state.scores[9] = pct;
-  if (pass && !state.completed.includes(9)) { state.completed.push(9); }
-  saveState(); updateNav();
-  if (pass) { document.getElementById('certificateArea').style.display='block'; showCertificate(); }
+  state.scores[9]=pct;
+  if(pass&&!state.completed.includes(9))state.completed.push(9);
+  save();updateNav();
+  if(pass){document.getElementById('certificateArea').style.display='block';showCertificate();}
 }
+function scoreQuiz(){return state.scores[9]||0;}
 
-function scoreQuiz() { return state.scores[9] || 0; }
-
-// ══════════════════════════════════════════
-// CERTIFICATE
-// ══════════════════════════════════════════
-function showCertificate() {
-  const name = state.studentName || 'Étudiant';
-  const date = new Date().toLocaleDateString('fr-FR', {day:'2-digit',month:'long',year:'numeric'});
-  const doneModules = state.completed.map(id => MODULES[id-1]?.name).filter(Boolean);
-  const avgScore = Math.round(Object.values(state.scores).reduce((s,v)=>s+v,0)/Math.max(1,Object.keys(state.scores).length));
-  document.getElementById('certificateArea').innerHTML = `
-    <div class="certificate">
-      <div class="certificate-inner">
-        <div style="font-size:3rem;margin-bottom:.5rem;">🏆</div>
-        <h1>CERTIFICAT DE COMPLÉTION</h1>
-        <div class="cert-divider"></div>
-        <div style="font-size:.85rem;opacity:.7;margin-bottom:1rem;">GREEN LAB · Formation Amélioration Continue · Génie Industriel</div>
-        <div style="font-size:1rem;opacity:.8;margin-bottom:.4rem;">Ce certificat est décerné à</div>
-        <div class="student-name">${name}</div>
-        <div style="font-size:.95rem;opacity:.8;margin-bottom:1rem;">pour avoir complété avec succès le parcours</div>
-        <div style="font-size:1.3rem;font-weight:800;letter-spacing:1px;margin-bottom:1.2rem;color:#fbbf24;">
-          Lean · Six Sigma · Kaizen · PDCA
+/* ══ CERTIFICATE ══ */
+function showCertificate(){
+  const name=state.studentName||'Étudiant';
+  const date=new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+  const mods=state.completed.map(id=>MODULES[id-1]?.name).filter(Boolean);
+  const avg=Math.round(Object.values(state.scores).reduce((a,b)=>a+b,0)/Math.max(1,Object.keys(state.scores).length));
+  document.getElementById('certificateArea').innerHTML=`
+    <div class="cert-wrap">
+      <div class="cert-orb1"></div><div class="cert-orb2"></div>
+      <div class="cert-inner">
+        <div class="cert-seal">🏆</div>
+        <div class="cert-title">CERTIFICAT DE COMPLÉTION</div>
+        <div class="cert-sub">GREEN LAB · Formation Amélioration Continue · Génie Industriel</div>
+        <div style="font-size:.9rem;opacity:.6;margin-bottom:.3rem;">Ce certificat est décerné à</div>
+        <div class="cert-name">${name}</div>
+        <div class="cert-line"></div>
+        <div style="font-size:.88rem;opacity:.6;margin-bottom:.8rem;">pour avoir complété avec succès le parcours</div>
+        <div style="font-size:1.1rem;font-weight:800;letter-spacing:1px;color:#fbbf24;margin-bottom:1.2rem;">Lean · Six Sigma · Kaizen · PDCA</div>
+        <div style="font-size:.75rem;opacity:.5;margin-bottom:.5rem;letter-spacing:.3px;">MODULES VALIDÉS</div>
+        <div class="cert-chips">${mods.map(m=>`<span class="cert-chip">✓ ${m}</span>`).join('')}</div>
+        <div class="cert-line"></div>
+        <div class="cert-stats">
+          <div class="cert-stat"><div class="val">${avg}%</div><div class="lbl">Score global</div></div>
+          <div class="cert-stat"><div class="val">${mods.length}/9</div><div class="lbl">Modules</div></div>
+          <div class="cert-stat"><div class="val" style="font-size:1rem;">${date}</div><div class="lbl">Date</div></div>
         </div>
-        <div style="font-size:.82rem;opacity:.7;margin-bottom:.6rem;">Modules validés :</div>
-        <div class="cert-modules">${doneModules.map(m=>`<span class="cert-module">✓ ${m}</span>`).join('')}</div>
-        <div class="cert-divider"></div>
-        <div style="display:flex;justify-content:center;gap:2rem;margin:.8rem 0;flex-wrap:wrap;">
-          <div style="text-align:center;"><div style="font-size:1.5rem;font-weight:800;color:#fbbf24;">${avgScore}%</div><div style="font-size:.75rem;opacity:.6;">Score global</div></div>
-          <div style="text-align:center;"><div style="font-size:1.5rem;font-weight:800;color:#fbbf24;">${doneModules.length}/9</div><div style="font-size:.75rem;opacity:.6;">Modules</div></div>
-          <div style="text-align:center;"><div style="font-size:1.1rem;font-weight:700;color:#fbbf24;">${date}</div><div style="font-size:.75rem;opacity:.6;">Date de délivrance</div></div>
-        </div>
-        <button class="btn btn-accent" style="margin-top:1.2rem;" onclick="window.print()">🖨️ Imprimer le certificat</button>
+        <button class="btn btn-gold" style="margin-top:1.2rem;" onclick="window.print()">🖨️ Imprimer</button>
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
-// ══════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════
-window.addEventListener('DOMContentLoaded', () => {
-  updateNav();
-  loadPDCA();
-  initPareto();
-  // Init default pareto rows display
-  renderParetoRows();
-  // Pre-load student name
-  if (state.studentName) document.getElementById('studentName').value = state.studentName;
+/* ══ INIT ══ */
+window.addEventListener('DOMContentLoaded',()=>{
+  updateNav();loadPDCA();initPareto();renderParetoRows();
+  if(state.studentName)document.getElementById('studentName').value=state.studentName;
 });
 </script>
 </body>
