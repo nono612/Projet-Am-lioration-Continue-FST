@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GREEN LAB – Amélioration Continue</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --primary: #1a2f4e;
+  --accent: #f39c12;
+  --success: #27ae60;
+  --danger: #e74c3c;
+  --light: #f4f6f9;
+  --white: #ffffff;
+  --gray: #7f8c8d;
+  --border: #dde1e7;
+  --card-shadow: 0 4px 18px rgba(26,47,78,0.10);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--light); color: #222; }
+a { text-decoration: none; color: inherit; }
+
+/* ── HEADER ── */
+header {
+  background: var(--primary);
+  color: var(--white);
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 62px;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+}
+.logo { font-size: 1.35rem; font-weight: 700; letter-spacing: 1px; }
+.logo span { color: var(--accent); }
+.header-right { display: flex; align-items: center; gap: 1rem; }
+.api-wrap { display: flex; align-items: center; gap: .5rem; }
+.api-wrap label { font-size: .8rem; opacity: .8; }
+#apiKey {
+  padding: .35rem .7rem; border-radius: 6px; border: 1.5px solid #3a5a80;
+  background: #223355; color: #fff; font-size: .82rem; width: 220px;
+}
+.progress-badge {
+  background: var(--accent); color: #fff; font-weight: 700;
+  border-radius: 20px; padding: .25rem .9rem; font-size: .85rem;
+}
+
+/* ── NAV ── */
+nav {
+  background: #fff;
+  border-bottom: 1.5px solid var(--border);
+  display: flex; gap: 0; overflow-x: auto;
+  padding: 0 1rem;
+}
+nav button {
+  background: none; border: none; cursor: pointer;
+  padding: .75rem 1.1rem; font-size: .85rem; color: var(--primary);
+  font-weight: 500; white-space: nowrap;
+  border-bottom: 3px solid transparent; transition: .2s;
+}
+nav button.active { border-bottom-color: var(--accent); color: var(--accent); font-weight: 700; }
+nav button:hover:not(.active) { background: var(--light); }
+nav button.locked { color: var(--gray); cursor: not-allowed; }
+nav button.locked::after { content: ' 🔒'; }
+nav button.done::after { content: ' ✓'; color: var(--success); }
+
+/* ── MAIN ── */
+main { max-width: 1100px; margin: 0 auto; padding: 2rem 1.2rem; }
+
+/* ── CARDS ── */
+.card {
+  background: var(--white); border-radius: 12px;
+  box-shadow: var(--card-shadow); padding: 1.6rem;
+  margin-bottom: 1.5rem;
+}
+.card h2 { color: var(--primary); margin-bottom: 1rem; font-size: 1.2rem; }
+.card h3 { color: var(--primary); margin-bottom: .7rem; font-size: 1rem; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-block; padding: .55rem 1.3rem; border-radius: 7px;
+  border: none; cursor: pointer; font-size: .9rem; font-weight: 600;
+  transition: .2s; margin-top: .5rem;
+}
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: #24447a; }
+.btn-accent { background: var(--accent); color: #fff; }
+.btn-accent:hover { background: #e08e0b; }
+.btn-success { background: var(--success); color: #fff; }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-outline {
+  background: transparent; border: 2px solid var(--primary); color: var(--primary);
+}
+.btn-sm { padding: .3rem .8rem; font-size: .8rem; }
+
+/* ── FORM ELEMENTS ── */
+input[type=text], input[type=number], textarea, select {
+  width: 100%; padding: .55rem .85rem; border-radius: 7px;
+  border: 1.5px solid var(--border); font-size: .93rem;
+  background: #fafbfc; margin-bottom: .6rem; color: #222;
+  transition: border .2s;
+}
+input:focus, textarea:focus, select:focus {
+  outline: none; border-color: var(--accent);
+}
+label { font-size: .88rem; color: var(--primary); font-weight: 600; display: block; margin-bottom: .25rem; }
+textarea { resize: vertical; min-height: 80px; }
+
+/* ── PROGRESS BAR ── */
+.progress-bar-wrap { background: #e0e7ef; border-radius: 20px; height: 12px; overflow: hidden; margin: .5rem 0; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--success)); border-radius: 20px; transition: width .5s; }
+
+/* ── HOME GRID ── */
+.module-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.3rem;
+}
+.module-card {
+  background: var(--white); border-radius: 12px; padding: 1.4rem;
+  box-shadow: var(--card-shadow); cursor: pointer; transition: .2s;
+  border-top: 4px solid var(--primary); position: relative;
+}
+.module-card:hover:not(.locked-card) { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(26,47,78,.15); }
+.module-card.locked-card { opacity: .6; cursor: not-allowed; border-top-color: var(--gray); }
+.module-card.done-card { border-top-color: var(--success); }
+.module-card .module-icon { font-size: 2rem; margin-bottom: .6rem; }
+.module-card h3 { color: var(--primary); font-size: 1rem; margin-bottom: .4rem; }
+.module-card p { color: var(--gray); font-size: .82rem; line-height: 1.5; }
+.module-status {
+  position: absolute; top: 1rem; right: 1rem;
+  font-size: .75rem; font-weight: 700; padding: .2rem .6rem; border-radius: 20px;
+}
+.status-done { background: #e8f8ef; color: var(--success); }
+.status-locked { background: #f0f0f0; color: var(--gray); }
+.status-open { background: #fff4e0; color: var(--accent); }
+
+/* ── AI FEEDBACK BOX ── */
+.ai-box {
+  background: linear-gradient(135deg, #e8f0fb, #f0f7ff);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px; padding: 1rem 1.2rem; margin-top: 1rem;
+  font-size: .9rem; line-height: 1.6; color: #1a2f4e;
+  white-space: pre-wrap;
+}
+.ai-loading { color: var(--gray); font-style: italic; }
+
+/* ── PDCA ── */
+.pdca-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.pdca-cell {
+  border-radius: 10px; padding: 1rem;
+  border: 2px solid var(--border);
+}
+.pdca-cell.plan { border-color: #3498db; background: #ebf5fb; }
+.pdca-cell.do   { border-color: var(--success); background: #eafaf1; }
+.pdca-cell.check{ border-color: var(--accent); background: #fef9e7; }
+.pdca-cell.act  { border-color: var(--danger); background: #fdf2f0; }
+.pdca-cell h4 { font-size: .95rem; margin-bottom: .5rem; }
+
+/* ── 5S ── */
+.fivs-workspace {
+  display: flex; flex-wrap: wrap; gap: .5rem;
+  background: #f9f9f9; border-radius: 8px; padding: 1rem;
+  min-height: 120px; border: 2px dashed var(--border);
+}
+.fivs-item {
+  background: var(--white); border-radius: 6px; padding: .4rem .8rem;
+  font-size: .83rem; cursor: grab; border: 1.5px solid var(--border);
+  user-select: none; transition: .2s; display: flex; align-items: center; gap: .4rem;
+}
+.fivs-item:hover { border-color: var(--accent); }
+.fivs-categories { display: grid; grid-template-columns: repeat(5, 1fr); gap: .8rem; margin-top: 1rem; }
+.fivs-cat {
+  background: var(--white); border-radius: 8px; padding: .7rem;
+  border: 2px solid var(--border); min-height: 90px;
+  transition: .2s;
+}
+.fivs-cat h5 { font-size: .78rem; color: var(--primary); margin-bottom: .4rem; text-align: center; }
+.fivs-cat.drag-over { border-color: var(--accent); background: #fff8ee; }
+.fivs-cat .fivs-item { font-size: .75rem; margin-bottom: .3rem; cursor: default; }
+
+/* ── ISHIKAWA ── */
+.fishbone-svg { width: 100%; height: 300px; }
+.ishikawa-causes { display: grid; grid-template-columns: repeat(3,1fr); gap: .8rem; }
+.cause-group { background: var(--light); border-radius: 8px; padding: .8rem; }
+.cause-group h5 { font-size: .82rem; color: var(--primary); margin-bottom: .4rem; font-weight: 700; }
+.cause-tag {
+  background: var(--primary); color: #fff; border-radius: 12px;
+  padding: .2rem .6rem; font-size: .75rem; margin: .2rem .2rem .2rem 0;
+  display: inline-block; cursor: pointer;
+}
+.cause-tag:hover { background: var(--accent); }
+
+/* ── PARETO ── */
+.pareto-input { display: grid; grid-template-columns: 1fr auto auto; gap: .5rem; align-items: end; }
+.pareto-row { display: flex; gap: .5rem; align-items: center; margin-bottom: .4rem; }
+.pareto-row input { margin-bottom: 0; }
+
+/* ── KANBAN ── */
+.kanban-board { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; }
+.kanban-col {
+  background: var(--light); border-radius: 10px; padding: .8rem;
+  min-height: 300px; border: 2px solid var(--border);
+}
+.kanban-col h4 {
+  font-size: .9rem; color: var(--primary); font-weight: 700;
+  margin-bottom: .7rem; padding-bottom: .5rem; border-bottom: 2px solid var(--border);
+  display: flex; justify-content: space-between;
+}
+.wip-badge {
+  background: var(--accent); color: #fff; border-radius: 12px;
+  padding: .1rem .55rem; font-size: .75rem;
+}
+.wip-over { background: var(--danger) !important; }
+.kanban-card {
+  background: var(--white); border-radius: 7px; padding: .7rem .9rem;
+  margin-bottom: .6rem; cursor: grab; box-shadow: 0 2px 6px rgba(0,0,0,.07);
+  border-left: 3px solid var(--accent); font-size: .85rem;
+  user-select: none;
+}
+.kanban-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.13); }
+.kanban-card.dragging { opacity: .5; }
+.kanban-col.drag-over { border-color: var(--accent); background: #fff8ee; }
+.kanban-add { width: 100%; padding: .4rem; border-radius: 6px; border: 1.5px dashed var(--border); background: none; cursor: pointer; font-size: .82rem; color: var(--gray); margin-top: .4rem; }
+.kanban-add:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── VSM ── */
+.vsm-steps { margin-top: .8rem; }
+.vsm-step-row {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  gap: .6rem; align-items: center; margin-bottom: .5rem;
+}
+.vsm-step-row label { margin: 0; font-size: .8rem; }
+.vsm-result { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-top: 1rem; }
+.vsm-kpi { background: var(--light); border-radius: 8px; padding: .8rem; text-align: center; }
+.vsm-kpi .value { font-size: 1.6rem; font-weight: 700; color: var(--accent); }
+.vsm-kpi .kpi-label { font-size: .78rem; color: var(--gray); }
+
+/* ── SPC ── */
+.spc-inputs { display: flex; gap: .5rem; align-items: end; flex-wrap: wrap; }
+.spc-inputs input { width: 100px; margin-bottom: 0; }
+
+/* ── SMED ── */
+.smed-row {
+  display: grid; grid-template-columns: 2fr 1fr 1fr auto;
+  gap: .6rem; align-items: center; margin-bottom: .5rem;
+}
+.smed-result { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-top: 1rem; }
+
+/* ── QUIZ ── */
+.quiz-question { background: var(--light); border-radius: 10px; padding: 1.2rem; margin-bottom: 1.2rem; }
+.quiz-question h4 { color: var(--primary); margin-bottom: .8rem; font-size: .97rem; }
+.quiz-option {
+  display: flex; align-items: center; gap: .6rem;
+  padding: .55rem .9rem; border-radius: 7px; cursor: pointer;
+  margin-bottom: .4rem; border: 1.5px solid var(--border);
+  background: var(--white); transition: .2s; font-size: .87rem;
+}
+.quiz-option:hover { border-color: var(--accent); background: #fff8ee; }
+.quiz-option.selected { border-color: var(--primary); background: #ebf5fb; }
+.quiz-option.correct { border-color: var(--success); background: #eafaf1; }
+.quiz-option.wrong { border-color: var(--danger); background: #fdf2f0; }
+.quiz-score-box { text-align: center; padding: 2rem; }
+.quiz-score-big { font-size: 3.5rem; font-weight: 800; color: var(--accent); }
+
+/* ── CERTIFICATE ── */
+.certificate {
+  background: linear-gradient(135deg, #1a2f4e, #24447a);
+  color: #fff; border-radius: 16px; padding: 3rem;
+  text-align: center; margin-top: 2rem;
+}
+.certificate h1 { font-size: 2rem; color: var(--accent); margin-bottom: 1rem; }
+.certificate .student-name { font-size: 1.8rem; font-weight: 700; margin: .8rem 0; }
+.cert-modules { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; margin: 1rem 0; }
+.cert-module { background: rgba(255,255,255,.15); border-radius: 20px; padding: .3rem .9rem; font-size: .82rem; }
+
+/* ── ALERTS ── */
+.alert {
+  padding: .75rem 1rem; border-radius: 7px; margin-bottom: 1rem; font-size: .88rem;
+}
+.alert-info { background: #ebf5fb; color: #1a5276; border-left: 4px solid #3498db; }
+.alert-success { background: #eafaf1; color: #1e8449; border-left: 4px solid var(--success); }
+.alert-danger { background: #fdf2f0; color: #922b21; border-left: 4px solid var(--danger); }
+.alert-warning { background: #fef9e7; color: #7d6608; border-left: 4px solid var(--accent); }
+
+/* ── SECTION HIDDEN ── */
+.section { display: none; }
+.section.active { display: block; }
+
+/* ── SCORE PANEL ── */
+.score-panel {
+  display: flex; align-items: center; gap: 1rem;
+  background: var(--light); border-radius: 8px; padding: .7rem 1rem;
+  margin-top: 1rem;
+}
+.score-circle {
+  width: 56px; height: 56px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 1.1rem; flex-shrink: 0;
+  border: 3px solid var(--accent); color: var(--primary);
+}
+
+/* ── FISHBONE SVG ── */
+.fishbone-container {
+  background: #fff; border-radius: 8px; border: 1.5px solid var(--border);
+  padding: 1rem; overflow: auto;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 7px; height: 7px; }
+::-webkit-scrollbar-thumb { background: #c5cfe0; border-radius: 4px; }
+
+@media (max-width: 768px) {
+  .pdca-grid { grid-template-columns: 1fr; }
+  .fivs-categories { grid-template-columns: repeat(2,1fr); }
+  .kanban-board { grid-template-columns: 1fr; }
+  .vsm-step-row { grid-template-columns: 1fr 1fr; }
+  .ishikawa-causes { grid-template-columns: 1fr; }
+  .smed-row { grid-template-columns: 1fr 1fr; }
+  nav button { padding: .6rem .7rem; font-size: .78rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">GREEN<span>LAB</span> — Amélioration Continue</div>
+  <div class="header-right">
+    <div class="api-wrap">
+      <label for="apiKey">Clé API Claude :</label>
+      <input type="password" id="apiKey" placeholder="sk-ant-..." oninput="saveKey()">
+    </div>
+    <div class="progress-badge" id="globalBadge">0 / 9</div>
+  </div>
+</header>
+
+<nav id="mainNav">
+  <button onclick="showSection('home')" class="active" data-section="home">🏠 Accueil</button>
+  <button onclick="goModule(1)" data-module="1" data-section="m1">M1 · PDCA</button>
+  <button onclick="goModule(2)" data-module="2" data-section="m2">M2 · 5S</button>
+  <button onclick="goModule(3)" data-module="3" data-section="m3">M3 · Ishikawa</button>
+  <button onclick="goModule(4)" data-module="4" data-section="m4">M4 · Pareto</button>
+  <button onclick="goModule(5)" data-module="5" data-section="m5">M5 · Kanban</button>
+  <button onclick="goModule(6)" data-module="6" data-section="m6">M6 · VSM</button>
+  <button onclick="goModule(7)" data-module="7" data-section="m7">M7 · SPC</button>
+  <button onclick="goModule(8)" data-module="8" data-section="m8">M8 · SMED</button>
+  <button onclick="goModule(9)" data-module="9" data-section="m9">🎓 Quiz Final</button>
+</nav>
+
+<main>
+
+<!-- ══ HOME ══ -->
+<div id="home" class="section active">
+  <div class="card">
+    <h2>Bienvenue dans le Lab d'Amélioration Continue</h2>
+    <p style="color:var(--gray);margin-bottom:1rem;">Parcours pédagogique interactif – Génie Industriel · Lean · Six Sigma · Kaizen</p>
+    <div style="margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:.88rem;color:var(--gray);">Progression globale</span>
+      <span id="progressText" style="font-weight:700;color:var(--primary);">0%</span>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="globalBar" style="width:0%"></div>
+    </div>
+    <p style="font-size:.82rem;color:var(--gray);margin-top:.4rem;">Validez chaque module pour débloquer le suivant. Score minimum : 60%</p>
+  </div>
+
+  <div style="margin-bottom:.8rem;">
+    <label style="display:block;margin-bottom:.4rem;">Votre prénom & nom :</label>
+    <input type="text" id="studentName" placeholder="Ex: Jean Dupont" style="max-width:300px;" oninput="saveName()">
+  </div>
+
+  <div class="module-grid" id="moduleGrid"></div>
+</div>
+
+<!-- ══ MODULE 1 – PDCA ══ -->
+<div id="m1" class="section">
+  <div class="card">
+    <h2>🔄 Module 1 – Cycle PDCA Interactif</h2>
+    <p style="color:var(--gray);margin-bottom:1rem;">Décrivez un problème réel et complétez les 4 quadrants du cycle PDCA. L'IA évaluera la qualité de votre analyse.</p>
+    <label>Problème à résoudre :</label>
+    <input type="text" id="pdcaProblem" placeholder="Ex: Taux de rebuts élevé sur ligne d'assemblage (8%)" oninput="savePDCA()">
+  </div>
+  <div class="pdca-grid">
+    <div class="pdca-cell plan card">
+      <h4>🔵 PLAN – Planifier</h4>
+      <label>Objectif SMART :</label>
+      <textarea id="pdcaPlan1" placeholder="Réduire le taux de rebuts de 8% à 3% en 3 mois" oninput="savePDCA()"></textarea>
+      <label>Actions prévues :</label>
+      <textarea id="pdcaPlan2" placeholder="Analyser les causes, former les opérateurs, ajuster les paramètres machine..." oninput="savePDCA()"></textarea>
+    </div>
+    <div class="pdca-cell do card">
+      <h4>🟢 DO – Réaliser</h4>
+      <label>Actions mises en œuvre :</label>
+      <textarea id="pdcaDo1" placeholder="Formation réalisée le 15/03, paramètres ajustés..." oninput="savePDCA()"></textarea>
+      <label>Ressources mobilisées :</label>
+      <textarea id="pdcaDo2" placeholder="2 opérateurs formés, technicien qualité, 3 jours d'intervention..." oninput="savePDCA()"></textarea>
+    </div>
+    <div class="pdca-cell check card">
+      <h4>🟡 CHECK – Vérifier</h4>
+      <label>Résultats mesurés :</label>
+      <textarea id="pdcaCheck1" placeholder="Taux rebuts = 4.2% après 4 semaines (objectif : 3%)" oninput="savePDCA()"></textarea>
+      <label>Indicateurs de performance :</label>
+      <textarea id="pdcaCheck2" placeholder="KPI1 : taux rebuts, KPI2 : temps de cycle, KPI3 : satisfaction client" oninput="savePDCA()"></textarea>
+    </div>
+    <div class="pdca-cell act card">
+      <h4>🔴 ACT – Agir</h4>
+      <label>Standardisation des actions :</label>
+      <textarea id="pdcaAct1" placeholder="Mise à jour de la gamme opératoire, nouvelle procédure QC-07..." oninput="savePDCA()"></textarea>
+      <label>Prochain cycle PDCA :</label>
+      <textarea id="pdcaAct2" placeholder="Objectif suivant : réduire à 1.5%, étudier la cause 'matière première'..." oninput="savePDCA()"></textarea>
+    </div>
+  </div>
+  <div class="card" style="margin-top:1rem;">
+    <button class="btn btn-accent" onclick="analyzePDCA()">🤖 Obtenir un feedback IA</button>
+    <button class="btn btn-primary" style="margin-left:.5rem;" onclick="validateModule(1, scorePDCA)">✅ Valider le module</button>
+    <div id="pdcaAI" style="margin-top:1rem;"></div>
+    <div id="pdcaScore" style="margin-top:.5rem;"></div>
+  </div>
+</div>
+
+<!-- ══ MODULE 2 – 5S ══ -->
+<div id="m2" class="section">
+  <div class="card">
+    <h2>🧹 Module 2 – Simulation 5S</h2>
+    <p style="color:var(--gray);margin-bottom:1rem;">Faites glisser chaque élément de l'atelier vers la bonne catégorie 5S.</p>
+    <div class="alert alert-info">
+      <b>Rappel :</b> Seiri (Éliminer) · Seiton (Ranger) · Seiso (Nettoyer) · Seiketsu (Standardiser) · Shitsuke (Respecter)
+    </div>
+    <h3>Éléments de l'atelier (à classer) :</h3>
+    <div class="fivs-workspace" id="fiveS-source"></div>
+    <h3 style="margin-top:1.2rem;">Catégories 5S :</h3>
+    <div class="fivs-categories" id="fiveS-cats"></div>
+    <div style="margin-top:1rem;display:flex;gap:.7rem;flex-wrap:wrap;">
+      <button class="btn btn-accent" onclick="check5S()">📊 Vérifier ma classification</button>
+      <button class="btn btn-outline" onclick="reset5S()">🔄 Recommencer</button>
+      <button class="btn btn-primary" onclick="validateModule(2, score5S)">✅ Valider le module</button>
+    </div>
+    <div id="fiveS-result" style="margin-top:1rem;"></div>
+  </div>
+</div>
+
+<!-- ══ MODULE 3 – ISHIKAWA ══ -->
+<div id="m3" class="section">
+  <div class="card">
+    <h2>🐟 Module 3 – Diagramme Ishikawa (5M)</h2>
+    <p style="color:var(--gray);margin-bottom:1rem;">Construisez votre diagramme causes-effets et demandez à l'IA de suggérer des causes additionnelles.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <div>
+        <label>Effet / Problème :</label>
+        <input type="text" id="ishiEffect" placeholder="Ex: Pièces non conformes sur ligne B">
+        <button class="btn btn-accent btn-sm" onclick="aiIshikawa()">🤖 Suggestions IA</button>
+      </div>
+      <div id="ishiAI"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Saisir les causes par catégorie (5M) :</h3>
+    <div class="ishikawa-causes" id="ishiCauses"></div>
+    <div class="fishbone-container" style="margin-top:1rem;">
+      <svg id="fishbone-svg" width="800" height="280" viewBox="0 0 800 280"></svg>
+    </div>
+    <div style="margin-top:1rem;display:flex;gap:.7rem;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="drawFishbone()">🐟 Générer le diagramme</button>
+      <button class="btn btn-primary" onclick="validateModule(3, scoreIshikawa)">✅ Valider le module</button>
+    </div>
+    <div id="ishiScore" style="margin-top:.5rem;"></div>
+  </div>
+</div>
+
+<!-- ══ MODULE 4 – PARETO ══ -->
+<div id="m4" class="section">
+  <div class="card">
+    <h2>📊 Module 4 – Analyse de Pareto</h2>
+    <p style="color:var(--gray);margin-bottom:1rem;">Saisissez vos données de défauts, générez le diagramme de Pareto et obtenez une interprétation IA.</p>
+    <div id="paretoRows"></div>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem;">
+      <button class="btn btn-outline btn-sm" onclick="addParetoRow()">+ Ajouter une ligne</button>
+      <button class="btn btn-accent" onclick="generatePareto()">📊 Générer le Pareto</button>
+      <button class="btn btn-primary" onclick="aiPareto()">🤖 Interprétation IA</button>
+      <button class="btn btn-primary" onclick="validateModule(4, scorePareto)">✅ Valider le module</button>
+    </div>
+  </div>
+  <div class="card">
+    <canvas id="paretoChart" height="300"></canvas>
+    <div id="paretoAI" style="margin-top:1rem;"></div>
+    <div id="paretoScore" style="margin-top:.5rem;"></div>
+  </div>
+</div>
+
+<!-- ══ MODULE 5 – KANBAN ══ -->
+<div id="m5" class="section">
+  <div class="card">
+    <h2>📋 Module 5 – Tableau Kanban</h2>
+    <p style="color:var(--gray);margin-bottom:1rem;">Gérez vos tâches avec le tableau Kanban. Configurez la limite WIP et surveillez les alertes.</p>
+    <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
+      <div>
+        <label>Limite WIP (En cours) :</label>
+        <input type="number" id="wipLimit" value="3" min="1" max="10" style="width:80px;margin:0;" onchange="updateKanban()">
+      </div>
+      <div>
+        <label>Ajouter une tâche :</label>
+        <div style="display:flex;gap:.5rem;">
+          <input type="text" id="newTaskName" placeholder="Nom de la tâche" style="margin:0;width:220px;">
+          <button class="btn btn-accent btn-sm" onclick="addKanbanTask()">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="kanban-board" id="kanbanBoard"></div>
+    <div style="margin-top:1rem;">
+      <button class="btn btn-primary" onclick="validateModule(5, scoreKanban)">✅ Valider le module</button>
+    </div>
+    <div id="kanbanScore" style="margin-top:.5rem;"></div>
+  </div>
+</div>
+
+<!-- ══ MODULE 6 – VSM ══ -->
+<div id="m6" class="section">
+  <div class="card">
+    <h2>🗺️ Module 6 – VSM Simplifié</h2>
+    <p style="color:var(--gray);margin-bottom:1rem;">Cartographiez votre flux de valeur. Le système calcule le taux de valeur ajoutée et visualise le flux.</p>
+    <div id="vsmSteps"></div>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem;">
+      <button class="btn btn-outline btn-sm" onclick="addVSMStep()">+ Ajouter une étape</button>
+      <button class="btn btn-accent" onclick="calcVSM()">📊 Calculer & Visualiser</button>
+      <button class="btn btn-primary" onclick="validateModule(6, scoreVSM)">✅ Valider le module</button>
+    </div>
+  </div>
+  <div class="card" id="vsmResult" style="display:none;">
+    <h3>Résultats VSM</h3>
+    <div class="vsm-result" id="vsmKPIs"></div>
+    <canvas id="vsmChart" height="200" style="margin-top:1rem;"></canvas>
+    <div id="vsmScore" style="margin-top:.5rem;"></div>
+  </div>
+</div>
+
+<!-- ══ MODULE 7 – SPC ══ -->
+<div id="m7" class="section">
+  <div class="card">
+    <h2>📈 Module 7 – Carte de Contrôle SPC</h2>
+    <p style="color:var(--gray);margin-bottom:1rem;">Entrez vos mesures pour tracer la carte de contrôle. L'IA détecte les anomalies et violations des règles de Nelson.</p>
+    <label>Entrez vos mesures (séparées par des virgules) :</label>
+    <textarea id="spcData" rows="2" placeholder="Ex: 10.2, 10.5, 10.1, 9.8, 10.7, 11.2, 10.3, 9.9, 10.6, 10.4, 9.7, 10.8, 11.5, 10.2, 10.1, 9.6, 10.9, 10.3, 10.5, 9.8"></textarea>
+    <div style="display:flex;gap:.7rem;flex-wrap:wrap;">
+      <button class="btn btn-accent" onclick="generateSPC()">📈 Tracer la carte</button>
+      <button class="btn btn-primary" onclick="aiSPC()">🤖 Analyse IA des anomalies</button>
+      <button class="btn btn-primary" onclick="validateModule(7, scoreSPC)">✅ Valider le module</button>
+    </div>
+  </div>
+  <div class="card">
+    <canvas id="spcChart" height="280"></canvas>
+    <div id="spcStats" style="margin-top:1rem;"></div>
+    <div id="spcAI" style="margin-top:1rem;"></div>
+    <div id="spcScore" style="margin-top:.5rem;"></div>
+  </div>
+</div>
+
+<!-- ══ MODULE 8 – SMED ══ -->
+<div id="m8" class="section">
+  <div class="card">
+    <h2>⏱️ Module 8 – SMED Simulator</h2>
+    <p style="color:var(--gray);margin-bottom:1rem;">Listez les tâches de changement de série, classez-les en internes/externes, et calculez le gain potentiel.</p>
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:.6rem;margin-bottom:.5rem;">
+      <span style="font-size:.8rem;font-weight:700;color:var(--gray);">Tâche</span>
+      <span style="font-size:.8rem;font-weight:700;color:var(--gray);">Durée (min)</span>
+      <span style="font-size:.8rem;font-weight:700;color:var(--gray);">Type</span>
+      <span></span>
+    </div>
+    <div id="smedRows"></div>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem;">
+      <button class="btn btn-outline btn-sm" onclick="addSMEDRow()">+ Ajouter une tâche</button>
+      <button class="btn btn-accent" onclick="calcSMED()">⏱️ Calculer le gain</button>
+      <button class="btn btn-primary" onclick="validateModule(8, scoreSMED)">✅ Valider le module</button>
+    </div>
+    <div id="smedResult" style="margin-top:1rem;"></div>
+  </div>
+</div>
+
+<!-- ══ MODULE 9 – QUIZ ══ -->
+<div id="m9" class="section">
+  <div class="card">
+    <h2>🎓 Quiz Final – Validation du Parcours</h2>
+    <p style="color:var(--gray);margin-bottom:1rem;">10 questions générées par l'IA sur l'ensemble des modules. Score minimum : 70% pour valider.</p>
+    <div id="quizArea">
+      <button class="btn btn-accent" onclick="generateQuiz()">🤖 Générer le Quiz IA</button>
+      <div class="alert alert-warning" style="margin-top:1rem;">
+        <b>Attention :</b> Assurez-vous d'avoir renseigné votre clé API Claude en haut de la page.
+      </div>
+    </div>
+    <div id="quizScore" style="margin-top:1rem;"></div>
+  </div>
+  <div id="certificateArea" style="display:none;"></div>
+</div>
+
+</main>
+
+<script>
+// ══════════════════════════════════════════
+// GLOBAL STATE
+// ══════════════════════════════════════════
+const MODULES = [
+  { id:1, name:'PDCA Interactif', icon:'🔄', desc:'Cycle Plan-Do-Check-Act avec feedback IA' },
+  { id:2, name:'5S Simulation', icon:'🧹', desc:'Classez les éléments d\'atelier dans les bonnes catégories' },
+  { id:3, name:'Ishikawa (5M)', icon:'🐟', desc:'Diagramme causes-effets avec suggestions IA' },
+  { id:4, name:'Analyse de Pareto', icon:'📊', desc:'Générez le diagramme 80/20 avec interprétation IA' },
+  { id:5, name:'Kanban Board', icon:'📋', desc:'Tableau Kanban interactif avec limites WIP' },
+  { id:6, name:'VSM Simplifié', icon:'🗺️', desc:'Value Stream Mapping et taux de valeur ajoutée' },
+  { id:7, name:'Carte de Contrôle SPC', icon:'📈', desc:'Cartes de contrôle et détection anomalies IA' },
+  { id:8, name:'SMED Simulator', icon:'⏱️', desc:'Changement de série rapide et gain de temps' },
+  { id:9, name:'Quiz Final IA', icon:'🎓', desc:'QCM dynamique généré par IA – 70% requis' }
+];
+
+let state = JSON.parse(localStorage.getItem('greenlab_state') || '{}');
+state.scores = state.scores || {};
+state.completed = state.completed || [];
+state.studentName = state.studentName || '';
+state.kanban = state.kanban || {
+  backlog: ['Définir le problème', 'Analyser les données', 'Former l\'équipe'],
+  doing: ['Cartographier le flux'],
+  done: ['Identifier les gaspillages']
+};
+state.pdca = state.pdca || {};
+state.vsmSteps = state.vsmSteps || null;
+state.smedRows = state.smedRows || null;
+state.paretoData = state.paretoData || null;
+
+let paretoChartInst = null;
+let spcChartInst = null;
+let vsmChartInst = null;
+let quizAnswers = {};
+let quizData = [];
+
+function saveState() { localStorage.setItem('greenlab_state', JSON.stringify(state)); }
+function saveName() { state.studentName = document.getElementById('studentName').value; saveState(); }
+function saveKey() { /* key only in memory */ }
+function getKey() { return document.getElementById('apiKey').value.trim(); }
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('nav button').forEach(b => {
+    b.classList.toggle('active', b.dataset.section === id || (id==='home' && b.dataset.section==='home'));
+  });
+}
+
+function goModule(n) {
+  if (n > 1 && !state.completed.includes(n-1)) {
+    alert(`🔒 Complétez le Module ${n-1} pour débloquer ce module.`);
+    return;
+  }
+  showSection('m'+n);
+  if (n===2) init5S();
+  if (n===3) initIshikawa();
+  if (n===4) initPareto();
+  if (n===5) initKanban();
+  if (n===6) initVSM();
+  if (n===8) initSMED();
+}
+
+function updateNav() {
+  document.querySelectorAll('nav button[data-module]').forEach(b => {
+    const n = +b.dataset.module;
+    b.classList.remove('locked','done');
+    if (state.completed.includes(n)) b.classList.add('done');
+    else if (n > 1 && !state.completed.includes(n-1)) b.classList.add('locked');
+  });
+  const done = state.completed.length;
+  document.getElementById('globalBadge').textContent = done + ' / 9';
+  document.getElementById('globalBar').style.width = (done/9*100)+'%';
+  document.getElementById('progressText').textContent = Math.round(done/9*100)+'%';
+  renderHomeGrid();
+}
+
+// ══════════════════════════════════════════
+// HOME GRID
+// ══════════════════════════════════════════
+function renderHomeGrid() {
+  const g = document.getElementById('moduleGrid');
+  g.innerHTML = '';
+  document.getElementById('studentName').value = state.studentName;
+  MODULES.forEach(m => {
+    const done = state.completed.includes(m.id);
+    const locked = m.id > 1 && !state.completed.includes(m.id-1);
+    const score = state.scores[m.id] !== undefined ? state.scores[m.id] : null;
+    const div = document.createElement('div');
+    div.className = 'module-card' + (locked?' locked-card':'') + (done?' done-card':'');
+    div.innerHTML = `
+      <span class="module-status ${done?'status-done':locked?'status-locked':'status-open'}">
+        ${done?'✓ Validé':locked?'🔒 Verrouillé':'→ Disponible'}
+      </span>
+      <div class="module-icon">${m.icon}</div>
+      <h3>Module ${m.id} – ${m.name}</h3>
+      <p>${m.desc}</p>
+      ${score!==null?`<div style="margin-top:.5rem;font-size:.8rem;color:var(--success);font-weight:700;">Score : ${score}%</div>`:''}
+    `;
+    if (!locked) div.onclick = () => goModule(m.id);
+    g.appendChild(div);
+  });
+}
+
+// ══════════════════════════════════════════
+// MODULE VALIDATION
+// ══════════════════════════════════════════
+function validateModule(n, scoreFn) {
+  const score = scoreFn();
+  state.scores[n] = score;
+  const pass = score >= (n===9?70:60);
+  if (pass && !state.completed.includes(n)) { state.completed.push(n); state.completed.sort((a,b)=>a-b); }
+  saveState(); updateNav();
+  const el = document.getElementById('m'+n);
+  let box = el.querySelector('.score-panel');
+  if (!box) { box = document.createElement('div'); box.className='score-panel'; el.querySelector('.card:last-child').appendChild(box); }
+  box.innerHTML = `
+    <div class="score-circle" style="border-color:${pass?'var(--success)':'var(--danger)'};color:${pass?'var(--success)':'var(--danger)'};">${score}%</div>
+    <div>
+      <div style="font-weight:700;color:${pass?'var(--success)':'var(--danger)'};">${pass?'✅ Module validé !':'❌ Score insuffisant'}</div>
+      <div style="font-size:.82rem;color:var(--gray);">Score : ${score}% — Minimum : ${n===9?70:60}%</div>
+      ${!pass?'<div style="font-size:.82rem;color:var(--danger);">Améliorez votre réponse et réessayez.</div>':''}
+    </div>
+  `;
+  if (pass && n===9) showCertificate();
+}
+
+// ══════════════════════════════════════════
+// AI API CALL
+// ══════════════════════════════════════════
+async function callClaude(prompt, elId) {
+  const key = getKey();
+  if (!key) { document.getElementById(elId).innerHTML = '<div class="alert alert-danger">⚠️ Veuillez entrer votre clé API Claude en haut de la page.</div>'; return null; }
+  const el = document.getElementById(elId);
+  el.innerHTML = '<div class="ai-box ai-loading">🤖 L\'IA analyse votre réponse...</div>';
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1024,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    if (!resp.ok) { const e = await resp.json(); el.innerHTML = `<div class="alert alert-danger">Erreur API : ${e.error?.message||resp.statusText}</div>`; return null; }
+    const data = await resp.json();
+    const text = data.content[0].text;
+    el.innerHTML = `<div class="ai-box">${text.replace(/\n/g,'<br>')}</div>`;
+    return text;
+  } catch(e) {
+    el.innerHTML = `<div class="alert alert-danger">Erreur réseau : ${e.message}</div>`;
+    return null;
+  }
+}
+
+// ══════════════════════════════════════════
+// MODULE 1 – PDCA
+// ══════════════════════════════════════════
+function savePDCA() {
+  state.pdca = {
+    problem: document.getElementById('pdcaProblem').value,
+    plan1: document.getElementById('pdcaPlan1').value,
+    plan2: document.getElementById('pdcaPlan2').value,
+    do1: document.getElementById('pdcaDo1').value,
+    do2: document.getElementById('pdcaDo2').value,
+    check1: document.getElementById('pdcaCheck1').value,
+    check2: document.getElementById('pdcaCheck2').value,
+    act1: document.getElementById('pdcaAct1').value,
+    act2: document.getElementById('pdcaAct2').value
+  };
+  saveState();
+}
+
+function loadPDCA() {
+  const p = state.pdca;
+  if (!p) return;
+  ['problem','plan1','plan2','do1','do2','check1','check2','act1','act2'].forEach(k => {
+    const el = document.getElementById('pdca'+k.charAt(0).toUpperCase()+k.slice(1));
+    if (el && p[k]) el.value = p[k];
+  });
+}
+
+async function analyzePDCA() {
+  const p = state.pdca;
+  const prompt = `Tu es un expert Lean Six Sigma. Évalue ce cycle PDCA d'un étudiant ingénieur et donne un feedback constructif en français.
+
+Problème : ${p.problem||'Non renseigné'}
+PLAN – Objectif : ${p.plan1||'Vide'} | Actions : ${p.plan2||'Vide'}
+DO – Actions : ${p.do1||'Vide'} | Ressources : ${p.do2||'Vide'}
+CHECK – Résultats : ${p.check1||'Vide'} | KPIs : ${p.check2||'Vide'}
+ACT – Standardisation : ${p.act1||'Vide'} | Prochain cycle : ${p.act2||'Vide'}
+
+Fournis :
+1. Points forts (2-3 points)
+2. Points à améliorer (2-3 points)
+3. Score global estimé sur 100
+4. Un conseil actionnable pour améliorer l'analyse`;
+  await callClaude(prompt, 'pdcaAI');
+}
+
+function scorePDCA() {
+  const p = state.pdca;
+  let s = 0;
+  if (p.problem && p.problem.length > 20) s += 20;
+  if (p.plan1 && p.plan1.length > 20) s += 15; if (p.plan2 && p.plan2.length > 20) s += 10;
+  if (p.do1 && p.do1.length > 20) s += 15; if (p.do2 && p.do2.length > 10) s += 5;
+  if (p.check1 && p.check1.length > 20) s += 15; if (p.check2 && p.check2.length > 10) s += 5;
+  if (p.act1 && p.act1.length > 20) s += 10; if (p.act2 && p.act2.length > 10) s += 5;
+  return Math.min(100, s);
+}
+
+// ══════════════════════════════════════════
+// MODULE 2 – 5S
+// ══════════════════════════════════════════
+const FIVE_S_ITEMS = [
+  { id:'a', name:'Marteau rouillé inutilisé', emoji:'🔨', correct:'seiri' },
+  { id:'b', name:'Huile de coupe périmée', emoji:'🛢️', correct:'seiri' },
+  { id:'c', name:'Clé à molette manquante', emoji:'🔧', correct:'seiton' },
+  { id:'d', name:'Chiffons souillés sur le sol', emoji:'🧻', correct:'seiso' },
+  { id:'e', name:'Procédure de maintenance', emoji:'📄', correct:'seiketsu' },
+  { id:'f', name:'EPI non portés', emoji:'🥽', correct:'shitsuke' },
+  { id:'g', name:'Pièces obsolètes sur l\'étagère', emoji:'📦', correct:'seiri' },
+  { id:'h', name:'Plan de nettoyage affiché', emoji:'📋', correct:'seiketsu' },
+  { id:'i', name:'Machine à nettoyer quotidiennement', emoji:'⚙️', correct:'seiso' },
+  { id:'j', name:'Formation sécurité non suivie', emoji:'📚', correct:'shitsuke' },
+  { id:'k', name:'Outil à sa place marquée', emoji:'✂️', correct:'seiton' },
+  { id:'l', name:'Audit 5S hebdomadaire', emoji:'✔️', correct:'shitsuke' }
+];
+
+const FIVE_S_CATS = [
+  { id:'seiri', name:'Seiri', label:'Éliminer', color:'#e74c3c' },
+  { id:'seiton', name:'Seiton', label:'Ranger', color:'#3498db' },
+  { id:'seiso', name:'Seiso', label:'Nettoyer', color:'#27ae60' },
+  { id:'seiketsu', name:'Seiketsu', label:'Standardiser', color:'#f39c12' },
+  { id:'shitsuke', name:'Shitsuke', label:'Respecter', color:'#9b59b6' }
+];
+
+let fiveSPlaced = {};
+let dragging5S = null;
+
+function init5S() {
+  fiveSPlaced = {};
+  const src = document.getElementById('fiveS-source');
+  src.innerHTML = '';
+  FIVE_S_ITEMS.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'fivs-item'; div.draggable = true;
+    div.dataset.id = item.id; div.id = '5s-item-'+item.id;
+    div.innerHTML = `${item.emoji} ${item.name}`;
+    div.addEventListener('dragstart', e => { dragging5S = item.id; div.classList.add('dragging'); });
+    div.addEventListener('dragend', () => div.classList.remove('dragging'));
+    src.appendChild(div);
+  });
+  const cats = document.getElementById('fiveS-cats');
+  cats.innerHTML = '';
+  FIVE_S_CATS.forEach(cat => {
+    const div = document.createElement('div');
+    div.className = 'fivs-cat'; div.id = '5s-cat-'+cat.id;
+    div.innerHTML = `<h5 style="color:${cat.color}">${cat.name}<br><small style="font-weight:400;">${cat.label}</small></h5>`;
+    div.addEventListener('dragover', e => { e.preventDefault(); div.classList.add('drag-over'); });
+    div.addEventListener('dragleave', () => div.classList.remove('drag-over'));
+    div.addEventListener('drop', e => {
+      e.preventDefault(); div.classList.remove('drag-over');
+      if (!dragging5S) return;
+      fiveSPlaced[dragging5S] = cat.id;
+      const src = document.getElementById('fiveS-source');
+      const itemEl = document.getElementById('5s-item-'+dragging5S);
+      if (itemEl) { itemEl.draggable = false; div.appendChild(itemEl); }
+      dragging5S = null;
+    });
+    cats.appendChild(div);
+  });
+  document.getElementById('fiveS-result').innerHTML = '';
+}
+
+function check5S() {
+  let correct = 0, total = FIVE_S_ITEMS.length;
+  FIVE_S_ITEMS.forEach(item => {
+    const el = document.getElementById('5s-item-'+item.id);
+    if (el) {
+      const placed = fiveSPlaced[item.id];
+      if (placed === item.correct) { el.style.background='#eafaf1'; el.style.borderColor='var(--success)'; correct++; }
+      else if (placed) { el.style.background='#fdf2f0'; el.style.borderColor='var(--danger)'; }
+    }
+  });
+  const pct = Math.round(correct/total*100);
+  document.getElementById('fiveS-result').innerHTML = `
+    <div class="alert ${pct>=60?'alert-success':'alert-danger'}">
+      <b>Résultat : ${correct}/${total} (${pct}%)</b><br>
+      ${pct>=60?'Bonne classification !':'Certains éléments sont mal classés. Vérifiez les définitions 5S.'}
+    </div>`;
+  state.scores[2] = pct; saveState();
+}
+
+function reset5S() { init5S(); }
+function score5S() { return state.scores[2] || 0; }
+
+// ══════════════════════════════════════════
+// MODULE 3 – ISHIKAWA
+// ══════════════════════════════════════════
+const ISHI_CATS = ['Matière','Méthode','Main-d\'œuvre','Machines','Milieu'];
+let ishiData = { Matière:[], Méthode:[], 'Main-d\'œuvre':[], Machines:[], Milieu:[] };
+
+function initIshikawa() {
+  const c = document.getElementById('ishiCauses');
+  c.innerHTML = '';
+  ISHI_CATS.forEach(cat => {
+    const div = document.createElement('div');
+    div.className = 'cause-group';
+    div.innerHTML = `<h5>${cat}</h5>
+      <div style="display:flex;gap:.4rem;margin-bottom:.4rem;">
+        <input type="text" id="ishi-${cat}" placeholder="Ajouter une cause..." style="margin:0;flex:1;font-size:.8rem;">
+        <button class="btn btn-accent btn-sm" onclick="addIshiCause('${cat}')">+</button>
+      </div>
+      <div id="ishi-tags-${cat}"></div>`;
+    c.appendChild(div);
+  });
+  renderIshiTags();
+}
+
+function addIshiCause(cat) {
+  const inp = document.getElementById('ishi-'+cat);
+  const val = inp.value.trim();
+  if (!val) return;
+  if (!ishiData[cat]) ishiData[cat] = [];
+  ishiData[cat].push(val);
+  inp.value = '';
+  renderIshiTags();
+}
+
+function renderIshiTags() {
+  ISHI_CATS.forEach(cat => {
+    const el = document.getElementById('ishi-tags-'+cat);
+    if (!el) return;
+    el.innerHTML = (ishiData[cat]||[]).map((c,i) =>
+      `<span class="cause-tag" onclick="removeIshiCause('${cat}',${i})">${c} ×</span>`
+    ).join('');
+  });
+}
+
+function removeIshiCause(cat, i) {
+  ishiData[cat].splice(i,1);
+  renderIshiTags();
+}
+
+async function aiIshikawa() {
+  const effect = document.getElementById('ishiEffect').value;
+  if (!effect) { alert('Entrez d\'abord le problème/effet.'); return; }
+  const prompt = `Tu es expert Lean. Pour le problème : "${effect}", suggère 3 causes potentielles pour chacune des 5 catégories 5M (Matière, Méthode, Main-d'œuvre, Machines, Milieu) dans le contexte industrie/production. Réponds en JSON strict : {"Matière":["...","...","..."],"Méthode":[...],"Main-d'œuvre":[...],"Machines":[...],"Milieu":[...]}`;
+  const el = document.getElementById('ishiAI');
+  el.innerHTML = '<div class="ai-box ai-loading">🤖 Génération des suggestions...</div>';
+  const key = getKey();
+  if (!key) { el.innerHTML = '<div class="alert alert-danger">Clé API requise.</div>'; return; }
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'x-api-key':key,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:800,messages:[{role:'user',content:prompt}]})
+    });
+    const data = await resp.json();
+    const text = data.content[0].text;
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      const suggestions = JSON.parse(jsonMatch[0]);
+      Object.keys(suggestions).forEach(cat => {
+        if (ishiData[cat]) {
+          suggestions[cat].forEach(c => { if (!ishiData[cat].includes(c)) ishiData[cat].push(c); });
+        }
+      });
+      renderIshiTags();
+      el.innerHTML = '<div class="alert alert-success">✅ Suggestions IA ajoutées au diagramme !</div>';
+    } else {
+      el.innerHTML = `<div class="ai-box">${text.replace(/\n/g,'<br>')}</div>`;
+    }
+  } catch(e) { el.innerHTML = `<div class="alert alert-danger">Erreur : ${e.message}</div>`; }
+}
+
+function drawFishbone() {
+  const svg = document.getElementById('fishbone-svg');
+  const effect = document.getElementById('ishiEffect').value || 'Problème';
+  const W=800, H=280, spine=H/2;
+  let html = '';
+  html += `<line x1="50" y1="${spine}" x2="700" y2="${spine}" stroke="#1a2f4e" stroke-width="3"/>`;
+  html += `<polygon points="700,${spine} 690,${spine-8} 690,${spine+8}" fill="#1a2f4e"/>`;
+  html += `<rect x="710" y="${spine-22}" width="80" height="44" rx="6" fill="#f39c12"/>`;
+  html += `<text x="750" y="${spine+5}" text-anchor="middle" font-size="11" font-weight="bold" fill="white">${effect.substring(0,15)}</text>`;
+  const catColors = ['#3498db','#e74c3c','#27ae60','#9b59b6','#f39c12'];
+  const catX = [120, 240, 360, 480, 600];
+  const top = [true, false, true, false, true];
+  ISHI_CATS.forEach((cat, i) => {
+    const x = catX[i], isTop = top[i];
+    const yEnd = isTop ? spine-70 : spine+70;
+    html += `<line x1="${x}" y1="${spine}" x2="${x}" y2="${yEnd}" stroke="${catColors[i]}" stroke-width="2"/>`;
+    html += `<text x="${x}" y="${isTop?spine-80:spine+90}" text-anchor="middle" font-size="11" font-weight="bold" fill="${catColors[i]}">${cat}</text>`;
+    (ishiData[cat]||[]).slice(0,3).forEach((cause,j) => {
+      const cx = x - 35 + j*10;
+      const cy = isTop ? spine - 25 - j*18 : spine + 25 + j*18;
+      const ex = x - 15 + j*5;
+      const ey = isTop ? spine - 10 - j*5 : spine + 10 + j*5;
+      html += `<line x1="${cx}" y1="${cy}" x2="${ex}" y2="${ey}" stroke="${catColors[i]}" stroke-width="1.5" stroke-dasharray="3,2"/>`;
+      html += `<text x="${cx-5}" y="${cy+(isTop?-4:12)}" font-size="9" fill="#333" text-anchor="middle">${cause.substring(0,18)}</text>`;
+    });
+  });
+  svg.innerHTML = html;
+}
+
+function scoreIshikawa() {
+  let total = 0;
+  ISHI_CATS.forEach(c => total += (ishiData[c]||[]).length);
+  const effect = document.getElementById('ishiEffect').value;
+  let s = 0;
+  if (effect && effect.length > 5) s += 20;
+  s += Math.min(80, total * 8);
+  return Math.min(100, s);
+}
+
+// ══════════════════════════════════════════
+// MODULE 4 – PARETO
+// ══════════════════════════════════════════
+let paretoRows = [
+  { name:'Défaut de soudure', count:45 },
+  { name:'Mauvais alignement', count:30 },
+  { name:'Rayures surface', count:15 },
+  { name:'Dimensions hors tolérance', count:8 },
+  { name:'Autres défauts', count:5 }
+];
+
+function initPareto() {
+  if (state.paretoData) paretoRows = state.paretoData;
+  renderParetoRows();
+}
+
+function renderParetoRows() {
+  const c = document.getElementById('paretoRows');
+  c.innerHTML = '<div style="display:grid;grid-template-columns:1fr auto auto;gap:.5rem;margin-bottom:.4rem;"><span style="font-size:.8rem;font-weight:700;color:var(--gray);">Défaut</span><span style="font-size:.8rem;font-weight:700;color:var(--gray);">Fréquence</span><span></span></div>';
+  paretoRows.forEach((r,i) => {
+    const div = document.createElement('div');
+    div.className = 'pareto-row';
+    div.innerHTML = `
+      <input type="text" value="${r.name}" placeholder="Nom du défaut" style="margin:0;flex:1;" onchange="paretoRows[${i}].name=this.value">
+      <input type="number" value="${r.count}" min="0" style="width:90px;margin:0;" onchange="paretoRows[${i}].count=+this.value">
+      <button class="btn btn-danger btn-sm" onclick="removeParetoRow(${i})">×</button>
+    `;
+    c.appendChild(div);
+  });
+  state.paretoData = paretoRows; saveState();
+}
+
+function addParetoRow() { paretoRows.push({name:'',count:0}); renderParetoRows(); }
+function removeParetoRow(i) { paretoRows.splice(i,1); renderParetoRows(); }
+
+function generatePareto() {
+  const sorted = [...paretoRows].sort((a,b)=>b.count-a.count);
+  const total = sorted.reduce((s,r)=>s+r.count,0);
+  let cumul = 0;
+  const labels = sorted.map(r=>r.name);
+  const counts = sorted.map(r=>r.count);
+  const cumulPct = sorted.map(r=>{ cumul+=r.count; return Math.round(cumul/total*100); });
+
+  if (paretoChartInst) paretoChartInst.destroy();
+  const ctx = document.getElementById('paretoChart').getContext('2d');
+  paretoChartInst = new Chart(ctx, {
+    data: {
+      labels,
+      datasets: [
+        { type:'bar', label:'Fréquence', data:counts, backgroundColor:'rgba(26,47,78,0.8)', yAxisID:'y' },
+        { type:'line', label:'Cumulé %', data:cumulPct, borderColor:'#f39c12', backgroundColor:'rgba(243,156,18,0.1)', fill:true, yAxisID:'y1', tension:0.3, pointRadius:5 }
+      ]
+    },
+    options: {
+      responsive:true,
+      plugins:{ legend:{display:true}, tooltip:{ callbacks:{label:ctx=>ctx.datasetIndex===0?`${ctx.raw} occurrences`:`${ctx.raw}% cumulé`} } },
+      scales: {
+        y:{ position:'left', title:{display:true,text:'Fréquence'} },
+        y1:{ position:'right', min:0, max:100, title:{display:true,text:'% Cumulé'}, grid:{drawOnChartArea:false},
+          ticks:{ callback:v=>v+'%' }
+        }
+      }
+    }
+  });
+  const vital = sorted.filter((_,i)=>cumulPct[i]<=80).length || 1;
+  document.getElementById('paretoAI').innerHTML = `<div class="alert alert-info"><b>Analyse 80/20 :</b> Les ${vital} premiers défauts représentent 80% des occurrences. Concentrez vos efforts sur : <b>${sorted.slice(0,vital).map(r=>r.name).join(', ')}</b>.</div>`;
+}
+
+async function aiPareto() {
+  const sorted = [...paretoRows].sort((a,b)=>b.count-a.count);
+  const total = sorted.reduce((s,r)=>s+r.count,0);
+  const prompt = `Tu es expert Lean Six Sigma. Analyse ce diagramme de Pareto et fournis une interprétation professionnelle en français :
+
+Données de défauts (triées par fréquence) :
+${sorted.map((r,i)=>` ${i+1}. ${r.name} : ${r.count} occurrences (${Math.round(r.count/total*100)}%)`).join('\n')}
+
+Total : ${total} défauts
+
+Fournis :
+1. Identification des "vitaux peu nombreux" (règle 80/20)
+2. Actions prioritaires recommandées
+3. Outils Lean/6σ à appliquer sur les causes principales
+4. Estimation du gain potentiel si les 2 premiers défauts sont éliminés`;
+  await callClaude(prompt, 'paretoAI');
+}
+
+function scorePareto() {
+  if (!paretoChartInst) return 0;
+  let s = 0;
+  if (paretoRows.length >= 3) s += 40;
+  if (paretoRows.length >= 5) s += 20;
+  if (paretoChartInst) s += 40;
+  return Math.min(100, s);
+}
+
+// ══════════════════════════════════════════
+// MODULE 5 – KANBAN
+// ══════════════════════════════════════════
+let dragTask = null, dragFrom = null;
+
+function initKanban() { renderKanban(); }
+
+function renderKanban() {
+  const board = document.getElementById('kanbanBoard');
+  const wip = +document.getElementById('wipLimit').value || 3;
+  const cols = [
+    { id:'backlog', name:'📋 Backlog', limit:null },
+    { id:'doing', name:'⚙️ En cours', limit:wip },
+    { id:'done', name:'✅ Terminé', limit:null }
+  ];
+  board.innerHTML = '';
+  cols.forEach(col => {
+    const tasks = state.kanban[col.id] || [];
+    const over = col.limit && tasks.length > col.limit;
+    const div = document.createElement('div');
+    div.className = 'kanban-col'; div.dataset.col = col.id;
+    div.innerHTML = `<h4>${col.name} ${col.limit?`<span class="wip-badge ${over?'wip-over':''}">${tasks.length}/${col.limit}</span>`:''}</h4>`;
+    if (over) { const a=document.createElement('div'); a.className='alert alert-danger'; a.style.fontSize='.78rem'; a.textContent='⚠️ Limite WIP dépassée !'; div.appendChild(a); }
+    tasks.forEach((t,i) => {
+      const card = document.createElement('div');
+      card.className = 'kanban-card'; card.draggable = true;
+      card.innerHTML = `${t} <button onclick="removeKanbanTask('${col.id}',${i})" style="float:right;background:none;border:none;cursor:pointer;color:var(--gray);">×</button>`;
+      card.addEventListener('dragstart', () => { dragTask=t; dragFrom=col.id; card.classList.add('dragging'); });
+      card.addEventListener('dragend', () => card.classList.remove('dragging'));
+      div.appendChild(card);
+    });
+    div.addEventListener('dragover', e => { e.preventDefault(); div.classList.add('drag-over'); });
+    div.addEventListener('dragleave', () => div.classList.remove('drag-over'));
+    div.addEventListener('drop', e => {
+      e.preventDefault(); div.classList.remove('drag-over');
+      if (!dragTask || dragFrom===col.id) return;
+      state.kanban[dragFrom] = state.kanban[dragFrom].filter(t=>t!==dragTask);
+      state.kanban[col.id].push(dragTask);
+      dragTask=null; dragFrom=null; saveState(); renderKanban();
+    });
+    board.appendChild(div);
+  });
+}
+
+function addKanbanTask() {
+  const n = document.getElementById('newTaskName').value.trim();
+  if (!n) return;
+  state.kanban.backlog.push(n);
+  document.getElementById('newTaskName').value = '';
+  saveState(); renderKanban();
+}
+
+function removeKanbanTask(col, i) {
+  state.kanban[col].splice(i,1);
+  saveState(); renderKanban();
+}
+
+function updateKanban() { renderKanban(); }
+
+function scoreKanban() {
+  const total = Object.values(state.kanban).flat().length;
+  const done = (state.kanban.done||[]).length;
+  if (total < 3) return 0;
+  const movePct = done/total*100;
+  let s = 40;
+  if (total >= 5) s += 20;
+  if (done >= 1) s += 20;
+  if (movePct >= 20) s += 20;
+  return Math.min(100, s);
+}
+
+// ══════════════════════════════════════════
+// MODULE 6 – VSM
+// ══════════════════════════════════════════
+let vsmSteps = [
+  { name:'Réception matière', cycle:15, wait:120, va:false },
+  { name:'Découpe', cycle:8, wait:30, va:true },
+  { name:'Soudure', cycle:12, wait:60, va:true },
+  { name:'Contrôle qualité', cycle:5, wait:10, va:false },
+  { name:'Expédition', cycle:3, wait:0, va:false }
+];
+
+function initVSM() {
+  if (state.vsmSteps) vsmSteps = state.vsmSteps;
+  renderVSMSteps();
+}
+
+function renderVSMSteps() {
+  const c = document.getElementById('vsmSteps');
+  c.innerHTML = `<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:.6rem;margin-bottom:.4rem;">
+    <span style="font-size:.8rem;font-weight:700;color:var(--gray);">Étape</span>
+    <span style="font-size:.8rem;font-weight:700;color:var(--gray);">Cycle (min)</span>
+    <span style="font-size:.8rem;font-weight:700;color:var(--gray);">Attente (min)</span>
+    <span style="font-size:.8rem;font-weight:700;color:var(--gray);">Valeur Ajoutée</span>
+    <span></span>
+  </div>`;
+  vsmSteps.forEach((s,i) => {
+    const div = document.createElement('div');
+    div.className = 'vsm-step-row';
+    div.innerHTML = `
+      <input type="text" value="${s.name}" placeholder="Nom de l'étape" style="margin:0;" onchange="vsmSteps[${i}].name=this.value;saveVSM()">
+      <input type="number" value="${s.cycle}" min="0" style="margin:0;" onchange="vsmSteps[${i}].cycle=+this.value;saveVSM()">
+      <input type="number" value="${s.wait}" min="0" style="margin:0;" onchange="vsmSteps[${i}].wait=+this.value;saveVSM()">
+      <select style="margin:0;" onchange="vsmSteps[${i}].va=this.value==='true';saveVSM()">
+        <option value="true" ${s.va?'selected':''}>✅ Oui</option>
+        <option value="false" ${!s.va?'selected':''}>❌ Non</option>
+      </select>
+      <button class="btn btn-danger btn-sm" onclick="vsmSteps.splice(${i},1);saveVSM();renderVSMSteps()">×</button>
+    `;
+    c.appendChild(div);
+  });
+}
+
+function addVSMStep() { vsmSteps.push({name:'',cycle:0,wait:0,va:false}); saveVSM(); renderVSMSteps(); }
+function saveVSM() { state.vsmSteps = vsmSteps; saveState(); }
+
+function calcVSM() {
+  const totalCycle = vsmSteps.reduce((s,r)=>s+r.cycle,0);
+  const totalWait = vsmSteps.reduce((s,r)=>s+r.wait,0);
+  const vaCycle = vsmSteps.filter(r=>r.va).reduce((s,r)=>s+r.cycle,0);
+  const leadTime = totalCycle + totalWait;
+  const vaRatio = leadTime > 0 ? Math.round(vaCycle/leadTime*100) : 0;
+  document.getElementById('vsmResult').style.display = 'block';
+  document.getElementById('vsmKPIs').innerHTML = `
+    <div class="vsm-kpi"><div class="value">${totalCycle} min</div><div class="kpi-label">Temps de cycle total</div></div>
+    <div class="vsm-kpi"><div class="value">${leadTime} min</div><div class="kpi-label">Lead Time total</div></div>
+    <div class="vsm-kpi"><div class="value" style="color:${vaRatio>=30?'var(--success)':'var(--danger)'};">${vaRatio}%</div><div class="kpi-label">Taux de Valeur Ajoutée</div></div>
+  `;
+  if (vsmChartInst) vsmChartInst.destroy();
+  const ctx = document.getElementById('vsmChart').getContext('2d');
+  vsmChartInst = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels: vsmSteps.map(s=>s.name),
+      datasets:[
+        { label:'Temps de cycle (VA)', data:vsmSteps.map(s=>s.va?s.cycle:0), backgroundColor:'rgba(39,174,96,0.8)' },
+        { label:'Temps de cycle (NVA)', data:vsmSteps.map(s=>!s.va?s.cycle:0), backgroundColor:'rgba(231,76,60,0.6)' },
+        { label:'Temps d\'attente', data:vsmSteps.map(s=>s.wait), backgroundColor:'rgba(243,156,18,0.5)' }
+      ]
+    },
+    options:{ responsive:true, scales:{ x:{stacked:true}, y:{stacked:true, title:{display:true,text:'Minutes'}} } }
+  });
+}
+
+function scoreVSM() {
+  if (vsmSteps.length < 3) return 0;
+  let s = 40;
+  if (vsmSteps.length >= 4) s += 20;
+  if (vsmSteps.some(v=>v.va)) s += 20;
+  if (vsmChartInst) s += 20;
+  return Math.min(100, s);
+}
+
+// ══════════════════════════════════════════
+// MODULE 7 – SPC
+// ══════════════════════════════════════════
+let spcValues = [];
+
+function generateSPC() {
+  const raw = document.getElementById('spcData').value;
+  spcValues = raw.split(/[,;\s]+/).map(v=>parseFloat(v.trim())).filter(v=>!isNaN(v));
+  if (spcValues.length < 5) { alert('Entrez au moins 5 mesures.'); return; }
+
+  const n = spcValues.length;
+  const mean = spcValues.reduce((s,v)=>s+v,0)/n;
+  const std = Math.sqrt(spcValues.reduce((s,v)=>s+(v-mean)**2,0)/(n-1));
+  const ucl = mean + 3*std, lcl = mean - 3*std;
+
+  const outPts = spcValues.filter(v=>v>ucl||v<lcl).length;
+  document.getElementById('spcStats').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;">
+      <div class="vsm-kpi"><div class="value">${mean.toFixed(3)}</div><div class="kpi-label">Moyenne (X̄)</div></div>
+      <div class="vsm-kpi"><div class="value">${std.toFixed(3)}</div><div class="kpi-label">Écart-type (σ)</div></div>
+      <div class="vsm-kpi"><div class="value" style="color:var(--danger)">${ucl.toFixed(3)}</div><div class="kpi-label">UCL (X̄+3σ)</div></div>
+      <div class="vsm-kpi"><div class="value" style="color:var(--danger)">${lcl.toFixed(3)}</div><div class="kpi-label">LCL (X̄-3σ)</div></div>
+    </div>
+    ${outPts>0?`<div class="alert alert-danger" style="margin-top:.5rem;"><b>⚠️ ${outPts} point(s) hors limites de contrôle !</b></div>`:'<div class="alert alert-success" style="margin-top:.5rem;">✅ Tous les points sont dans les limites.</div>'}
+  `;
+
+  if (spcChartInst) spcChartInst.destroy();
+  const ctx = document.getElementById('spcChart').getContext('2d');
+  const colors = spcValues.map(v=>(v>ucl||v<lcl)?'rgba(231,76,60,0.9)':'rgba(26,47,78,0.8)');
+  spcChartInst = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels: spcValues.map((_,i)=>'#'+(i+1)),
+      datasets:[
+        { label:'Mesures', data:spcValues, borderColor:'rgba(26,47,78,0.9)', backgroundColor:colors, pointBackgroundColor:colors, pointRadius:5, fill:false, tension:.2 },
+        { label:'Moyenne', data:Array(n).fill(mean), borderColor:'#27ae60', borderDash:[5,5], pointRadius:0, fill:false },
+        { label:'UCL', data:Array(n).fill(ucl), borderColor:'#e74c3c', borderDash:[8,4], pointRadius:0, fill:false },
+        { label:'LCL', data:Array(n).fill(lcl), borderColor:'#e74c3c', borderDash:[8,4], pointRadius:0, fill:false }
+      ]
+    },
+    options:{ responsive:true, plugins:{legend:{display:true}} }
+  });
+}
+
+async function aiSPC() {
+  if (spcValues.length === 0) { alert('Générez d\'abord la carte de contrôle.'); return; }
+  const n = spcValues.length;
+  const mean = spcValues.reduce((s,v)=>s+v,0)/n;
+  const std = Math.sqrt(spcValues.reduce((s,v)=>s+(v-mean)**2,0)/(n-1));
+  const ucl = mean + 3*std, lcl = mean - 3*std;
+  const outPts = spcValues.map((v,i)=>({val:v,idx:i+1,out:v>ucl||v<lcl})).filter(p=>p.out);
+
+  const prompt = `Tu es expert en Contrôle Statistique des Procédés (SPC/MSP). Analyse cette carte de contrôle et détecte les violations des règles de Nelson en français.
+
+Données : ${spcValues.join(', ')}
+Moyenne (X̄) = ${mean.toFixed(3)}
+Écart-type (σ) = ${std.toFixed(3)}
+UCL = ${ucl.toFixed(3)}, LCL = ${lcl.toFixed(3)}
+Points hors limites : ${outPts.length > 0 ? outPts.map(p=>`Point #${p.idx} (${p.val})`).join(', ') : 'Aucun'}
+
+Analyse :
+1. Règle de Nelson 1 : points hors ±3σ
+2. Règle 2 : 9 points consécutifs du même côté de la moyenne
+3. Règle 3 : 6 points consécutifs en montée ou descente
+4. Règle 4 : 14 points alternant haut/bas
+5. Interprétation globale du procédé (stable/instable/dérivé)
+6. Recommandations d'actions correctives`;
+  await callClaude(prompt, 'spcAI');
+}
+
+function scoreSPC() {
+  if (spcValues.length === 0) return 0;
+  let s = 0;
+  if (spcValues.length >= 10) s += 40;
+  if (spcValues.length >= 15) s += 20;
+  if (spcChartInst) s += 40;
+  return Math.min(100, s);
+}
+
+// ══════════════════════════════════════════
+// MODULE 8 – SMED
+// ══════════════════════════════════════════
+let smedRows = [
+  { name:'Arrêt machine', dur:5, type:'interne' },
+  { name:'Retrait outil précédent', dur:8, type:'interne' },
+  { name:'Nettoyage machine', dur:12, type:'interne' },
+  { name:'Préparation outil suivant', dur:15, type:'externe' },
+  { name:'Montage nouvel outil', dur:10, type:'interne' },
+  { name:'Réglage et calage', dur:20, type:'interne' },
+  { name:'Premier essai', dur:8, type:'interne' },
+  { name:'Commande pièce de rechange', dur:10, type:'externe' }
+];
+
+function initSMED() {
+  if (state.smedRows) smedRows = state.smedRows;
+  renderSMEDRows();
+}
+
+function renderSMEDRows() {
+  const c = document.getElementById('smedRows');
+  c.innerHTML = '';
+  smedRows.forEach((r,i) => {
+    const div = document.createElement('div');
+    div.className = 'smed-row';
+    div.innerHTML = `
+      <input type="text" value="${r.name}" placeholder="Nom de la tâche" style="margin:0;" onchange="smedRows[${i}].name=this.value;saveSMED()">
+      <input type="number" value="${r.dur}" min="0" style="margin:0;" onchange="smedRows[${i}].dur=+this.value;saveSMED()">
+      <select style="margin:0;" onchange="smedRows[${i}].type=this.value;saveSMED()">
+        <option value="interne" ${r.type==='interne'?'selected':''}>Interne</option>
+        <option value="externe" ${r.type==='externe'?'selected':''}>Externe</option>
+      </select>
+      <button class="btn btn-danger btn-sm" onclick="smedRows.splice(${i},1);saveSMED();renderSMEDRows()">×</button>
+    `;
+    c.appendChild(div);
+  });
+}
+
+function addSMEDRow() { smedRows.push({name:'',dur:0,type:'interne'}); saveSMED(); renderSMEDRows(); }
+function saveSMED() { state.smedRows = smedRows; saveState(); }
+
+function calcSMED() {
+  const totalInternal = smedRows.filter(r=>r.type==='interne').reduce((s,r)=>s+r.dur,0);
+  const totalExternal = smedRows.filter(r=>r.type==='externe').reduce((s,r)=>s+r.dur,0);
+  const total = totalInternal + totalExternal;
+  const extConvert = smedRows.filter(r=>r.type==='interne' && r.dur > 0)
+    .sort((a,b)=>b.dur-a.dur).slice(0,2).reduce((s,r)=>s+r.dur,0);
+  const newInternal = totalInternal - extConvert;
+  const gain = extConvert;
+  const gainPct = total > 0 ? Math.round(gain/total*100) : 0;
+
+  document.getElementById('smedResult').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem;">
+      <div class="vsm-kpi"><div class="value">${total} min</div><div class="kpi-label">Temps total actuel</div></div>
+      <div class="vsm-kpi"><div class="value" style="color:var(--success);">${newInternal} min</div><div class="kpi-label">Après optimisation SMED</div></div>
+      <div class="vsm-kpi"><div class="value" style="color:var(--accent);">${gainPct}%</div><div class="kpi-label">Gain potentiel</div></div>
+    </div>
+    <div class="alert alert-info">
+      <b>📋 Plan d'action SMED :</b><br>
+      • <b>Tâches internes (machine arrêtée) :</b> ${smedRows.filter(r=>r.type==='interne').map(r=>r.name).join(', ')}<br>
+      • <b>Tâches externes (machine en marche) :</b> ${smedRows.filter(r=>r.type==='externe').map(r=>r.name).join(', ')}<br>
+      • <b>À externaliser en priorité :</b> ${smedRows.filter(r=>r.type==='interne').sort((a,b)=>b.dur-a.dur).slice(0,2).map(r=>r.name).join(', ')}
+    </div>
+  `;
+  state.scores[8] = Math.min(100, 40 + (smedRows.length>=5?20:0) + (gainPct>0?40:0));
+  saveState();
+}
+
+function scoreSMED() { return state.scores[8] || 0; }
+
+// ══════════════════════════════════════════
+// MODULE 9 – QUIZ
+// ══════════════════════════════════════════
+const FALLBACK_QUIZ = [
+  { q:"Que signifie l'acronyme PDCA ?", opts:["Plan-Do-Check-Act","Process-Design-Control-Assess","Plan-Deploy-Check-Adjust","Prepare-Define-Control-Adjust"], correct:0 },
+  { q:"Dans le 5S, 'Seiri' signifie :", opts:["Ranger","Éliminer","Nettoyer","Respecter"], correct:1 },
+  { q:"Le diagramme d'Ishikawa est aussi appelé :", opts:["Diagramme de Gantt","Diagramme en arête de poisson","Diagramme de flux","Diagramme de Venn"], correct:1 },
+  { q:"La règle de Pareto (80/20) stipule que :", opts:["80% des efforts donnent 20% des résultats","20% des causes produisent 80% des effets","80% des défauts viennent de 20% des produits","20% du temps produit 80% des pièces"], correct:1 },
+  { q:"Dans un tableau Kanban, WIP signifie :", opts:["Work In Progress","Work Is Possible","Workflow Integration Process","Work In Planning"], correct:0 },
+  { q:"La VSM mesure :", opts:["La vitesse des machines","La valeur ajoutée par heure","Le flux de valeur et les gaspillages","Les stocks de matières premières"], correct:2 },
+  { q:"Dans une carte de contrôle SPC, UCL signifie :", opts:["Upper Control Limit","Unit Control Level","Upper Cost Line","Uniform Check Level"], correct:0 },
+  { q:"En SMED, convertir une tâche interne en externe signifie :", opts:["La supprimer","L'effectuer machine en marche","L'automatiser","La déplacer à un autre poste"], correct:1 },
+  { q:"Le Lean Management vise principalement à :", opts:["Maximiser la production","Éliminer les gaspillages","Réduire les effectifs","Augmenter les stocks"], correct:1 },
+  { q:"Le 'Kaizen' désigne :", opts:["Un outil de contrôle qualité","L'amélioration continue par petits pas","Une méthode de planification","Un type de diagramme de flux"], correct:1 }
+];
+
+async function generateQuiz() {
+  const key = getKey();
+  document.getElementById('quizArea').innerHTML = '<div class="ai-box ai-loading">🤖 Génération du quiz en cours...</div>';
+  if (!key) {
+    quizData = FALLBACK_QUIZ;
+    renderQuiz();
+    return;
+  }
+  const prompt = `Génère un QCM de 10 questions en français sur ces thèmes (Lean, Six Sigma, PDCA, 5S, Ishikawa, Pareto, Kanban, VSM, SPC, SMED) pour étudiants ingénieurs.
+Réponds UNIQUEMENT en JSON valide, sans texte avant ni après :
+[
+  {"q":"Question ?","opts":["A","B","C","D"],"correct":0},
+  ...
+]
+L'index "correct" est 0-based. Varie les thèmes, les niveaux de difficulté. 10 questions exactement.`;
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'x-api-key':key,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:prompt}]})
+    });
+    const data = await resp.json();
+    const text = data.content[0].text;
+    const jsonMatch = text.match(/\[[\s\S]*\]/);
+    if (jsonMatch) {
+      quizData = JSON.parse(jsonMatch[0]);
+      renderQuiz();
+    } else { quizData = FALLBACK_QUIZ; renderQuiz(); }
+  } catch(e) { quizData = FALLBACK_QUIZ; renderQuiz(); }
+}
+
+function renderQuiz() {
+  quizAnswers = {};
+  let html = '<form id="quizForm">';
+  quizData.forEach((q,qi) => {
+    html += `<div class="quiz-question">
+      <h4>${qi+1}. ${q.q}</h4>`;
+    q.opts.forEach((opt,oi) => {
+      html += `<div class="quiz-option" id="qopt-${qi}-${oi}" onclick="selectQuizOpt(${qi},${oi})">${opt}</div>`;
+    });
+    html += '</div>';
+  });
+  html += '</form>';
+  html += '<button class="btn btn-accent" onclick="submitQuiz()">📊 Soumettre le Quiz</button>';
+  document.getElementById('quizArea').innerHTML = html;
+}
+
+function selectQuizOpt(qi, oi) {
+  quizAnswers[qi] = oi;
+  quizData[qi].opts.forEach((_,i) => {
+    document.getElementById(`qopt-${qi}-${i}`).classList.toggle('selected', i===oi);
+  });
+}
+
+function submitQuiz() {
+  let correct = 0;
+  quizData.forEach((q,qi) => {
+    const ans = quizAnswers[qi];
+    q.opts.forEach((_,oi) => {
+      const el = document.getElementById(`qopt-${qi}-${oi}`);
+      if (!el) return;
+      if (oi === q.correct) el.classList.add('correct');
+      else if (ans === oi) el.classList.add('wrong');
+    });
+    if (ans === q.correct) correct++;
+  });
+  const pct = Math.round(correct/quizData.length*100);
+  const pass = pct >= 70;
+  document.getElementById('quizScore').innerHTML = `
+    <div class="quiz-score-box">
+      <div class="quiz-score-big">${pct}%</div>
+      <div style="font-size:1.1rem;font-weight:700;color:${pass?'var(--success)':'var(--danger)'};">${pass?'🎉 Félicitations ! Parcours validé !':'❌ Score insuffisant – 70% requis'}</div>
+      <div style="color:var(--gray);font-size:.9rem;margin-top:.5rem;">${correct} / ${quizData.length} bonnes réponses</div>
+    </div>`;
+  state.scores[9] = pct;
+  if (pass && !state.completed.includes(9)) { state.completed.push(9); }
+  saveState(); updateNav();
+  if (pass) { document.getElementById('certificateArea').style.display='block'; showCertificate(); }
+}
+
+function scoreQuiz() { return state.scores[9] || 0; }
+
+// ══════════════════════════════════════════
+// CERTIFICATE
+// ══════════════════════════════════════════
+function showCertificate() {
+  const name = state.studentName || 'Étudiant';
+  const date = new Date().toLocaleDateString('fr-FR', {day:'2-digit',month:'long',year:'numeric'});
+  const doneModules = state.completed.map(id => MODULES[id-1]?.name).filter(Boolean);
+  document.getElementById('certificateArea').innerHTML = `
+    <div class="certificate">
+      <div style="font-size:2.5rem;margin-bottom:.5rem;">🏆</div>
+      <h1>CERTIFICAT DE COMPLÉTION</h1>
+      <div style="font-size:.9rem;opacity:.8;margin-bottom:1rem;">GREEN LAB – Formation Amélioration Continue</div>
+      <div style="font-size:1rem;margin-bottom:.5rem;">Ce certificat atteste que</div>
+      <div class="student-name">${name}</div>
+      <div style="font-size:.95rem;margin-bottom:.8rem;">a complété avec succès le parcours</div>
+      <div style="font-size:1.2rem;font-weight:700;color:var(--accent);margin-bottom:1rem;">Lean · Six Sigma · Kaizen · PDCA</div>
+      <div style="font-size:.88rem;opacity:.8;margin-bottom:.5rem;">Modules validés :</div>
+      <div class="cert-modules">${doneModules.map(m=>`<span class="cert-module">${m}</span>`).join('')}</div>
+      <div style="margin-top:1.5rem;font-size:.85rem;opacity:.7;">Délivré le ${date}</div>
+      <div style="margin-top:.5rem;font-size:.85rem;opacity:.7;">Score global : ${Math.round(Object.values(state.scores).reduce((s,v)=>s+v,0)/Math.max(1,Object.keys(state.scores).length))}%</div>
+      <button class="btn btn-accent" style="margin-top:1.5rem;" onclick="window.print()">🖨️ Imprimer le certificat</button>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  updateNav();
+  loadPDCA();
+  initPareto();
+  // Init default pareto rows display
+  renderParetoRows();
+  // Pre-load student name
+  if (state.studentName) document.getElementById('studentName').value = state.studentName;
+});
+</script>
+</body>
+</html>
