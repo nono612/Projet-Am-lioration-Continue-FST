@@ -687,52 +687,73 @@ textarea{resize:vertical;min-height:80px;}
       <div class="mod-header-icon">🔄</div>
       <div class="mod-header-text">
         <h2>Module 1 — Cycle PDCA Interactif</h2>
-        <p>Saisissez un problème industriel réel et remplissez les 4 quadrants. L'IA analyse la qualité de votre démarche.</p>
+        <p>L'IA vous soumet un problème industriel réel. Résolvez-le avec le cycle PDCA et obtenez une évaluation détaillée.</p>
       </div>
     </div>
   </div>
+
+  <!-- Problem generation -->
   <div class="ccard">
-    <div class="ccard-title">Problème à résoudre</div>
-    <label>Description du problème</label>
-    <input type="text" id="pdcaProblem" placeholder="Ex : Taux de rebuts élevé sur ligne d'assemblage (8%)" oninput="savePDCA()">
-  </div>
-  <div class="pdca-wrap">
-    <div class="pdca-quad Q-plan ccard">
-      <div class="pdca-quad-title">🔵 PLAN — Planifier</div>
-      <label>Objectif SMART</label>
-      <textarea id="pdcaPlan1" placeholder="Réduire le taux de rebuts de 8% à 3% en 3 mois" oninput="savePDCA()"></textarea>
-      <label>Actions prévues</label>
-      <textarea id="pdcaPlan2" placeholder="Analyser les causes, former les opérateurs..." oninput="savePDCA()"></textarea>
+    <div class="ccard-title">Problème industriel à résoudre</div>
+    <div id="pdcaProblemCard">
+      <div style="text-align:center;padding:2.5rem 1rem;">
+        <div style="font-size:3.5rem;margin-bottom:1rem;">🏭</div>
+        <div style="font-size:1.05rem;font-weight:800;color:var(--gray800);margin-bottom:.5rem;">Prêt pour votre défi PDCA ?</div>
+        <div style="font-size:.87rem;color:var(--gray400);margin-bottom:1.5rem;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.6;">Cliquez ci-dessous — l'IA génère un problème industriel réaliste que vous devez résoudre avec le cycle PDCA.</div>
+        <button class="btn btn-gold" style="font-size:.9rem;padding:.65rem 1.6rem;" onclick="generatePDCAProblem()">🎲 Générer un problème industriel</button>
+      </div>
     </div>
-    <div class="pdca-quad Q-do ccard">
-      <div class="pdca-quad-title">🟢 DO — Réaliser</div>
-      <label>Actions mises en œuvre</label>
-      <textarea id="pdcaDo1" placeholder="Formation réalisée le 15/03, paramètres ajustés..." oninput="savePDCA()"></textarea>
-      <label>Ressources mobilisées</label>
-      <textarea id="pdcaDo2" placeholder="2 opérateurs, technicien qualité, 3 jours..." oninput="savePDCA()"></textarea>
-    </div>
-    <div class="pdca-quad Q-check ccard">
-      <div class="pdca-quad-title">🟡 CHECK — Vérifier</div>
-      <label>Résultats mesurés</label>
-      <textarea id="pdcaCheck1" placeholder="Taux rebuts = 4.2% après 4 semaines" oninput="savePDCA()"></textarea>
-      <label>Indicateurs (KPIs)</label>
-      <textarea id="pdcaCheck2" placeholder="KPI1 : taux rebuts, KPI2 : temps cycle..." oninput="savePDCA()"></textarea>
-    </div>
-    <div class="pdca-quad Q-act ccard">
-      <div class="pdca-quad-title">🔴 ACT — Agir</div>
-      <label>Standardisation</label>
-      <textarea id="pdcaAct1" placeholder="Mise à jour gamme opératoire, procédure QC-07..." oninput="savePDCA()"></textarea>
-      <label>Prochain cycle</label>
-      <textarea id="pdcaAct2" placeholder="Objectif suivant : 1.5%, étudier matière première..." oninput="savePDCA()"></textarea>
+    <div id="pdcaNewProblemBtn" style="display:none;margin-top:.8rem;">
+      <button class="btn btn-ghost btn-sm" onclick="generatePDCAProblem()">🔄 Nouveau problème</button>
     </div>
   </div>
-  <div class="ccard">
-    <div class="btn-row">
-      <button class="btn btn-gold" onclick="analyzePDCA()">🤖 Feedback IA</button>
-      <button class="btn btn-green" onclick="validateModule(1,scorePDCA)">✅ Valider le module</button>
+
+  <!-- PDCA quadrants (hidden until problem is generated) -->
+  <div id="pdcaForm" style="display:none;">
+    <div class="alert alert-info" style="margin-bottom:1rem;">
+      💡 <span>Lisez attentivement le problème ci-dessus, puis remplissez les 4 quadrants PDCA avec vos réponses.</span>
     </div>
-    <div id="pdcaAI"></div>
-    <div id="pdcaScore"></div>
+    <div class="pdca-wrap">
+      <div class="pdca-quad Q-plan ccard">
+        <div class="pdca-quad-title">🔵 PLAN — Planifier</div>
+        <label>Objectif SMART (Spécifique, Mesurable, Atteignable, Réaliste, Temporel)</label>
+        <textarea id="pdcaPlan1" placeholder="Ex : Réduire le taux de rebuts de 8% à 3% d'ici 8 semaines grâce à..." oninput="savePDCA()"></textarea>
+        <label>Actions prévues</label>
+        <textarea id="pdcaPlan2" placeholder="Liste des actions à planifier et leur calendrier..." oninput="savePDCA()"></textarea>
+      </div>
+      <div class="pdca-quad Q-do ccard">
+        <div class="pdca-quad-title">🟢 DO — Réaliser</div>
+        <label>Actions mises en œuvre</label>
+        <textarea id="pdcaDo1" placeholder="Ce qui a été concrètement réalisé, par qui, quand..." oninput="savePDCA()"></textarea>
+        <label>Ressources mobilisées</label>
+        <textarea id="pdcaDo2" placeholder="Équipes, budget, outils, formations déployées..." oninput="savePDCA()"></textarea>
+      </div>
+      <div class="pdca-quad Q-check ccard">
+        <div class="pdca-quad-title">🟡 CHECK — Vérifier</div>
+        <label>Résultats mesurés</label>
+        <textarea id="pdcaCheck1" placeholder="Résultats obtenus après les actions, avec chiffres..." oninput="savePDCA()"></textarea>
+        <label>Indicateurs (KPIs)</label>
+        <textarea id="pdcaCheck2" placeholder="KPIs suivis et leurs valeurs mesurées..." oninput="savePDCA()"></textarea>
+      </div>
+      <div class="pdca-quad Q-act ccard">
+        <div class="pdca-quad-title">🔴 ACT — Agir</div>
+        <label>Standardisation des bonnes pratiques</label>
+        <textarea id="pdcaAct1" placeholder="Comment pérenniser les améliorations (procédures, formations...)..." oninput="savePDCA()"></textarea>
+        <label>Prochain cycle d'amélioration</label>
+        <textarea id="pdcaAct2" placeholder="Nouvel objectif, prochaine itération PDCA..." oninput="savePDCA()"></textarea>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="evaluatePDCA()">📊 Évaluer mes réponses</button>
+        <button class="btn btn-gold" onclick="analyzePDCA()">🤖 Feedback IA complet</button>
+        <button class="btn btn-green" onclick="validateModule(1,scorePDCA)">✅ Valider le module</button>
+      </div>
+      <div id="pdcaEvalResult" style="margin-top:1rem;"></div>
+      <div id="pdcaAI" style="margin-top:.5rem;"></div>
+      <div id="pdcaScore"></div>
+    </div>
   </div>
 </div>
 
@@ -1122,34 +1143,169 @@ async function callClaude(prompt,elId){
 }
 
 /* ══ M1 – PDCA ══ */
+const PDCA_FALLBACKS=[
+  {titre:"Taux de rebuts excessif – Ligne d'assemblage automobile",secteur:"Automobile",contexte:"Usine de montage produisant 500 véhicules/jour. Les rebuts ont augmenté de 3% à 8% sur les 4 dernières semaines suite à un changement de fournisseur de joints d'étanchéité.",probleme:"Le taux de rebuts sur la ligne B est de 8% (objectif ≤3%). Cela génère 40 pièces rejetées/jour et un coût de 12 000€/semaine en matière gaspillée et retouches.",objectif:"Ramener le taux de rebuts à 3% en 8 semaines sans arrêt de la ligne de production.",contraintes:"Budget : 15 000€ max. Pas d'arrêt de production. Délai impératif : 8 semaines."},
+  {titre:"Délais de livraison non tenus – Centre logistique e-commerce",secteur:"Logistique",contexte:"Centre de distribution traitant 2 000 commandes/jour. Le taux de livraisons en retard est passé de 5% à 18% depuis l'intégration d'un nouveau canal de vente en ligne.",probleme:"18% des commandes arrivent avec plus de 24h de retard. Les réclamations ont bondi de 340% et le taux de fidélisation client a chuté de 12 points en 2 mois.",objectif:"Réduire le taux de retard sous 5% en 6 semaines sans recrutement supplémentaire.",contraintes:"Aucune embauche. Budget informatique : 8 000€. Contrainte : avant la période des fêtes."},
+  {titre:"Pannes machines récurrentes – Ligne de conditionnement agroalimentaire",secteur:"Agroalimentaire",contexte:"Ligne de conditionnement de yaourts, cadence normale de 3 000 unités/heure. Les arrêts non planifiés ont triplé ce trimestre, atteignant 45 min/jour en moyenne.",probleme:"Le TRS est tombé à 62% contre un objectif de 85%. Les 45 min d'arrêt/jour représentent 2 250 pots non produits et 3 400€ de perte quotidienne.",objectif:"Améliorer le TRS à 82% minimum en 10 semaines via la réduction des pannes imprévues.",contraintes:"Maintenance uniquement le week-end. Budget pièces de rechange : 20 000€."},
+  {titre:"Non-conformités en hausse – Fabrication de comprimés pharmaceutiques",secteur:"Pharmaceutique",contexte:"Unité de fabrication de comprimés à 100 000 unités/jour. Le contrôle qualité final rejette 6% de la production depuis 3 semaines, perturbant les livraisons hospitalières.",probleme:"6% de non-conformités (dosage hors tolérance ±5%) détectées en fin de ligne. Pertes : 35 000€/semaine. Risque de non-conformité réglementaire BPF imminent.",objectif:"Ramener le taux de non-conformité sous 1% en 6 semaines en conformité avec les normes GMP.",contraintes:"Contraintes BPF strictes. Toute modification doit être validée par la qualité. Budget : 10 000€."},
+  {titre:"Consommation énergétique excessive – Fonderie d'aluminium",secteur:"Métallurgie",contexte:"Fonderie produisant 80 tonnes/jour. La consommation électrique a augmenté de 35% en un an, dégradant la compétitivité des offres face à la concurrence.",probleme:"Consommation de 850 kWh/tonne contre un benchmark sectoriel de 620 kWh/tonne. Surcoût mensuel : 45 000€, menaçant la rentabilité de deux contrats majeurs.",objectif:"Réduire la consommation à 700 kWh/tonne (–18%) en 12 semaines sans investissement lourd.",contraintes:"Budget : 25 000€. Pas d'arrêt de production. Jalons intermédiaires à 4 et 8 semaines."}
+];
+let currentPDCAProblem=null;
+
+function generatePDCAProblem(){
+  const key=getKey();
+  const card=document.getElementById('pdcaProblemCard');
+  card.innerHTML='<div class="ai-wrap"><div class="ai-wrap-header"><div class="ai-spinner"></div>Génération du problème...</div><div class="ai-loading-text">L\'IA prépare un scénario industriel réaliste...</div></div>';
+  const sectors=['Automobile','Aéronautique','Agroalimentaire','Pharmaceutique','Électronique','Textile','Chimie','Métallurgie','Énergie','Logistique','BTP','Plasturgie'];
+  const sector=sectors[Math.floor(Math.random()*sectors.length)];
+  if(!key){
+    const prob=PDCA_FALLBACKS[Math.floor(Math.random()*PDCA_FALLBACKS.length)];
+    currentPDCAProblem=prob;state.currentPDCAProblem=prob;save();
+    setTimeout(()=>{renderProblemCard(prob);showPDCAForm();},700);
+    return;
+  }
+  const prompt=`Tu es expert Génie Industriel. Génère un problème industriel réaliste pour un exercice PDCA étudiant ingénieur.\nSecteur imposé: ${sector}\nRéponds UNIQUEMENT en JSON valide (sans texte autour):\n{"titre":"Titre accrocheur max 8 mots","secteur":"${sector}","contexte":"Contexte en 2 phrases avec chiffres concrets","probleme":"Problème précis avec données chiffrées (%, volumes, coûts)","objectif":"Objectif SMART précis avec métriques et délai","contraintes":"Contraintes réelles (budget, délai, ressources, réglementaire)"}`;
+  fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':key,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:600,messages:[{role:'user',content:prompt}]})})
+  .then(r=>r.json()).then(data=>{
+    const m=data.content[0].text.match(/\{[\s\S]*\}/);
+    if(!m)throw new Error();
+    const prob=JSON.parse(m[0]);
+    currentPDCAProblem=prob;state.currentPDCAProblem=prob;save();
+    renderProblemCard(prob);showPDCAForm();
+  }).catch(()=>{
+    const prob=PDCA_FALLBACKS[Math.floor(Math.random()*PDCA_FALLBACKS.length)];
+    currentPDCAProblem=prob;state.currentPDCAProblem=prob;save();
+    renderProblemCard(prob);showPDCAForm();
+  });
+}
+
+function renderProblemCard(prob){
+  const colors={Automobile:'#3b82f6',Aéronautique:'#6366f1',Agroalimentaire:'#10b981',Pharmaceutique:'#8b5cf6',Électronique:'#0ea5e9',Logistique:'#f59e0b',Métallurgie:'#64748b',Chimie:'#ef4444',Énergie:'#f97316',Textile:'#ec4899',BTP:'#78716c',Plasturgie:'#14b8a6'};
+  const c=colors[prob.secteur]||'#3b82f6';
+  document.getElementById('pdcaProblemCard').innerHTML=`
+    <div style="border:2px solid ${c}25;border-radius:14px;overflow:hidden;">
+      <div style="background:${c};padding:.9rem 1.3rem;display:flex;align-items:center;justify-content:space-between;">
+        <span style="background:rgba(255,255,255,.2);border-radius:8px;padding:.2rem .75rem;font-size:.72rem;font-weight:800;color:#fff;letter-spacing:.5px;">🏭 ${(prob.secteur||'').toUpperCase()}</span>
+        <span style="font-size:.72rem;color:rgba(255,255,255,.65);">Scénario généré par IA</span>
+      </div>
+      <div style="padding:1.3rem;">
+        <h3 style="font-size:1.1rem;font-weight:800;color:var(--gray800);margin-bottom:1rem;">${prob.titre}</h3>
+        <div style="display:grid;gap:.7rem;">
+          <div style="background:var(--gray50);border-radius:10px;padding:.85rem;border-left:3px solid ${c};">
+            <div style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:${c};margin-bottom:.35rem;">📋 Contexte</div>
+            <div style="font-size:.86rem;color:var(--gray600);line-height:1.6;">${prob.contexte}</div>
+          </div>
+          <div style="background:#fef2f2;border-radius:10px;padding:.85rem;border-left:3px solid #ef4444;">
+            <div style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#ef4444;margin-bottom:.35rem;">⚠️ Problème identifié</div>
+            <div style="font-size:.86rem;color:var(--gray600);line-height:1.6;">${prob.probleme}</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;">
+            <div style="background:#ecfdf5;border-radius:10px;padding:.85rem;border-left:3px solid #059669;">
+              <div style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#059669;margin-bottom:.35rem;">🎯 Objectif à atteindre</div>
+              <div style="font-size:.83rem;color:var(--gray600);line-height:1.6;">${prob.objectif}</div>
+            </div>
+            <div style="background:#fffbeb;border-radius:10px;padding:.85rem;border-left:3px solid #f59e0b;">
+              <div style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#f59e0b;margin-bottom:.35rem;">⚡ Contraintes</div>
+              <div style="font-size:.83rem;color:var(--gray600);line-height:1.6;">${prob.contraintes}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('pdcaNewProblemBtn').style.display='block';
+}
+
+function showPDCAForm(){
+  document.getElementById('pdcaForm').style.display='block';
+  clearPDCAFields();
+}
+
+function clearPDCAFields(){
+  ['pdcaPlan1','pdcaPlan2','pdcaDo1','pdcaDo2','pdcaCheck1','pdcaCheck2','pdcaAct1','pdcaAct2'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+  document.getElementById('pdcaEvalResult').innerHTML='';
+  document.getElementById('pdcaAI').innerHTML='';
+  state.pdca={};save();
+}
+
 function savePDCA(){
   state.pdca={
-    problem:document.getElementById('pdcaProblem').value,
     plan1:document.getElementById('pdcaPlan1').value,plan2:document.getElementById('pdcaPlan2').value,
     do1:document.getElementById('pdcaDo1').value,do2:document.getElementById('pdcaDo2').value,
     check1:document.getElementById('pdcaCheck1').value,check2:document.getElementById('pdcaCheck2').value,
     act1:document.getElementById('pdcaAct1').value,act2:document.getElementById('pdcaAct2').value
   };save();
 }
-function loadPDCA(){
-  const p=state.pdca;if(!p)return;
-  ['Problem','Plan1','Plan2','Do1','Do2','Check1','Check2','Act1','Act2'].forEach(k=>{
-    const el=document.getElementById('pdca'+k);if(el&&p[k.toLowerCase()])el.value=p[k.toLowerCase()];
-  });
+
+async function evaluatePDCA(){
+  const prob=state.currentPDCAProblem||currentPDCAProblem;
+  const p=state.pdca||{};
+  const el=document.getElementById('pdcaEvalResult');
+  if(!prob){el.innerHTML='<div class="alert alert-warning">⚠️ Générez d\'abord un problème industriel.</div>';return;}
+  const key=getKey();
+  if(!key){
+    const fields=[
+      {label:'PLAN – Objectif SMART',val:p.plan1,w:25},{label:'PLAN – Actions prévues',val:p.plan2,w:15},
+      {label:'DO – Actions réalisées',val:p.do1,w:20},{label:'DO – Ressources',val:p.do2,w:10},
+      {label:'CHECK – Résultats mesurés',val:p.check1,w:15},{label:'CHECK – KPIs',val:p.check2,w:5},
+      {label:'ACT – Standardisation',val:p.act1,w:7},{label:'ACT – Prochain cycle',val:p.act2,w:3}
+    ];
+    let total=0;let rows='';
+    fields.forEach(f=>{
+      const len=f.val?f.val.trim().length:0;
+      const s=len===0?0:len<20?30:len<60?65:100;
+      total+=s*f.w/100;
+      const color=s>=70?'var(--green)':s>=40?'var(--accent)':'var(--red)';
+      rows+=`<div style="display:flex;align-items:center;gap:.8rem;margin-bottom:.5rem;padding:.5rem .8rem;background:var(--gray50);border-radius:9px;"><span style="flex:1;font-size:.8rem;color:var(--gray600);">${f.label}</span><div style="width:110px;background:var(--gray200);border-radius:20px;height:7px;overflow:hidden;"><div style="width:${s}%;height:100%;background:${color};border-radius:20px;"></div></div><span style="font-size:.78rem;font-weight:800;color:${color};width:36px;text-align:right;">${s}%</span></div>`;
+    });
+    const overall=Math.round(total);state.scores[1]=overall;save();
+    el.innerHTML=`<div><div style="display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;border-radius:12px;background:${overall>=60?'#ecfdf5':'#fef2f2'};margin-bottom:1rem;"><div style="font-size:3rem;font-weight:900;line-height:1;color:${overall>=60?'var(--green)':'var(--red)'};">${overall}%</div><div><div style="font-weight:800;color:${overall>=60?'var(--green)':'var(--red)'};font-size:1rem;">${overall>=60?'✅ Vous avez bien répondu !':'❌ Réponses incomplètes'}</div><div style="font-size:.78rem;color:var(--gray400);margin-top:.2rem;">Score de complétude — ajoutez votre clé API pour une évaluation précise.</div></div></div>${rows}<div class="alert alert-info" style="margin-top:.8rem;">💡 Ajoutez votre <b>clé API Claude</b> et cliquez sur <b>Feedback IA complet</b> pour voir les réponses correctes.</div></div>`;
+    return;
+  }
+  el.innerHTML='<div class="ai-wrap"><div class="ai-wrap-header"><div class="ai-spinner"></div>Évaluation en cours...</div><div class="ai-loading-text">L\'IA analyse vos réponses quadrant par quadrant...</div></div>';
+  const prompt=`Tu es formateur expert Lean Six Sigma. Évalue STRICTEMENT les réponses PDCA de cet étudiant.\n\nPROBLÈME: ${prob.probleme}\nOBJECTIF: ${prob.objectif}\nCONTRAINTES: ${prob.contraintes}\n\nRÉPONSES:\nPLAN – Objectif: "${p.plan1||'[Vide]'}"\nPLAN – Actions: "${p.plan2||'[Vide]'}"\nDO – Actions: "${p.do1||'[Vide]'}"\nDO – Ressources: "${p.do2||'[Vide]'}"\nCHECK – Résultats: "${p.check1||'[Vide]'}"\nCHECK – KPIs: "${p.check2||'[Vide]'}"\nACT – Standardisation: "${p.act1||'[Vide]'}"\nACT – Prochain cycle: "${p.act2||'[Vide]'}"\n\nRéponds UNIQUEMENT en JSON valide:\n{"plan":{"score":0-100,"avis":"feedback 1 phrase"},"do":{"score":0-100,"avis":"feedback 1 phrase"},"check":{"score":0-100,"avis":"feedback 1 phrase"},"act":{"score":0-100,"avis":"feedback 1 phrase"},"total":0-100}`;
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':key,'anthropic-version':'2023-06-01','content-type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:500,messages:[{role:'user',content:prompt}]})});
+    const data=await resp.json();
+    const m=data.content[0].text.match(/\{[\s\S]*\}/);
+    if(!m)throw new Error('JSON not found');
+    const r=JSON.parse(m[0]);
+    state.scores[1]=r.total;save();
+    const quads=[{k:'plan',l:'PLAN',c:'#3b82f6'},{k:'do',l:'DO',c:'#10b981'},{k:'check',l:'CHECK',c:'#f59e0b'},{k:'act',l:'ACT',c:'#ef4444'}];
+    let rows='';
+    quads.forEach(q=>{
+      const sc=r[q.k]?.score||0;
+      const color=sc>=70?'var(--green)':sc>=40?'var(--accent)':'var(--red)';
+      rows+=`<div style="display:flex;align-items:center;gap:.8rem;margin-bottom:.6rem;background:var(--gray50);border-radius:10px;padding:.65rem .9rem;"><span style="font-size:.78rem;font-weight:800;color:${q.c};width:52px;flex-shrink:0;">${q.l}</span><div style="flex:1;"><div style="background:var(--gray200);border-radius:20px;height:8px;overflow:hidden;margin-bottom:.3rem;"><div style="width:${sc}%;height:100%;background:${color};border-radius:20px;"></div></div><div style="font-size:.76rem;color:var(--gray600);">${r[q.k]?.avis||''}</div></div><span style="font-size:.88rem;font-weight:900;color:${color};width:42px;text-align:right;">${sc}%</span></div>`;
+    });
+    el.innerHTML=`<div><div style="display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;border-radius:12px;background:${r.total>=60?'#ecfdf5':'#fef2f2'};margin-bottom:1rem;"><div style="font-size:3rem;font-weight:900;line-height:1;color:${r.total>=60?'var(--green)':'var(--red)'};">${r.total}%</div><div><div style="font-weight:800;color:${r.total>=60?'var(--green)':'var(--red)'};font-size:1rem;">${r.total>=60?'✅ Vous avez bien répondu !':'❌ Des points sont à améliorer'}</div><div style="font-size:.78rem;color:var(--gray400);margin-top:.2rem;">Score IA global — détail par quadrant ci-dessous</div></div></div>${rows}<div class="alert alert-info" style="margin-top:.8rem;">💡 Cliquez sur <b>Feedback IA complet</b> pour voir vos erreurs et les <b>réponses correctes</b>.</div></div>`;
+  }catch(e){el.innerHTML=`<div class="alert alert-danger">Erreur évaluation : ${e.message}</div>`;}
 }
+
 async function analyzePDCA(){
-  const p=state.pdca;
-  const prompt=`Tu es expert Lean Six Sigma. Évalue ce cycle PDCA d'un étudiant ingénieur. Feedback constructif en français.\n\nProblème : ${p.problem||'Non renseigné'}\nPLAN – Objectif : ${p.plan1||'Vide'} | Actions : ${p.plan2||'Vide'}\nDO – Actions : ${p.do1||'Vide'} | Ressources : ${p.do2||'Vide'}\nCHECK – Résultats : ${p.check1||'Vide'} | KPIs : ${p.check2||'Vide'}\nACT – Standardisation : ${p.act1||'Vide'} | Prochain cycle : ${p.act2||'Vide'}\n\nFournis :\n1. Points forts (2-3)\n2. Points à améliorer (2-3)\n3. Score /100\n4. Conseil actionnable`;
+  const prob=state.currentPDCAProblem||currentPDCAProblem;
+  const p=state.pdca||{};
+  const ai=document.getElementById('pdcaAI');
+  if(!prob){ai.innerHTML='<div class="alert alert-warning">⚠️ Générez d\'abord un problème.</div>';return;}
+  const prompt=`Tu es formateur expert Lean Six Sigma. Donne un feedback PÉDAGOGIQUE COMPLET sur ce cycle PDCA d'un étudiant en Génie Industriel. Réponds en FRANÇAIS.\n\nPROBLÈME: ${prob.titre}\nContexte: ${prob.contexte}\nProblème: ${prob.probleme}\nObjectif: ${prob.objectif}\nContraintes: ${prob.contraintes}\n\nRÉPONSES DE L'ÉTUDIANT:\nPLAN – Objectif: "${p.plan1||'[Non rempli]'}"\nPLAN – Actions: "${p.plan2||'[Non rempli]'}"\nDO – Actions: "${p.do1||'[Non rempli]'}"\nDO – Ressources: "${p.do2||'[Non rempli]'}"\nCHECK – Résultats: "${p.check1||'[Non rempli]'}"\nCHECK – KPIs: "${p.check2||'[Non rempli]'}"\nACT – Standardisation: "${p.act1||'[Non rempli]'}"\nACT – Prochain cycle: "${p.act2||'[Non rempli]'}"\n\nStructure ta réponse ainsi:\n\n✅ CE QUE VOUS AVEZ BIEN FAIT\n[Liste des points positifs avec explication]\n\n❌ CE QUI EST INSUFFISANT OU INCORRECT\n[Liste des erreurs et manques avec explication]\n\n📝 LES RÉPONSES CORRECTES COMPLÈTES\nPLAN – Objectif SMART idéal: [réponse modèle]\nPLAN – Actions prévues idéales: [réponse modèle]\nDO – Actions idéales: [réponse modèle]\nDO – Ressources idéales: [réponse modèle]\nCHECK – Résultats idéaux: [réponse modèle]\nCHECK – KPIs idéaux: [réponse modèle]\nACT – Standardisation idéale: [réponse modèle]\nACT – Prochain cycle idéal: [réponse modèle]\n\n💡 CONSEILS POUR PROGRESSER\n[2-3 conseils actionnables pour mieux utiliser le PDCA]`;
   await callClaude(prompt,'pdcaAI');
 }
-function scorePDCA(){
-  const p=state.pdca;let s=0;
-  if(p.problem&&p.problem.length>20)s+=20;
-  if(p.plan1&&p.plan1.length>20)s+=15;if(p.plan2&&p.plan2.length>20)s+=10;
-  if(p.do1&&p.do1.length>20)s+=15;if(p.do2&&p.do2.length>10)s+=5;
-  if(p.check1&&p.check1.length>20)s+=15;if(p.check2&&p.check2.length>10)s+=5;
-  if(p.act1&&p.act1.length>20)s+=10;if(p.act2&&p.act2.length>10)s+=5;
-  return Math.min(100,s);
+
+function scorePDCA(){return state.scores[1]||0;}
+
+function loadPDCA(){
+  if(state.currentPDCAProblem){
+    currentPDCAProblem=state.currentPDCAProblem;
+    renderProblemCard(state.currentPDCAProblem);
+    document.getElementById('pdcaNewProblemBtn').style.display='block';
+    document.getElementById('pdcaForm').style.display='block';
+    const p=state.pdca||{};
+    ['Plan1','Plan2','Do1','Do2','Check1','Check2','Act1','Act2'].forEach(k=>{
+      const el=document.getElementById('pdca'+k);
+      if(el&&p[k.toLowerCase()])el.value=p[k.toLowerCase()];
+    });
+  }
 }
 
 /* ══ M2 – 5S ══ */
