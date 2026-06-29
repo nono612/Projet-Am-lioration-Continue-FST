@@ -573,6 +573,20 @@ textarea{resize:vertical;min-height:80px;}
 .cert-stat .val{font-size:1.6rem;font-weight:800;color:var(--accent);}
 .cert-stat .lbl{font-size:.7rem;color:rgba(255,255,255,.4);margin-top:.1rem;}
 
+/* ─ Modals ─ */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;display:none;align-items:center;justify-content:center;padding:1rem;}
+.modal-box{background:#fff;border-radius:20px;padding:2rem;max-width:760px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);position:relative;}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.4rem;}
+.modal-head h2{font-size:1.1rem;font-weight:800;display:flex;align-items:center;gap:.5rem;}
+.modal-close-btn{background:var(--gray100);border:none;border-radius:8px;cursor:pointer;font-size:1rem;padding:.3rem .7rem;color:var(--gray600);}
+.modal-close-btn:hover{background:var(--gray200);}
+.teacher-table{width:100%;border-collapse:collapse;font-size:.78rem;}
+.teacher-table th{background:var(--gray800);color:#fff;padding:.55rem .6rem;text-align:center;}
+.teacher-table th:first-child{text-align:left;border-radius:8px 0 0 0;}
+.teacher-table th:last-child{border-radius:0 8px 0 0;}
+.teacher-table td{padding:.5rem .6rem;border-bottom:1px solid var(--gray200);}
+.teacher-table tr:nth-child(even) td{background:var(--gray50);}
+
 /* ─ Scrollbar ─ */
 ::-webkit-scrollbar{width:6px;height:6px;}
 ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px;}
@@ -657,6 +671,10 @@ textarea{resize:vertical;min-height:80px;}
           <div class="stat-num">60%</div>
           <div class="stat-lbl">Score requis</div>
         </div>
+        <div class="stat-box">
+          <div class="stat-num" id="statTime">0 min</div>
+          <div class="stat-lbl">Temps passé</div>
+        </div>
       </div>
     </div>
   </div>
@@ -678,6 +696,12 @@ textarea{resize:vertical;min-height:80px;}
 
   <!-- Module grid -->
   <div class="mod-grid" id="moduleGrid"></div>
+
+  <!-- Actions rapides -->
+  <div style="display:flex;justify-content:center;gap:.8rem;margin-top:1.5rem;flex-wrap:wrap;">
+    <button class="btn btn-primary" onclick="openStudentReport()">📄 Mon rapport de progression</button>
+    <button class="btn btn-ghost" onclick="openTeacherDashboard()">👨‍🏫 Espace Professeur</button>
+  </div>
 </div>
 
 <!-- ══════════════ M1 – PDCA ══════════════ -->
@@ -1000,6 +1024,45 @@ textarea{resize:vertical;min-height:80px;}
 </div>
 
 </main>
+
+<!-- ══════════════ MODAL – RAPPORT ÉTUDIANT ══════════════ -->
+<div class="modal-overlay" id="studentReportModal" onclick="if(event.target===this)closeStudentReport()">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2>📄 Mon rapport de progression</h2>
+      <button class="modal-close-btn" onclick="closeStudentReport()">✕ Fermer</button>
+    </div>
+    <div id="studentReportContent"></div>
+  </div>
+</div>
+
+<!-- ══════════════ MODAL – ESPACE PROFESSEUR ══════════════ -->
+<div class="modal-overlay" id="teacherModal" onclick="if(event.target===this)closeTeacher()">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2>👨‍🏫 Tableau de bord Professeur</h2>
+      <button class="modal-close-btn" onclick="closeTeacher()">✕ Fermer</button>
+    </div>
+    <div class="ccard" style="margin-bottom:1rem;">
+      <div class="ccard-title">Charger un étudiant</div>
+      <div class="alert alert-info">Demandez aux étudiants de cliquer sur <b>Mon rapport</b> → copier leur code, puis collez-le ici.</div>
+      <div style="display:flex;gap:.6rem;margin-top:.6rem;">
+        <textarea id="teacherCodeInput" placeholder="Collez le code de l'étudiant ici..." style="flex:1;min-height:60px;resize:none;margin:0;font-size:.78rem;font-family:monospace;"></textarea>
+        <button class="btn btn-gold" onclick="loadStudentCode()" style="align-self:flex-end;">➕ Ajouter</button>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem;flex-wrap:wrap;gap:.5rem;">
+      <div class="ccard-title" style="margin:0;">Résultats de la classe</div>
+      <div style="display:flex;gap:.5rem;">
+        <button class="btn btn-green btn-sm" onclick="exportTeacherCSV()">⬇️ Exporter CSV</button>
+        <button class="btn btn-ghost btn-sm" onclick="teacherStudents=[];renderTeacherTable()">🗑️ Effacer</button>
+      </div>
+    </div>
+    <div id="teacherTableWrap">
+      <div class="alert alert-info">Aucun étudiant chargé. Collez les codes des étudiants ci-dessus.</div>
+    </div>
+  </div>
+</div>
 
 <script>
 /* ══════════════════════════════════════════
@@ -1726,10 +1789,155 @@ function showCertificate(){
     </div>`;
 }
 
+/* ══ TIME TRACKING ══ */
+if(!state.totalTime)state.totalTime=0;
+let sessionStart=Date.now();
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){state.totalTime+=Date.now()-sessionStart;save();}
+  else sessionStart=Date.now();
+});
+window.addEventListener('beforeunload',()=>{state.totalTime+=Date.now()-sessionStart;save();});
+function getTotalTime(){return state.totalTime+(Date.now()-sessionStart);}
+function formatTime(ms){
+  const min=Math.floor(ms/60000),h=Math.floor(min/60),m=min%60;
+  return h>0?`${h}h ${m}min`:min>0?`${min} min`:'< 1 min';
+}
+function updateTimeDisplay(){
+  const el=document.getElementById('statTime');
+  if(el)el.textContent=formatTime(getTotalTime());
+}
+setInterval(updateTimeDisplay,30000);
+
+/* ══ RAPPORT ÉTUDIANT ══ */
+function openStudentReport(){
+  updateTimeDisplay();
+  const name=state.studentName||'Anonyme';
+  const time=getTotalTime();
+  const scores=state.scores||{};
+  const completed=state.completed||[];
+  const avg=Object.values(scores).length?Math.round(Object.values(scores).reduce((a,b)=>a+b,0)/Object.values(scores).length):0;
+  const date=new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+  const report={name,time,scores,completed,avg,date};
+  const code=btoa(unescape(encodeURIComponent(JSON.stringify(report))));
+
+  document.getElementById('studentReportModal').style.display='flex';
+  document.getElementById('studentReportContent').innerHTML=`
+    <div style="background:linear-gradient(135deg,#0d1b2a,#1a3a6e);border-radius:14px;padding:1.5rem;color:#fff;margin-bottom:1.2rem;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <div style="font-size:.68rem;opacity:.5;text-transform:uppercase;letter-spacing:.5px;">Rapport de progression GREEN LAB</div>
+          <div style="font-size:1.5rem;font-weight:800;margin:.3rem 0;">${name}</div>
+          <div style="font-size:.78rem;opacity:.6;">${date}</div>
+        </div>
+        <div style="display:flex;gap:.7rem;flex-wrap:wrap;">
+          <div style="text-align:center;background:rgba(255,255,255,.09);border-radius:10px;padding:.7rem 1rem;">
+            <div style="font-size:1.3rem;font-weight:900;color:var(--accent);">${formatTime(time)}</div>
+            <div style="font-size:.62rem;opacity:.5;text-transform:uppercase;margin-top:.2rem;">Temps total</div>
+          </div>
+          <div style="text-align:center;background:rgba(255,255,255,.09);border-radius:10px;padding:.7rem 1rem;">
+            <div style="font-size:1.3rem;font-weight:900;color:var(--accent);">${completed.length}/9</div>
+            <div style="font-size:.62rem;opacity:.5;text-transform:uppercase;margin-top:.2rem;">Modules validés</div>
+          </div>
+          <div style="text-align:center;background:rgba(255,255,255,.09);border-radius:10px;padding:.7rem 1rem;">
+            <div style="font-size:1.3rem;font-weight:900;color:var(--accent);">${avg}%</div>
+            <div style="font-size:.62rem;opacity:.5;text-transform:uppercase;margin-top:.2rem;">Score moyen</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-bottom:1.2rem;">
+      <div class="ccard-title">Détail par module</div>
+      ${MODULES.map(m=>{
+        const s=scores[m.id];const done=completed.includes(m.id);
+        const color=done?'var(--green)':s!==undefined?'var(--accent)':'var(--gray300)';
+        return `<div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.4rem;padding:.45rem .8rem;background:var(--gray50);border-radius:9px;">
+          <span style="font-size:.9rem;">${m.icon}</span>
+          <span style="flex:1;font-size:.79rem;color:var(--gray700);">M${m.id} · ${m.name}</span>
+          <div style="width:90px;background:var(--gray200);border-radius:20px;height:6px;overflow:hidden;">
+            <div style="width:${s||0}%;height:100%;background:${color};border-radius:20px;"></div>
+          </div>
+          <span style="font-size:.77rem;font-weight:800;color:${color};width:34px;text-align:right;">${s!==undefined?s+'%':'–'}</span>
+          <span style="font-size:.75rem;">${done?'✅':'○'}</span>
+        </div>`;
+      }).join('')}
+    </div>
+    <div>
+      <div class="ccard-title">Code à envoyer au professeur</div>
+      <div class="alert alert-info" style="margin-bottom:.6rem;">📋 Copiez ce code et envoyez-le à votre professeur (email, Teams, Moodle...)</div>
+      <div id="reportCodeBox" style="background:var(--gray800);border-radius:10px;padding:.8rem 1rem;font-family:monospace;font-size:.68rem;color:#e2e8f0;word-break:break-all;max-height:80px;overflow-y:auto;user-select:all;cursor:text;">${code}</div>
+      <button class="btn btn-gold btn-sm" style="margin-top:.6rem;" onclick="navigator.clipboard.writeText(document.getElementById('reportCodeBox').textContent).then(()=>this.textContent='✅ Copié !').catch(()=>alert('Sélectionnez le texte et copiez manuellement.'))">📋 Copier le code</button>
+    </div>`;
+}
+function closeStudentReport(){document.getElementById('studentReportModal').style.display='none';}
+
+/* ══ ESPACE PROFESSEUR ══ */
+let teacherStudents=[];
+function openTeacherDashboard(){
+  const pwd=prompt('Mot de passe professeur :');
+  if(pwd==='prof2024'){document.getElementById('teacherModal').style.display='flex';renderTeacherTable();}
+  else if(pwd!==null)alert('Mot de passe incorrect.');
+}
+function closeTeacher(){document.getElementById('teacherModal').style.display='none';}
+function loadStudentCode(){
+  const raw=document.getElementById('teacherCodeInput').value.trim();
+  if(!raw)return;
+  try{
+    const data=JSON.parse(decodeURIComponent(escape(atob(raw))));
+    const idx=teacherStudents.findIndex(s=>s.name===data.name);
+    if(idx>=0)teacherStudents[idx]=data;else teacherStudents.push(data);
+    document.getElementById('teacherCodeInput').value='';
+    renderTeacherTable();
+  }catch(e){alert('Code invalide ou corrompu. Vérifiez que l\'étudiant a bien copié l\'intégralité du code.');}
+}
+function renderTeacherTable(){
+  const el=document.getElementById('teacherTableWrap');
+  if(!teacherStudents.length){
+    el.innerHTML='<div class="alert alert-info">Aucun étudiant chargé. Collez les codes des étudiants ci-dessus.</div>';return;
+  }
+  const sorted=[...teacherStudents].sort((a,b)=>(b.completed?.length||0)-(a.completed?.length||0));
+  let html=`<div style="overflow-x:auto;"><table class="teacher-table">
+    <thead><tr>
+      <th style="text-align:left;">Étudiant</th>
+      <th>Temps</th><th>Modules</th><th>Moy.</th>
+      ${MODULES.map(m=>`<th>M${m.id}</th>`).join('')}
+      <th style="text-align:left;">Date</th>
+    </tr></thead><tbody>`;
+  sorted.forEach(s=>{
+    const avg=s.avg||0;const done=s.completed?.length||0;
+    html+=`<tr>
+      <td style="font-weight:700;">${s.name}</td>
+      <td style="text-align:center;color:var(--accent);font-weight:700;">${formatTime(s.time||0)}</td>
+      <td style="text-align:center;"><span style="background:${done===9?'var(--green)':done>=5?'var(--accent)':'var(--gray400)'};color:#fff;border-radius:20px;padding:.1rem .55rem;font-weight:800;font-size:.75rem;">${done}/9</span></td>
+      <td style="text-align:center;font-weight:800;color:${avg>=70?'var(--green)':avg>=50?'var(--accent)':'var(--red)'};">${avg}%</td>
+      ${MODULES.map(m=>{const sc=s.scores?.[m.id];const ok=s.completed?.includes(m.id);return `<td style="text-align:center;font-weight:700;color:${ok?'var(--green)':sc!==undefined?'var(--accent)':'var(--gray300)'};">${sc!==undefined?sc+'%':'–'}</td>`;}).join('')}
+      <td style="color:var(--gray400);font-size:.73rem;">${s.date||'–'}</td>
+    </tr>`;
+  });
+  html+=`</tbody></table></div>`;
+  const avgTime=formatTime(Math.round(teacherStudents.reduce((a,s)=>a+(s.time||0),0)/teacherStudents.length));
+  const avgMods=(teacherStudents.reduce((a,s)=>a+(s.completed?.length||0),0)/teacherStudents.length).toFixed(1);
+  const avgScore=Math.round(teacherStudents.reduce((a,s)=>a+(s.avg||0),0)/teacherStudents.length);
+  html+=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1rem;">
+    <div class="kpi-box"><div class="kpi-val">${teacherStudents.length}</div><div class="kpi-lbl">Étudiants</div></div>
+    <div class="kpi-box"><div class="kpi-val">${avgTime}</div><div class="kpi-lbl">Temps moyen</div></div>
+    <div class="kpi-box"><div class="kpi-val">${avgScore}%</div><div class="kpi-lbl">Score moyen classe</div></div>
+  </div>`;
+  el.innerHTML=html;
+}
+function exportTeacherCSV(){
+  if(!teacherStudents.length){alert('Aucune donnée à exporter.');return;}
+  const h=['Étudiant','Temps (min)','Modules validés','Score moyen',...MODULES.map(m=>`M${m.id} – ${m.name}`),'Date'];
+  const rows=teacherStudents.map(s=>[s.name,Math.round((s.time||0)/60000),s.completed?.length||0,s.avg||0,...MODULES.map(m=>s.scores?.[m.id]??''),s.date||'']);
+  const csv=[h,...rows].map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,﻿'+encodeURIComponent(csv);
+  a.download='greenlab_classe_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+}
+
 /* ══ INIT ══ */
 window.addEventListener('DOMContentLoaded',()=>{
   updateNav();loadPDCA();initPareto();renderParetoRows();
   if(state.studentName)document.getElementById('studentName').value=state.studentName;
+  updateTimeDisplay();
 });
 </script>
 </body>
