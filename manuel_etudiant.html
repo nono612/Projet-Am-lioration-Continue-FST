@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manuel Étudiant – Outils Pédagogiques d'Amélioration Continue</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0d1b2a;--blue:#1a3a6e;--accent:#f59e0b;--orange:#ea580c;--green:#059669;--red:#dc2626;--purple:#7c3aed;--gray50:#f8fafc;--gray100:#f1f5f9;--gray200:#e2e8f0;--gray400:#94a3b8;--gray600:#475569;--gray800:#1e293b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:var(--gray100);color:var(--gray800);line-height:1.7;}
+@media print{.no-print{display:none!important;}body{background:#fff;}.card,.tip,.warning,.step-block{box-shadow:none!important;border:1px solid #ddd!important;}}
+.cover{background:linear-gradient(135deg,#0d1b2a 0%,#1a3a6e 50%,#1e3a8a 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:3rem 2rem;position:relative;overflow:hidden;}
+.cover-orb1{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,.15),transparent 70%);top:-100px;right:-100px;}
+.cover-orb2{position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,.12),transparent 70%);bottom:-80px;left:0;}
+.cover-badge{background:linear-gradient(135deg,var(--accent),var(--orange));display:inline-block;padding:.4rem 1.2rem;border-radius:20px;font-size:.8rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:2rem;}
+.cover h1{font-size:3.5rem;font-weight:900;line-height:1.1;margin-bottom:1rem;}
+.cover h1 em{background:linear-gradient(90deg,var(--accent),#fbbf24,var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal;}
+.cover-sub{font-size:1.1rem;color:rgba(255,255,255,.65);max-width:540px;margin:0 auto 2.5rem;}
+.cover-chips{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2rem;}
+.cover-chip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:.3rem 1rem;font-size:.82rem;}
+.cover-meta{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.1);padding-top:1.5rem;}
+.cover-meta div{font-size:.78rem;color:rgba(255,255,255,.45);}
+.cover-meta strong{display:block;color:#fff;font-size:.95rem;margin-bottom:.2rem;}
+.toc{background:#fff;padding:2.5rem;max-width:860px;margin:2rem auto;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.08);}
+.toc h2{font-size:1.2rem;font-weight:800;margin-bottom:1.2rem;color:var(--navy);}
+.toc-list{list-style:none;}
+.toc-section a{display:flex;align-items:center;gap:.7rem;color:var(--gray600);text-decoration:none;padding:.4rem .5rem;border-radius:8px;font-size:.88rem;}
+.toc-section a:hover{background:var(--gray50);color:var(--navy);}
+.toc-num{min-width:26px;height:26px;border-radius:7px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;flex-shrink:0;}
+.toc-section.sub a{padding-left:2.5rem;font-size:.82rem;color:var(--gray400);}
+.page{max-width:860px;margin:0 auto;padding:2rem 1.2rem;}
+.section-header{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border-radius:14px;padding:1.6rem 2rem;margin-bottom:2rem;display:flex;align-items:center;gap:1.2rem;}
+.section-header .sh-icon{width:52px;height:52px;background:rgba(255,255,255,.12);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0;}
+.section-header h2{font-size:1.3rem;font-weight:800;margin-bottom:.2rem;}
+.section-header p{font-size:.83rem;color:rgba(255,255,255,.6);}
+.sn{font-size:.66rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.4);margin-bottom:.3rem;}
+.card{background:#fff;border-radius:12px;padding:1.4rem;margin-bottom:1.1rem;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid var(--gray200);}
+.card h3{font-size:.98rem;font-weight:800;margin-bottom:.7rem;color:var(--navy);}
+.card h4{font-size:.88rem;font-weight:700;color:var(--navy);margin:.8rem 0 .35rem;}
+.card p,.card li{font-size:.87rem;color:var(--gray600);}
+.card ul{padding-left:1.2rem;margin:.4rem 0;}
+.card li{margin-bottom:.22rem;}
+.steps{margin:1rem 0;}
+.step-block{display:flex;gap:.9rem;margin-bottom:.9rem;background:#fff;border-radius:12px;padding:.9rem 1.1rem;box-shadow:0 2px 8px rgba(0,0,0,.05);border:1px solid var(--gray200);}
+.step-num{min-width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;flex-shrink:0;}
+.step-content h4{font-size:.87rem;font-weight:800;color:var(--navy);margin-bottom:.25rem;}
+.step-content p{font-size:.83rem;color:var(--gray600);}
+.tip{background:#eff6ff;border-left:4px solid #3b82f6;border-radius:0 10px 10px 0;padding:.85rem 1rem;margin:1rem 0;font-size:.84rem;color:#1e40af;}
+.tip strong{display:block;margin-bottom:.15rem;}
+.warning{background:#fffbeb;border-left:4px solid var(--accent);border-radius:0 10px 10px 0;padding:.85rem 1rem;margin:1rem 0;font-size:.84rem;color:#92400e;}
+.warning strong{display:block;margin-bottom:.15rem;}
+.success{background:#ecfdf5;border-left:4px solid var(--green);border-radius:0 10px 10px 0;padding:.85rem 1rem;margin:1rem 0;font-size:.84rem;color:#065f46;}
+.success strong{display:block;margin-bottom:.15rem;}
+.danger{background:#fef2f2;border-left:4px solid var(--red);border-radius:0 10px 10px 0;padding:.85rem 1rem;margin:1rem 0;font-size:.84rem;color:#991b1b;}
+.danger strong{display:block;margin-bottom:.15rem;}
+.mod-header{border-radius:14px;padding:1.4rem 1.7rem;margin-bottom:1.1rem;color:#fff;}
+.m1{background:linear-gradient(135deg,#1d4ed8,#3b82f6);}.m2{background:linear-gradient(135deg,#b91c1c,#ef4444);}
+.m3{background:linear-gradient(135deg,#6d28d9,#8b5cf6);}.m4{background:linear-gradient(135deg,#b45309,#f59e0b);}
+.m5{background:linear-gradient(135deg,#0f766e,#14b8a6);}.m6{background:linear-gradient(135deg,#047857,#10b981);}
+.m7{background:linear-gradient(135deg,#0369a1,#0ea5e9);}.m8{background:linear-gradient(135deg,#c2410c,#f97316);}
+.m9{background:linear-gradient(135deg,#7e22ce,#a855f7);}
+.mod-header h2{font-size:1.25rem;font-weight:900;}
+.mod-header p{font-size:.8rem;opacity:.7;margin-top:.25rem;}
+.mod-num{font-size:.63rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;opacity:.5;margin-bottom:.25rem;}
+table{width:100%;border-collapse:collapse;font-size:.83rem;margin:1rem 0;}
+th{background:var(--navy);color:#fff;padding:.55rem .85rem;text-align:left;font-weight:700;}
+td{padding:.5rem .85rem;border-bottom:1px solid var(--gray200);}
+tr:nth-child(even) td{background:var(--gray50);}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+@media(max-width:600px){.grid2{grid-template-columns:1fr;}.cover h1{font-size:2.2rem;}}
+.divider{border:none;border-top:2px solid var(--gray200);margin:2.5rem 0;}
+.key{background:var(--gray800);color:#fff;border-radius:5px;padding:.1rem .4rem;font-size:.73rem;font-family:monospace;font-weight:700;}
+.mock-btn{display:inline-block;padding:.28rem .75rem;border-radius:7px;font-size:.73rem;font-weight:700;margin:.2rem;}
+.mock-btn.primary{background:var(--navy);color:#fff;}.mock-btn.gold{background:linear-gradient(135deg,var(--accent),var(--orange));color:#fff;}
+.mock-btn.green{background:var(--green);color:#fff;}.mock-btn.purple{background:var(--purple);color:#fff;}
+.mock-btn.ghost{background:#fff;border:1.5px solid var(--gray200);color:var(--gray600);}
+.quadrant-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1rem 0;}
+.quadrant{border-radius:10px;padding:.95rem;font-size:.83rem;}
+.q-plan{background:#dbeafe;border:2px solid #3b82f6;color:#1e40af;}
+.q-do{background:#dcfce7;border:2px solid #22c55e;color:#166534;}
+.q-check{background:#fef9c3;border:2px solid #eab308;color:#854d0e;}
+.q-act{background:#fee2e2;border:2px solid #ef4444;color:#991b1b;}
+.quadrant strong{display:block;font-size:.76rem;font-weight:900;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem;}
+.five-s{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem;margin:1rem 0;}
+.s-card{border-radius:8px;padding:.7rem .4rem;text-align:center;font-size:.71rem;font-weight:800;}
+.s1{background:#dbeafe;color:#1d4ed8;}.s2{background:#dcfce7;color:#166534;}
+.s3{background:#fef9c3;color:#854d0e;}.s4{background:#f3e8ff;color:#6d28d9;}
+.s5{background:#ffe4e6;color:#be123c;}
+.print-btn{position:fixed;bottom:1.5rem;right:1.5rem;background:linear-gradient(135deg,var(--accent),var(--orange));color:#fff;border:none;border-radius:50px;padding:.65rem 1.3rem;font-size:.83rem;font-weight:800;cursor:pointer;z-index:99;}
+::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px;}
+</style>
+</head>
+<body>
+<button class="print-btn no-print" onclick="window.print()">🖨️ Imprimer / PDF</button>
+
+<div class="cover">
+  <div class="cover-orb1"></div><div class="cover-orb2"></div>
+  <div style="position:relative;z-index:1;width:100%;max-width:680px;">
+    <div class="cover-badge">📘 Manuel Étudiant</div>
+    <h1>Guide complet<br><em>Amélioration Continue</em></h1>
+    <p class="cover-sub">Tout ce qu'il faut savoir pour utiliser la plateforme — de la première connexion jusqu'au certificat.</p>
+    <div class="cover-chips">
+      <span class="cover-chip">🔄 PDCA</span><span class="cover-chip">🧹 5S</span><span class="cover-chip">🐟 Ishikawa</span>
+      <span class="cover-chip">📊 Pareto</span><span class="cover-chip">📋 Kanban</span><span class="cover-chip">🗺️ VSM</span>
+      <span class="cover-chip">📈 SPC</span><span class="cover-chip">⏱️ SMED</span><span class="cover-chip">🎓 Quiz Final</span>
+    </div>
+    <div class="cover-meta">
+      <div><strong>Formation</strong>Génie Industriel · Lean Six Sigma</div>
+      <div><strong>Plateforme</strong>Outils pédagogiques · Web</div>
+      <div><strong>Version</strong>2026 · IA Intégrée</div>
+    </div>
+  </div>
+</div>
+
+<div class="toc">
+  <h2>📋 Table des matières</h2>
+  <ul class="toc-list">
+    <li class="toc-section"><a href="#s1"><span class="toc-num">1</span> Présentation de la plateforme</a></li>
+    <li class="toc-section"><a href="#s2"><span class="toc-num" style="background:linear-gradient(135deg,var(--accent),var(--orange));">2</span> Première connexion</a></li>
+    <li class="toc-section sub"><a href="#s2a">2.1 Accéder à la plateforme</a></li>
+    <li class="toc-section sub"><a href="#s2b">2.2 Télécharger votre CV</a></li>
+    <li class="toc-section sub"><a href="#s2c">2.3 La clé API Claude</a></li>
+    <li class="toc-section sub"><a href="#s2d">2.4 Saisir votre nom — clé de sauvegarde</a></li>
+    <li class="toc-section"><a href="#s3"><span class="toc-num">3</span> Interface et navigation</a></li>
+    <li class="toc-section"><a href="#s4"><span class="toc-num">4</span> Système de progression et boutons</a></li>
+    <li class="toc-section"><a href="#m1"><span class="toc-num" style="background:#3b82f6;">M1</span> Module 1 — Cycle PDCA</a></li>
+    <li class="toc-section"><a href="#m2"><span class="toc-num" style="background:#ef4444;">M2</span> Module 2 — Démarche 5S</a></li>
+    <li class="toc-section"><a href="#m3"><span class="toc-num" style="background:#8b5cf6;">M3</span> Module 3 — Ishikawa (5M)</a></li>
+    <li class="toc-section"><a href="#m4"><span class="toc-num" style="background:#f59e0b;">M4</span> Module 4 — Analyse de Pareto</a></li>
+    <li class="toc-section"><a href="#m5"><span class="toc-num" style="background:#14b8a6;">M5</span> Module 5 — Tableau Kanban</a></li>
+    <li class="toc-section"><a href="#m6"><span class="toc-num" style="background:#10b981;">M6</span> Module 6 — VSM</a></li>
+    <li class="toc-section"><a href="#m7"><span class="toc-num" style="background:#0ea5e9;">M7</span> Module 7 — Carte SPC</a></li>
+    <li class="toc-section"><a href="#m8"><span class="toc-num" style="background:#f97316;">M8</span> Module 8 — SMED</a></li>
+    <li class="toc-section"><a href="#m9"><span class="toc-num" style="background:#a855f7;">M9</span> Module 9 — Quiz Final & Certificat</a></li>
+    <li class="toc-section"><a href="#s5"><span class="toc-num" style="background:var(--green);">R</span> Mon rapport & envoi au professeur</a></li>
+    <li class="toc-section"><a href="#s6"><span class="toc-num" style="background:var(--purple);">?</span> FAQ</a></li>
+  </ul>
+</div>
+
+<!-- S1 -->
+<div class="page" id="s1">
+  <div class="section-header"><div class="sh-icon">🎓</div><div><div class="sn">Section 1</div><h2>Présentation de la plateforme</h2><p>Qu'est-ce que cette plateforme et à quoi sert-elle ?</p></div></div>
+  <div class="card">
+    <h3>🌐 Qu'est-ce que cette plateforme ?</h3>
+    <p>Cette <strong>plateforme pédagogique interactive</strong> dédiée à l'apprentissage de l'<strong>Amélioration Continue</strong> en Génie Industriel. Elle regroupe 9 modules pratiques couvrant les outils Lean et Six Sigma, avec des exercices corrigés par l'Intelligence Artificielle Claude.</p>
+    <div style="background:var(--navy);border-radius:10px;padding:.75rem 1.1rem;color:var(--accent);font-family:monospace;font-size:.86rem;font-weight:700;margin-top:.8rem;word-break:break-all;">https://nono612.github.io/Module-Pedagogique-Amelioration-Continue-FST/</div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <h3>🎯 Ce que vous allez apprendre</h3>
+      <ul>
+        <li>Appliquer le cycle PDCA à un problème industriel réel</li>
+        <li>Organiser un atelier avec la méthode 5S</li>
+        <li>Construire un diagramme Ishikawa (5M)</li>
+        <li>Réaliser une analyse de Pareto 80/20</li>
+        <li>Piloter un flux de travail avec Kanban</li>
+        <li>Cartographier une chaîne de valeur (VSM)</li>
+        <li>Lire et interpréter une carte de contrôle SPC</li>
+        <li>Réduire les temps de changement de série (SMED)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🤖 Le rôle de l'IA</h3>
+      <ul>
+        <li>Génère des problèmes industriels réalistes uniques</li>
+        <li>Évalue vos réponses avec un score en % par section</li>
+        <li>Donne un feedback personnalisé avec les corrections</li>
+        <li>Génère le quiz final (10 questions QCM)</li>
+        <li>Adapte les exercices à votre domaine (via CV)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <h3>📊 Vue d'ensemble des 9 modules</h3>
+    <table>
+      <tr><th>Module</th><th>Outil</th><th>Compétence clé</th><th>Score requis</th></tr>
+      <tr><td><strong>M1</strong> PDCA</td><td>Roue de Deming</td><td>Résoudre un problème en 4 étapes structurées</td><td>60%</td></tr>
+      <tr><td><strong>M2</strong> 5S</td><td>Organisation atelier</td><td>Classer et standardiser un espace de travail</td><td>60%</td></tr>
+      <tr><td><strong>M3</strong> Ishikawa</td><td>Diagramme 5M</td><td>Identifier toutes les causes racines d'un problème</td><td>60%</td></tr>
+      <tr><td><strong>M4</strong> Pareto</td><td>Règle 80/20</td><td>Prioriser les actions sur les causes majeures</td><td>60%</td></tr>
+      <tr><td><strong>M5</strong> Kanban</td><td>Tableau visuel</td><td>Gérer un flux de travail avec limites WIP</td><td>60%</td></tr>
+      <tr><td><strong>M6</strong> VSM</td><td>Value Stream Map</td><td>Calculer le taux de valeur ajoutée du flux</td><td>60%</td></tr>
+      <tr><td><strong>M7</strong> SPC</td><td>Cartes de contrôle</td><td>Détecter les dérives statistiques (règles Nelson)</td><td>60%</td></tr>
+      <tr><td><strong>M8</strong> SMED</td><td>Changement rapide</td><td>Convertir tâches internes en externes</td><td>60%</td></tr>
+      <tr><td><strong>M9</strong> Quiz Final</td><td>QCM IA</td><td>Valider l'ensemble du parcours</td><td><strong>70%</strong></td></tr>
+    </table>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- S2 -->
+<div class="page" id="s2">
+  <div class="section-header"><div class="sh-icon">🔑</div><div><div class="sn">Section 2</div><h2>Première connexion</h2><p>Les 4 étapes à faire avant de commencer.</p></div></div>
+
+  <div id="s2a"><div class="card">
+    <h3>2.1 — Accéder à la plateforme</h3>
+    <p>Ouvrez Chrome, Firefox, Edge ou Safari et entrez l'URL ci-dessus. Aucun compte ni téléchargement n'est requis.</p>
+    <div class="warning"><strong>⚠️ Utilisez toujours le même navigateur sur le même ordinateur</strong> pour retrouver votre progression. Votre avancement est sauvegardé localement dans le navigateur.</div>
+  </div></div>
+
+  <div id="s2b"><div class="card">
+    <h3>2.2 — Télécharger votre CV (personnalisation IA)</h3>
+    <p>À votre toute première visite, une fenêtre s'ouvre automatiquement. Elle vous propose de déposer votre CV pour que l'IA personnalise les exercices selon votre domaine (aéronautique, agroalimentaire, automobile, santé…).</p>
+    <div class="steps">
+      <div class="step-block"><div class="step-num">1</div><div class="step-content"><h4>Préparez votre CV en PDF ou image (JPG/PNG)</h4><p>Il doit contenir vos formations et/ou expériences dans votre domaine industriel.</p></div></div>
+      <div class="step-block"><div class="step-num">2</div><div class="step-content"><h4>Glissez le fichier dans la zone ou cliquez pour le choisir</h4><p>La zone de dépôt est au centre de la fenêtre d'accueil.</p></div></div>
+      <div class="step-block"><div class="step-num">3</div><div class="step-content"><h4>Cliquez sur "Analyser mon CV"</h4><p>L'IA lit votre fichier et détecte votre domaine en quelques secondes. Votre CV reste dans votre navigateur — il n'est jamais envoyé sur internet.</p></div></div>
+      <div class="step-block"><div class="step-num" style="background:var(--gray400);">Alt</div><div class="step-content"><h4>"Passer cette étape" si vous n'avez pas de CV</h4><p>Les exercices fonctionneront normalement avec des secteurs variés et aléatoires.</p></div></div>
+    </div>
+  </div></div>
+
+  <div id="s2c"><div class="card">
+    <h3>2.3 — La clé API Claude</h3>
+    <p>Le champ <strong>"Clé API"</strong> est en haut à droite du site. Saisissez-y la clé fournie par votre professeur pour activer toutes les fonctions IA (génération de problèmes, évaluation, feedback, quiz final).</p>
+    <div class="tip"><strong>💡 Format de la clé</strong> Elle ressemble à : <span class="key">sk-ant-api03-XXXX...</span> — votre professeur vous la communique en début de séance.</div>
+    <div class="warning"><strong>⚠️ La clé n'est pas sauvegardée</strong> Elle est en mémoire uniquement pendant la session. Vous devrez la resaisir à chaque nouvelle ouverture du site.</div>
+    <div class="success"><strong>✅ Sans clé API</strong> La plateforme reste utilisable avec les exercices pré-enregistrés, mais sans évaluation IA personnalisée.</div>
+  </div></div>
+
+  <div id="s2d"><div class="card">
+    <h3>2.4 — Saisir votre nom — votre clé de sauvegarde personnelle</h3>
+    <p>Sur la page d'accueil, saisissez votre <strong>prénom et nom</strong> dans le champ "Votre nom" de la barre de progression. <strong>C'est la première chose à faire avant de commencer les modules.</strong></p>
+    <div class="success">
+      <strong>✅ Nouveau système de sauvegarde personnalisé</strong>
+      Votre progression est sauvegardée directement sous votre nom et prénom. Si vous vous appelez "Alice Martin", toutes vos données (scores, modules validés, temps passé) sont enregistrées sous la clé <strong>"Alice Martin"</strong> dans le navigateur.
+    </div>
+    <h4>Ce que ça change concrètement :</h4>
+    <ul>
+      <li>Si deux étudiants utilisent le même ordinateur, chacun a <strong>sa propre sauvegarde indépendante</strong></li>
+      <li>Pour retrouver votre progression sur le même ordinateur, il suffit de retaper votre nom exact</li>
+      <li>Votre nom apparaîtra sur votre certificat de complétion</li>
+    </ul>
+    <div class="warning"><strong>⚠️ Saisissez votre vrai prénom et nom complet dès le début.</strong> Si vous changez de nom en cours de route, une nouvelle sauvegarde vierge est créée et l'ancienne n'est plus accessible.</div>
+  </div></div>
+</div>
+
+<hr class="divider">
+
+<!-- S3 -->
+<div class="page" id="s3">
+  <div class="section-header"><div class="sh-icon">🖥️</div><div><div class="sn">Section 3</div><h2>Interface et navigation</h2><p>Comprendre chaque zone de la plateforme.</p></div></div>
+  <div class="card">
+    <h3>🔝 L'en-tête (toujours visible en haut)</h3>
+    <table>
+      <tr><th>Élément</th><th>Description</th></tr>
+      <tr><td><strong>Logo de la plateforme</strong></td><td>Cliquez pour revenir à l'accueil depuis n'importe quel module</td></tr>
+      <tr><td><strong>Champ Clé API</strong></td><td>Saisissez votre clé Claude ici pour activer les fonctions IA (masquée en points)</td></tr>
+      <tr><td><strong>Badge X / 9 modules</strong></td><td>Compteur de modules validés, mis à jour en temps réel</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h3>🧭 La barre de navigation (sous l'en-tête)</h3>
+    <table>
+      <tr><th>Apparence de l'onglet</th><th>Signification</th></tr>
+      <tr><td>Onglet coloré surligné</td><td>Module actuellement actif (vous êtes ici)</td></tr>
+      <tr><td>✓ affiché en vert</td><td>Module validé (score ≥ 60% + bouton Valider cliqué)</td></tr>
+      <tr><td>🔒 grisé</td><td>Verrouillé — complétez d'abord le module précédent</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h3>🏠 La page d'accueil — votre tableau de bord</h3>
+    <ul>
+      <li><strong>Statistiques en temps réel :</strong> modules validés, score moyen global, temps total passé sur le site</li>
+      <li><strong>Barre de progression globale :</strong> % de complétion du parcours + champ de saisie de votre nom</li>
+      <li><strong>Grille des 9 modules :</strong> chaque carte affiche le statut (Disponible / ✓ Validé / 🔒 Verrouillé) et votre score si déjà tenté</li>
+      <li><strong>Radar de compétences :</strong> toile d'araignée se remplissant au fur et à mesure de vos validations</li>
+      <li><strong>Badges (0/8) :</strong> récompenses débloquées automatiquement selon votre progression</li>
+      <li><strong>Mode Révision :</strong> consultez tous vos feedbacks IA sauvegardés pour réviser avant un examen</li>
+    </ul>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- S4 -->
+<div class="page" id="s4">
+  <div class="section-header"><div class="sh-icon">🔓</div><div><div class="sn">Section 4</div><h2>Système de progression et boutons</h2><p>Comment débloquer les modules et utiliser les boutons.</p></div></div>
+  <div class="card">
+    <h3>📋 Règle de progression</h3>
+    <div class="grid2">
+      <div class="success"><strong>✅ Pour valider un module</strong> Obtenir ≥ 60% (sauf M9 Quiz Final : ≥ 70%) puis cliquer sur "✅ Valider le module".</div>
+      <div class="warning"><strong>🔒 Pour débloquer le suivant</strong> Valider le module précédent. Aucun saut de module possible.</div>
+    </div>
+    <div class="tip"><strong>💡 Tentatives illimitées</strong> Vous pouvez corriger vos réponses et revalider autant de fois que nécessaire. Aucune pénalité.</div>
+  </div>
+  <div class="card">
+    <h3>🔘 Les 5 boutons disponibles dans chaque module</h3>
+    <table>
+      <tr><th>Bouton</th><th>Ce qu'il fait</th><th>Quand l'utiliser</th></tr>
+      <tr><td><span class="mock-btn ghost">🎲 Nouvel exercice</span></td><td>Génère un nouveau scénario industriel via l'IA</td><td>Pour s'entraîner sur différents contextes</td></tr>
+      <tr><td><span class="mock-btn primary">📊 Évaluer mes réponses</span></td><td>Score par section (PLAN 75%, DO 60%...) via IA</td><td>Pour savoir où vous en êtes avant de valider</td></tr>
+      <tr><td><span class="mock-btn gold">🤖 Feedback IA complet</span></td><td>Analyse détaillée : points forts, erreurs, corrections complètes</td><td>Pour comprendre ce qui était attendu</td></tr>
+      <tr><td><span class="mock-btn purple">📖 Voir la correction</span></td><td>Affiche la correction officielle sans appel IA</td><td>Quand vous n'avez pas de clé API</td></tr>
+      <tr><td><span class="mock-btn green">✅ Valider le module</span></td><td>Calcule le score final et débloque le module suivant si ≥ 60%</td><td>Quand vous êtes satisfait de vos réponses</td></tr>
+    </table>
+    <div class="tip"><strong>📌 Ordre recommandé</strong> Remplissez les champs → Évaluez → Lisez le feedback IA → Corrigez si besoin → Validez.</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- M1 -->
+<div class="page" id="m1">
+  <div class="mod-header m1"><div class="mod-num">Module 1</div><h2>🔄 Cycle PDCA Interactif</h2><p>Résolvez un problème industriel réel en appliquant les 4 phases de la Roue de Deming.</p></div>
+  <div class="card">
+    <h3>📚 Rappel théorique — Les 4 phases</h3>
+    <p>Le <strong>cycle PDCA</strong> (Plan-Do-Check-Act), aussi appelé <strong>Roue de Deming</strong>, est la méthode universelle d'amélioration continue. On répète les 4 phases en boucle pour progresser pas à pas.</p>
+    <div class="quadrant-grid">
+      <div class="quadrant q-plan"><strong>🔵 PLAN — Planifier</strong>Analyser la situation, définir le problème avec des chiffres, fixer un objectif SMART (Spécifique, Mesurable, Atteignable, Réaliste, Temporel), identifier les causes racines, planifier les actions avec responsables et délais.</div>
+      <div class="quadrant q-do"><strong>🟢 DO — Réaliser</strong>Mettre en œuvre le plan sur un périmètre limité (pilote). Décrire concrètement ce qui est fait, par qui, avec quels moyens. Former les équipes si nécessaire. Documenter les actions réalisées.</div>
+      <div class="quadrant q-check"><strong>🟡 CHECK — Vérifier</strong>Mesurer les résultats obtenus et les comparer aux objectifs du PLAN. Utiliser des KPIs précis et chiffrés. Analyser les écarts et leurs causes. "Le taux de rebuts est passé de 12% à 4,8%."</div>
+      <div class="quadrant q-act"><strong>🔴 ACT — Agir</strong>Si résultats satisfaisants : standardiser (procédure écrite, formation, affichage). Pérenniser les gains. Identifier le prochain problème à traiter et lancer un nouveau cycle PDCA.</div>
+    </div>
+    <div style="text-align:center;margin:1rem 0;">
+      <svg viewBox="0 0 400 295" width="100%" style="max-width:340px;display:block;margin:0 auto;">
+        <defs><marker id="ap" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#94a3b8"/></marker></defs>
+        <path d="M 90,150 A 110,110 0 0,1 200,40 L 200,95 A 55,55 0 0,0 145,150 Z" fill="#3b82f6" stroke="white" stroke-width="3"/>
+        <path d="M 200,40 A 110,110 0 0,1 310,150 L 255,150 A 55,55 0 0,0 200,95 Z" fill="#22c55e" stroke="white" stroke-width="3"/>
+        <path d="M 310,150 A 110,110 0 0,1 200,260 L 200,205 A 55,55 0 0,0 255,150 Z" fill="#f59e0b" stroke="white" stroke-width="3"/>
+        <path d="M 200,260 A 110,110 0 0,1 90,150 L 145,150 A 55,55 0 0,0 200,205 Z" fill="#ef4444" stroke="white" stroke-width="3"/>
+        <circle cx="200" cy="150" r="48" fill="white" stroke="#e2e8f0" stroke-width="2"/>
+        <text x="200" y="144" text-anchor="middle" fill="#0d1b2a" font-size="10" font-weight="900" font-family="Inter,sans-serif">ROUE DE</text>
+        <text x="200" y="159" text-anchor="middle" fill="#0d1b2a" font-size="10" font-weight="900" font-family="Inter,sans-serif">DEMING</text>
+        <path d="M 196,22 A 128,128 0 0,1 328,152" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#ap)"/>
+        <text x="142" y="90" text-anchor="middle" fill="white" font-size="12" font-weight="900" font-family="Inter,sans-serif">PLAN</text>
+        <text x="142" y="104" text-anchor="middle" fill="rgba(255,255,255,.85)" font-size="8.5" font-family="Inter,sans-serif">① Planifier</text>
+        <text x="258" y="90" text-anchor="middle" fill="white" font-size="12" font-weight="900" font-family="Inter,sans-serif">DO</text>
+        <text x="258" y="104" text-anchor="middle" fill="rgba(255,255,255,.85)" font-size="8.5" font-family="Inter,sans-serif">② Réaliser</text>
+        <text x="258" y="207" text-anchor="middle" fill="white" font-size="12" font-weight="900" font-family="Inter,sans-serif">CHECK</text>
+        <text x="258" y="221" text-anchor="middle" fill="rgba(255,255,255,.85)" font-size="8.5" font-family="Inter,sans-serif">③ Vérifier</text>
+        <text x="142" y="207" text-anchor="middle" fill="white" font-size="12" font-weight="900" font-family="Inter,sans-serif">ACT</text>
+        <text x="142" y="221" text-anchor="middle" fill="rgba(255,255,255,.85)" font-size="8.5" font-family="Inter,sans-serif">④ Agir</text>
+        <text x="200" y="288" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="Inter,sans-serif">↻ Cycle répété indéfiniment — chaque tour améliore le processus</text>
+      </svg>
+    </div>
+    <div class="tip"><strong>💡 Question clé pour chaque phase</strong> PLAN = Quoi/Pourquoi ? · DO = Comment/Avec quoi ? · CHECK = Est-ce réussi ? (chiffres !) · ACT = Et maintenant pour garder les gains ?</div>
+  </div>
+  <div class="card">
+    <h3>🎮 Utilisation du module — Pas à pas</h3>
+    <div class="steps">
+      <div class="step-block"><div class="step-num">1</div><div class="step-content"><h4>Générez un problème industriel</h4><p>Cliquez sur <strong>"🎲 Générer un problème industriel"</strong>. L'IA crée un scénario avec : contexte de l'entreprise, description chiffrée du problème (taux de rebuts, délai de livraison, coût…), objectif à atteindre et contraintes à respecter.</p></div></div>
+      <div class="step-block"><div class="step-num">2</div><div class="step-content"><h4>Notez les données clés du problème</h4><p>Avant de remplir quoi que ce soit : relevez le chiffre actuel (ex : 12% de rebuts), l'objectif cible (ex : 5%), les contraintes (budget, délai). Ces données <strong>doivent apparaître dans vos réponses</strong> — l'IA le vérifiera.</p></div></div>
+      <div class="step-block"><div class="step-num">3</div><div class="step-content"><h4>Remplissez les 4 quadrants</h4><p><strong>PLAN :</strong> Objectif SMART précis + actions prévues + responsables + délais + causes identifiées.<br><strong>DO :</strong> Ce qui a été concrètement mis en place, les ressources mobilisées, le périmètre.<br><strong>CHECK :</strong> Résultats chiffrés mesurés, comparaison avec objectifs, analyse des écarts.<br><strong>ACT :</strong> Standardisation (procédure, formation, affichage), prochaines étapes, nouveau cycle.</p></div></div>
+      <div class="step-block"><div class="step-num">4</div><div class="step-content"><h4>Évaluez vos réponses</h4><p>Cliquez sur <strong>"📊 Évaluer mes réponses"</strong>. L'IA attribue un score à chaque quadrant (PLAN, DO, CHECK, ACT) et une appréciation courte. Le score global est la moyenne des 4.</p></div></div>
+      <div class="step-block"><div class="step-num">5</div><div class="step-content"><h4>Lisez le Feedback IA complet</h4><p>Cliquez sur <strong>"🤖 Feedback IA complet"</strong>. L'IA explique point par point ce que vous avez bien fait, ce qui manquait, et vous donne la réponse modèle complète pour chaque quadrant. Lisez-la avant de corriger.</p></div></div>
+      <div class="step-block"><div class="step-num">6</div><div class="step-content"><h4>Corrigez et validez</h4><p>Enrichissez vos réponses grâce au feedback, puis cliquez sur <strong>"✅ Valider le module"</strong>. Si votre score ≥ 60%, le Module 2 se débloque.</p></div></div>
+    </div>
+    <div class="tip"><strong>🔄 Entraînez-vous sur plusieurs problèmes</strong> Le bouton "Nouveau problème" génère un scénario différent dans un autre secteur. Idéal pour maîtriser la structure PDCA sur des contextes variés.</div>
+  </div>
+  <div class="card">
+    <h3>⭐ Ce que l'IA évalue dans chaque quadrant</h3>
+    <table>
+      <tr><th>Phase</th><th>Critères évalués</th><th>Erreurs fréquentes à éviter</th></tr>
+      <tr><td><strong>PLAN</strong></td><td>Objectif SMART avec chiffres, causes identifiées, plan d'action avec délais</td><td>Objectif vague ("améliorer la qualité"), pas de données chiffrées</td></tr>
+      <tr><td><strong>DO</strong></td><td>Actions concrètes et précises, ressources mentionnées, périmètre défini</td><td>Répéter le PLAN au lieu de décrire ce qui est RÉELLEMENT FAIT</td></tr>
+      <tr><td><strong>CHECK</strong></td><td>KPIs mesurés avec chiffres, comparaison avant/après, analyse des écarts</td><td>"Ça s'est bien passé" sans aucun indicateur chiffré</td></tr>
+      <tr><td><strong>ACT</strong></td><td>Standardisation précise, mesures pérennes, identification du prochain cycle</td><td>Juste écrire "continuer" ou "faire la même chose"</td></tr>
+    </table>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- M2 -->
+<div class="page" id="m2">
+  <div class="mod-header m2"><div class="mod-num">Module 2</div><h2>🧹 Démarche 5S en Atelier Industriel</h2><p>Classez les éléments d'un atelier selon la méthode japonaise des 5S.</p></div>
+  <div class="card">
+    <h3>📚 Rappel théorique — Les 5 étapes dans l'ordre</h3>
+    <div class="five-s">
+      <div class="s-card s1"><div style="font-size:1.3rem;">1️⃣</div><div>SEIRI</div><div style="font-weight:400;margin-top:.2rem;">Trier · Éliminer</div></div>
+      <div class="s-card s2"><div style="font-size:1.3rem;">2️⃣</div><div>SEITON</div><div style="font-weight:400;margin-top:.2rem;">Ranger · Situer</div></div>
+      <div class="s-card s3"><div style="font-size:1.3rem;">3️⃣</div><div>SEISO</div><div style="font-weight:400;margin-top:.2rem;">Nettoyer · Inspecter</div></div>
+      <div class="s-card s4"><div style="font-size:1.3rem;">4️⃣</div><div>SEIKETSU</div><div style="font-weight:400;margin-top:.2rem;">Standardiser</div></div>
+      <div class="s-card s5"><div style="font-size:1.3rem;">5️⃣</div><div>SHITSUKE</div><div style="font-weight:400;margin-top:.2rem;">Respecter · Discipliner</div></div>
+    </div>
+    <table style="margin-top:.8rem;">
+      <tr><th>S</th><th>Définition</th><th>Action concrète</th><th>Exemple industriel</th></tr>
+      <tr><td><strong>Seiri</strong></td><td>Trier, Éliminer l'inutile</td><td>Retirer tout ce qui n'est pas nécessaire à l'activité actuelle</td><td>Jeter les outils cassés, pièces obsolètes, cartons vides, documents périmés</td></tr>
+      <tr><td><strong>Seiton</strong></td><td>Ranger, Situer</td><td>Une place pour chaque chose, chaque chose à sa place — accessible rapidement</td><td>Étiqueter les étagères, tracer des zones au sol, panneau outil avec silhouettes</td></tr>
+      <tr><td><strong>Seiso</strong></td><td>Nettoyer, Inspecter</td><td>Nettoyer ET inspecter régulièrement pour détecter les anomalies précocement</td><td>Tournée de nettoyage quotidienne, vérification des fuites machines, check-list inspection</td></tr>
+      <tr><td><strong>Seiketsu</strong></td><td>Standardiser</td><td>Formaliser et documenter les bonnes pratiques des 3 premiers S</td><td>Procédures écrites, photos "état standard" affichées, check-lists de nettoyage</td></tr>
+      <tr><td><strong>Shitsuke</strong></td><td>Respecter, Discipliner</td><td>Maintenir la discipline dans le temps, auditer et améliorer en continu</td><td>Audits 5S hebdomadaires notés, formation des nouveaux arrivants, tableau de suivi affiché</td></tr>
+    </table>
+    <div class="tip"><strong>💡 L'ordre est obligatoire</strong> Impossible de bien ranger (Seiton) sans avoir d'abord éliminé l'inutile (Seiri). Impossible de standardiser (Seiketsu) sans avoir d'abord établi un état propre et rangé (Seiso).</div>
+  </div>
+  <div class="card">
+    <h3>🎮 Utilisation du module — Pas à pas</h3>
+    <div class="steps">
+      <div class="step-block"><div class="step-num">1</div><div class="step-content"><h4>Lisez le scénario d'atelier proposé</h4><p>L'IA génère un contexte (usine de fabrication, laboratoire, entrepôt...) avec une liste d'éléments présents dans l'espace. Cliquez sur "🎲 Nouvel atelier" pour changer de scénario.</p></div></div>
+      <div class="step-block"><div class="step-num">2</div><div class="step-content"><h4>Pour chaque élément, posez-vous la question : "Quel S correspond ?"</h4><p>Exemples de raisonnement : "Outil rouillé inutilisé depuis 6 mois" → à éliminer → Seiri. "Planning de nettoyage affiché" → standardise la pratique → Seiketsu. "Audit 5S mensuel" → maintient la discipline → Shitsuke.</p></div></div>
+      <div class="step-block"><div class="step-num">3</div><div class="step-content"><h4>Glissez-déposez chaque élément vers la bonne colonne</h4><p>Faites glisser l'élément de la liste vers la colonne 5S correspondante (Seiri, Seiton, Seiso, Seiketsu, Shitsuke).</p></div></div>
+      <div class="step-block"><div class="step-num">4</div><div class="step-content"><h4>Cliquez sur "📊 Vérifier"</h4><p>Éléments corrects en vert, erreurs en rouge avec la bonne réponse indiquée. Votre score en % s'affiche.</p></div></div>
+      <div class="step-block"><div class="step-num">5</div><div class="step-content"><h4>Cliquez sur "🔄 Recommencer" pour retenter</h4><p>Remet tous les éléments à zéro sans changer l'exercice. Tentez à nouveau avec les corrections en mémoire.</p></div></div>
+    </div>
+    <div class="warning"><strong>⚠️ Pièges classiques à éviter</strong><br>• "Planning de nettoyage affiché" → Seiketsu (pas Seiso)<br>• "Audit 5S mensuel" → Shitsuke (pas Seiketsu)<br>• "Ranger les outils dans les bonnes zones" → Seiton (pas Seiri)<br>• "Vérifier l'état des machines pendant le nettoyage" → Seiso (car inspecter = nettoyer)</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- M3 -->
+<div class="page" id="m3">
+  <div class="mod-header m3"><div class="mod-num">Module 3</div><h2>🐟 Diagramme Ishikawa (5M)</h2><p>Construisez une arête de poisson pour identifier toutes les causes racines d'un problème.</p></div>
+  <div class="card">
+    <h3>📚 Rappel théorique — Les 5 catégories M</h3>
+    <p>Le <strong>diagramme d'Ishikawa</strong> (diagramme en arête de poisson) classe toutes les causes possibles d'un problème en 5 familles. Le problème est placé à la "tête du poisson", les causes sur les "arêtes".</p>
+    <table>
+      <tr><th>M</th><th>Catégorie</th><th>Ce qu'elle couvre</th><th>Exemples de causes</th></tr>
+      <tr><td><strong>M1</strong></td><td>Matière</td><td>Matières premières, composants, pièces achetées, fournitures</td><td>Matière hors tolérance, variabilité fournisseur, stockage inadapté, contamination</td></tr>
+      <tr><td><strong>M2</strong></td><td>Méthode</td><td>Procédures, modes opératoires, instructions de travail, processus</td><td>Procédure absente ou mal rédigée, méthode non standardisée, séquence incorrecte</td></tr>
+      <tr><td><strong>M3</strong></td><td>Main-d'œuvre</td><td>Compétences, formation, fatigue, motivation, erreur humaine</td><td>Formation insuffisante, rotation excessive, fatigue, mauvaise communication</td></tr>
+      <tr><td><strong>M4</strong></td><td>Machines</td><td>Équipements, outillage, calibration, maintenance</td><td>Machine non calibrée, outil usé, vibrations, panne récurrente, réglage incorrect</td></tr>
+      <tr><td><strong>M5</strong></td><td>Milieu</td><td>Environnement : température, humidité, bruit, lumière, espace</td><td>Température trop élevée, poussières, vibrations ambiantes, éclairage insuffisant</td></tr>
+    </table>
+    <div style="margin:1rem 0;">
+      <svg viewBox="0 0 640 270" width="100%" style="max-width:640px;display:block;margin:.5rem auto;">
+        <!-- Spine principale -->
+        <line x1="55" y1="135" x2="548" y2="135" stroke="#1e293b" stroke-width="4"/>
+        <!-- Tête de poisson (EFFET / Problème) -->
+        <rect x="548" y="104" width="88" height="64" rx="9" fill="#0d1b2a"/>
+        <text x="592" y="127" text-anchor="middle" fill="white" font-size="11" font-weight="900" font-family="Inter,sans-serif">EFFET</text>
+        <text x="592" y="145" text-anchor="middle" fill="#fbbf24" font-size="9" font-weight="700" font-family="Inter,sans-serif">Problème</text>
+        <text x="592" y="160" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="7.5" font-family="Inter,sans-serif">à analyser</text>
+        <!-- Os supérieur 1 : MATIÈRE -->
+        <line x1="78" y1="72" x2="145" y2="135" stroke="#3b82f6" stroke-width="2.5"/>
+        <rect x="15" y="30" width="122" height="46" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+        <text x="76" y="52" text-anchor="middle" fill="#1d4ed8" font-size="11.5" font-weight="900" font-family="Inter,sans-serif">MATIÈRE</text>
+        <text x="76" y="68" text-anchor="middle" fill="#1d4ed8" font-size="9" font-family="Inter,sans-serif">Matières premières</text>
+        <!-- Os supérieur 2 : MÉTHODE -->
+        <line x1="218" y1="72" x2="285" y2="135" stroke="#8b5cf6" stroke-width="2.5"/>
+        <rect x="155" y="30" width="122" height="46" rx="8" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="2"/>
+        <text x="216" y="52" text-anchor="middle" fill="#6d28d9" font-size="11.5" font-weight="900" font-family="Inter,sans-serif">MÉTHODE</text>
+        <text x="216" y="68" text-anchor="middle" fill="#6d28d9" font-size="9" font-family="Inter,sans-serif">Procédures</text>
+        <!-- Os supérieur 3 : MILIEU -->
+        <line x1="358" y1="72" x2="425" y2="135" stroke="#059669" stroke-width="2.5"/>
+        <rect x="295" y="30" width="122" height="46" rx="8" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+        <text x="356" y="52" text-anchor="middle" fill="#047857" font-size="11.5" font-weight="900" font-family="Inter,sans-serif">MILIEU</text>
+        <text x="356" y="68" text-anchor="middle" fill="#047857" font-size="9" font-family="Inter,sans-serif">Environnement</text>
+        <!-- Os inférieur 1 : MAIN-D'ŒUVRE -->
+        <line x1="138" y1="200" x2="205" y2="135" stroke="#f59e0b" stroke-width="2.5"/>
+        <rect x="66" y="196" width="144" height="46" rx="8" fill="#fef9c3" stroke="#f59e0b" stroke-width="2"/>
+        <text x="138" y="217" text-anchor="middle" fill="#b45309" font-size="11.5" font-weight="900" font-family="Inter,sans-serif">MAIN-D'ŒUVRE</text>
+        <text x="138" y="233" text-anchor="middle" fill="#b45309" font-size="9" font-family="Inter,sans-serif">Compétences, formation</text>
+        <!-- Os inférieur 2 : MACHINE -->
+        <line x1="296" y1="200" x2="363" y2="135" stroke="#ef4444" stroke-width="2.5"/>
+        <rect x="228" y="196" width="136" height="46" rx="8" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+        <text x="296" y="217" text-anchor="middle" fill="#dc2626" font-size="11.5" font-weight="900" font-family="Inter,sans-serif">MACHINE</text>
+        <text x="296" y="233" text-anchor="middle" fill="#dc2626" font-size="9" font-family="Inter,sans-serif">Équipements, outillage</text>
+        <!-- Légende -->
+        <text x="320" y="262" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="Inter,sans-serif">Diagramme d'Ishikawa (arête de poisson) — 5 catégories M</text>
+      </svg>
+    </div>
+    <div class="tip"><strong>💡 Règle d'or</strong> Ne confondez pas la cause avec l'effet. Mauvais : "les pièces sont défectueuses" (c'est l'effet). Bon : "l'alliage a une teneur en silicium hors tolérance" (c'est une cause Matière). Une cause doit être actionnelle : on doit pouvoir agir dessus.</div>
+  </div>
+  <div class="card">
+    <h3>🎮 Utilisation du module — Pas à pas</h3>
+    <div class="steps">
+      <div class="step-block"><div class="step-num">1</div><div class="step-content"><h4>Lisez le problème (l'"effet" à analyser)</h4><p>L'IA propose un problème précis placé à la "tête du poisson". Ex : "Taux de rebuts de 8% sur la ligne d'assemblage moteur". Analysez-le en termes des 5M.</p></div></div>
+      <div class="step-block"><div class="step-num">2</div><div class="step-content"><h4>Ajoutez des causes dans chaque catégorie 5M</h4><p>Pour chaque catégorie, tapez une cause dans le champ prévu et cliquez sur "+". Visez <strong>au minimum 2 causes par catégorie</strong> pour un diagramme complet et équilibré. Plus c'est précis, mieux c'est.</p></div></div>
+      <div class="step-block"><div class="step-num">3</div><div class="step-content"><h4>Formulez des causes précises et actionnables</h4><p>❌ Vague : "Matière de mauvaise qualité"<br>✅ Précis : "Alliage d'aluminium A356 avec teneur en silicium au-delà de la tolérance 7,5%"<br>Une cause précise permet d'identifier une action corrective concrète.</p></div></div>
+      <div class="step-block"><div class="step-num">4</div><div class="step-content"><h4>Demandez des suggestions IA si vous êtes bloqué</h4><p>Le bouton <strong>"🤖 Suggestions IA"</strong> propose 3 causes supplémentaires par catégorie, adaptées à votre problème. Elles s'ajoutent automatiquement à votre diagramme.</p></div></div>
+      <div class="step-block"><div class="step-num">5</div><div class="step-content"><h4>Générez le diagramme visuel</h4><p>Cliquez sur <strong>"🐟 Générer le diagramme"</strong>. L'arête de poisson s'affiche avec toutes vos causes. Le panneau "Répartition 5M" montre l'équilibre entre catégories — idéalement, toutes les catégories doivent avoir des causes.</p></div></div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- M4 -->
+<div class="page" id="m4">
+  <div class="mod-header m4"><div class="mod-num">Module 4</div><h2>📊 Analyse de Pareto</h2><p>Appliquez la règle des 80/20 pour identifier et prioriser les causes majeures.</p></div>
+  <div class="card">
+    <h3>📚 Rappel théorique — La règle des 80/20</h3>
+    <p>La <strong>loi de Pareto</strong> stipule que <strong>80% des problèmes sont causés par 20% des causes</strong>. En qualité industrielle, cela signifie qu'en traitant seulement 2-3 types de défauts sur 10, on peut éliminer la majorité des problèmes.</p>
+    <h4>Comment construire un diagramme de Pareto — Les 6 étapes</h4>
+    <table>
+      <tr><th>Étape</th><th>Action</th><th>Exemple concret</th></tr>
+      <tr><td><strong>1</strong></td><td>Collecter les fréquences de chaque défaut</td><td>Soudure: 450, Alignement: 200, Peinture: 150, Visserie: 120, Autre: 80</td></tr>
+      <tr><td><strong>2</strong></td><td>Calculer le total</td><td>Total = 1 000 occurrences</td></tr>
+      <tr><td><strong>3</strong></td><td>Trier par ordre décroissant</td><td>Soudure (450) > Alignement (200) > Peinture (150)…</td></tr>
+      <tr><td><strong>4</strong></td><td>Calculer les % individuels</td><td>450/1000 = 45%, 200/1000 = 20%, 150/1000 = 15%…</td></tr>
+      <tr><td><strong>5</strong></td><td>Calculer les % cumulés</td><td>45% → 65% → 80% → 92% → 100%</td></tr>
+      <tr><td><strong>6</strong></td><td>Identifier les "vitaux peu nombreux"</td><td>Soudure + Alignement = 65% du total → vitaux (avant 80%)</td></tr>
+    </table>
+    <div style="margin:1rem 0;">
+      <svg viewBox="0 0 520 255" width="100%" style="max-width:520px;display:block;margin:.5rem auto;">
+        <line x1="50" y1="20" x2="50" y2="210" stroke="#e2e8f0" stroke-width="1.5"/>
+        <line x1="50" y1="210" x2="475" y2="210" stroke="#1e293b" stroke-width="1.5"/>
+        <line x1="50" y1="172" x2="470" y2="172" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="44" y="176" text-anchor="end" fill="#94a3b8" font-size="8" font-family="Inter,sans-serif">20%</text>
+        <line x1="50" y1="134" x2="470" y2="134" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="44" y="138" text-anchor="end" fill="#94a3b8" font-size="8" font-family="Inter,sans-serif">40%</text>
+        <line x1="50" y1="96" x2="470" y2="96" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="44" y="100" text-anchor="end" fill="#94a3b8" font-size="8" font-family="Inter,sans-serif">60%</text>
+        <line x1="50" y1="58" x2="470" y2="58" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <text x="44" y="62" text-anchor="end" fill="#ef4444" font-size="8" font-weight="700" font-family="Inter,sans-serif">80%</text>
+        <line x1="50" y1="20" x2="470" y2="20" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="44" y="24" text-anchor="end" fill="#94a3b8" font-size="8" font-family="Inter,sans-serif">100%</text>
+        <rect x="58" y="124" width="72" height="86" rx="3" fill="#ef4444"/>
+        <text x="94" y="120" text-anchor="middle" fill="#dc2626" font-size="9" font-weight="700" font-family="Inter,sans-serif">45%</text>
+        <rect x="142" y="172" width="72" height="38" rx="3" fill="#ef4444"/>
+        <text x="178" y="168" text-anchor="middle" fill="#dc2626" font-size="9" font-weight="700" font-family="Inter,sans-serif">20%</text>
+        <rect x="226" y="181" width="72" height="29" rx="3" fill="#ef4444"/>
+        <text x="262" y="177" text-anchor="middle" fill="#dc2626" font-size="9" font-weight="700" font-family="Inter,sans-serif">15%</text>
+        <rect x="310" y="187" width="72" height="23" rx="3" fill="#94a3b8"/>
+        <text x="346" y="183" text-anchor="middle" fill="#64748b" font-size="9" font-family="Inter,sans-serif">12%</text>
+        <rect x="394" y="195" width="72" height="15" rx="3" fill="#94a3b8"/>
+        <text x="430" y="191" text-anchor="middle" fill="#64748b" font-size="9" font-family="Inter,sans-serif">8%</text>
+        <polyline points="50,210 130,124 214,96 298,58 382,35 466,20" fill="none" stroke="#f97316" stroke-width="2"/>
+        <circle cx="130" cy="124" r="4" fill="#f97316"/>
+        <circle cx="214" cy="96" r="4" fill="#f97316"/>
+        <circle cx="298" cy="58" r="5" fill="#ef4444" stroke="white" stroke-width="2"/>
+        <circle cx="382" cy="35" r="4" fill="#f97316"/>
+        <circle cx="466" cy="20" r="4" fill="#f97316"/>
+        <text x="94" y="222" text-anchor="middle" fill="#dc2626" font-size="7.5" font-weight="700" font-family="Inter,sans-serif">Soudure</text>
+        <text x="178" y="222" text-anchor="middle" fill="#dc2626" font-size="7.5" font-weight="700" font-family="Inter,sans-serif">Alignement</text>
+        <text x="262" y="222" text-anchor="middle" fill="#dc2626" font-size="7.5" font-weight="700" font-family="Inter,sans-serif">Peinture</text>
+        <text x="346" y="222" text-anchor="middle" fill="#64748b" font-size="7.5" font-family="Inter,sans-serif">Visserie</text>
+        <text x="430" y="222" text-anchor="middle" fill="#64748b" font-size="7.5" font-family="Inter,sans-serif">Autre</text>
+        <rect x="58" y="236" width="10" height="10" rx="2" fill="#ef4444"/>
+        <text x="72" y="245" fill="#dc2626" font-size="8" font-weight="700" font-family="Inter,sans-serif">Vitaux peu nombreux (≤ 80%)</text>
+        <rect x="230" y="236" width="10" height="10" rx="2" fill="#94a3b8"/>
+        <text x="244" y="245" fill="#64748b" font-size="8" font-family="Inter,sans-serif">Trivials</text>
+        <line x1="310" y1="241" x2="340" y2="241" stroke="#f97316" stroke-width="2"/>
+        <circle cx="325" cy="241" r="3" fill="#f97316"/>
+        <text x="344" y="245" fill="#f97316" font-size="8" font-family="Inter,sans-serif">Courbe cumulée</text>
+        <line x1="50" y1="58" x2="298" y2="58" stroke="#ef4444" stroke-width="1" stroke-dasharray="2,2"/>
+        <line x1="298" y1="58" x2="298" y2="210" stroke="#ef4444" stroke-width="1" stroke-dasharray="2,2"/>
+      </svg>
+    </div>
+    <div class="tip"><strong>💡 Lecture du graphique</strong> Les barres rouges (à gauche de la ligne 80%) = causes vitales à traiter en priorité. Les barres grises = causes triviales à traiter plus tard ou à surveiller.</div>
+  </div>
+  <div class="card">
+    <h3>🎮 Utilisation du module — Pas à pas</h3>
+    <div class="steps">
+      <div class="step-block"><div class="step-num">1</div><div class="step-content"><h4>Un jeu de données est proposé</h4><p>L'IA génère un contexte industriel avec des types de défauts et leurs fréquences pré-remplies dans le tableau. Vérifiez qu'elles correspondent bien au scénario.</p></div></div>
+      <div class="step-block"><div class="step-num">2</div><div class="step-content"><h4>Modifiez le tableau si nécessaire</h4><p>Chaque ligne contient un nom de défaut et sa fréquence. Cliquez "+ Ajouter" pour une nouvelle ligne, "×" pour supprimer. Les données doivent être cohérentes avec le problème décrit.</p></div></div>
+      <div class="step-block"><div class="step-num">3</div><div class="step-content"><h4>Générez le diagramme de Pareto</h4><p>Cliquez sur <strong>"📊 Générer le Pareto"</strong>. Le graphique s'affiche : barres triées par ordre décroissant, courbe cumulée en orange, ligne de référence à 80% en rouge pointillé.</p></div></div>
+      <div class="step-block"><div class="step-num">4</div><div class="step-content"><h4>Identifiez les vitaux peu nombreux</h4><p>Repérez les barres rouges (avant que la courbe cumulée croise 80%). Ce sont les défauts à traiter en priorité absolue. Notez leur nom et leur contribution cumulée.</p></div></div>
+      <div class="step-block"><div class="step-num">5</div><div class="step-content"><h4>Demandez l'interprétation IA</h4><p>Cliquez sur <strong>"🤖 Interprétation IA"</strong> : l'IA analyse les vitaux identifiés, recommande des outils Lean adaptés (SMED, Ishikawa, Poka-Yoke, SPC…) et propose des actions concrètes.</p></div></div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- M5 -->
+<div class="page" id="m5">
+  <div class="mod-header m5"><div class="mod-num">Module 5</div><h2>📋 Tableau Kanban</h2><p>Pilotez un flux de travail avec des cartes visuelles et des limites WIP.</p></div>
+  <div class="card">
+    <h3>📚 Rappel théorique — Le Kanban et le WIP</h3>
+    <p>Le <strong>Kanban</strong> (mot japonais = "carte visuelle") est un système développé chez Toyota dans les années 1950. Il permet de visualiser le travail, de limiter la surcharge et d'identifier les goulots d'étranglement.</p>
+    <table>
+      <tr><th>Colonne</th><th>Description</th><th>Règle</th></tr>
+      <tr><td>📋 <strong>Backlog</strong></td><td>Toutes les tâches à faire, en attente</td><td>Aucune limite — toutes les demandes s'accumulent ici</td></tr>
+      <tr><td>⚙️ <strong>En cours</strong></td><td>Tâches en cours de réalisation</td><td><strong>Limitée par le WIP</strong> — ne jamais dépasser la limite !</td></tr>
+      <tr><td>✅ <strong>Terminé</strong></td><td>Tâches complètes et livrées</td><td>Aucune limite — c'est la sortie du flux</td></tr>
+    </table>
+    <div style="margin:1rem 0;">
+      <svg viewBox="0 0 520 240" width="100%" style="max-width:520px;display:block;margin:.5rem auto;">
+        <!-- Colonne Backlog -->
+        <rect x="5" y="5" width="157" height="218" rx="9" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+        <rect x="5" y="5" width="157" height="42" rx="9" fill="#e2e8f0"/>
+        <rect x="5" y="34" width="157" height="13" fill="#e2e8f0"/>
+        <text x="83" y="31" text-anchor="middle" fill="#334155" font-size="12" font-weight="800" font-family="Inter,sans-serif">📋 Backlog</text>
+        <rect x="14" y="54" width="139" height="36" rx="6" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+        <rect x="14" y="54" width="5" height="36" rx="3" fill="#64748b"/>
+        <text x="92" y="76" text-anchor="middle" fill="#475569" font-size="9.5" font-family="Inter,sans-serif">Tâche A — Inspection</text>
+        <rect x="14" y="97" width="139" height="36" rx="6" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+        <rect x="14" y="97" width="5" height="36" rx="3" fill="#64748b"/>
+        <text x="92" y="119" text-anchor="middle" fill="#475569" font-size="9.5" font-family="Inter,sans-serif">Tâche B — Réglage</text>
+        <rect x="14" y="140" width="139" height="36" rx="6" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+        <rect x="14" y="140" width="5" height="36" rx="3" fill="#64748b"/>
+        <text x="92" y="162" text-anchor="middle" fill="#475569" font-size="9.5" font-family="Inter,sans-serif">Tâche C — Rapport</text>
+        <!-- Flèche -->
+        <text x="172" y="120" text-anchor="middle" fill="#94a3b8" font-size="20" font-family="sans-serif">→</text>
+        <!-- Colonne En cours (WIP limit) -->
+        <rect x="182" y="5" width="157" height="218" rx="9" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+        <rect x="182" y="5" width="157" height="42" rx="9" fill="#fef3c7"/>
+        <rect x="182" y="34" width="157" height="13" fill="#fef3c7"/>
+        <text x="260" y="24" text-anchor="middle" fill="#92400e" font-size="11" font-weight="800" font-family="Inter,sans-serif">⚙️ En cours</text>
+        <text x="260" y="38" text-anchor="middle" fill="#b45309" font-size="8.5" font-weight="700" font-family="Inter,sans-serif">Limite WIP : 2   ⚠️ ATTEINTE</text>
+        <rect x="191" y="54" width="139" height="36" rx="6" fill="#fde68a" stroke="#f59e0b" stroke-width="1.5"/>
+        <rect x="191" y="54" width="5" height="36" rx="3" fill="#f59e0b"/>
+        <text x="269" y="76" text-anchor="middle" fill="#78350f" font-size="9.5" font-weight="600" font-family="Inter,sans-serif">Tâche D — Soudage</text>
+        <rect x="191" y="97" width="139" height="36" rx="6" fill="#fde68a" stroke="#f59e0b" stroke-width="1.5"/>
+        <rect x="191" y="97" width="5" height="36" rx="3" fill="#f59e0b"/>
+        <text x="269" y="119" text-anchor="middle" fill="#78350f" font-size="9.5" font-weight="600" font-family="Inter,sans-serif">Tâche E — Peinture</text>
+        <rect x="191" y="140" width="139" height="34" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="2" stroke-dasharray="5,3"/>
+        <text x="260" y="162" text-anchor="middle" fill="#dc2626" font-size="9.5" font-weight="800" font-family="Inter,sans-serif">🚫 Limite WIP atteinte !</text>
+        <!-- Flèche -->
+        <text x="349" y="120" text-anchor="middle" fill="#94a3b8" font-size="20" font-family="sans-serif">→</text>
+        <!-- Colonne Terminé -->
+        <rect x="358" y="5" width="157" height="218" rx="9" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+        <rect x="358" y="5" width="157" height="42" rx="9" fill="#dcfce7"/>
+        <rect x="358" y="34" width="157" height="13" fill="#dcfce7"/>
+        <text x="436" y="31" text-anchor="middle" fill="#166534" font-size="12" font-weight="800" font-family="Inter,sans-serif">✅ Terminé</text>
+        <rect x="367" y="54" width="139" height="36" rx="6" fill="#86efac" stroke="#22c55e" stroke-width="1.5"/>
+        <rect x="367" y="54" width="5" height="36" rx="3" fill="#22c55e"/>
+        <text x="444" y="76" text-anchor="middle" fill="#166534" font-size="9.5" font-weight="700" font-family="Inter,sans-serif">✅ Tâche F — Assemblage</text>
+        <!-- Légende -->
+        <text x="260" y="233" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="Inter,sans-serif">Les cartes avancent de gauche → droite · Ne jamais dépasser la limite WIP</text>
+      </svg>
+    </div>
+    <h4>Pourquoi limiter le WIP ?</h4>
+    <p>La <strong>limite WIP</strong> (Work In Progress) fixe le nombre maximum de tâches simultanées "En cours". La dépasser crée de la surcharge, des erreurs et des retards. La respecter assure un flux régulier et des délais prévisibles.</p>
+    <div class="tip"><strong>💡 Loi de Little</strong> Temps de livraison = Tâches en cours ÷ Cadence. Moins on a de tâches en cours simultanément, plus chaque tâche individuelle est livrée rapidement.</div>
+  </div>
+  <div class="card">
+    <h3>🎮 Utilisation du module — Pas à pas</h3>
+    <div class="steps">
+      <div class="step-block"><div class="step-num">1</div><div class="step-content"><h4>Réglez la limite WIP selon le scénario</h4><p>Le champ "Limite WIP" (défaut : 3) contrôle le maximum de tâches simultanées dans la colonne "En cours". Ajustez-le selon ce que le scénario proposé préconise.</p></div></div>
+      <div class="step-block"><div class="step-num">2</div><div class="step-content"><h4>Ajoutez des tâches au Backlog</h4><p>Tapez le nom d'une tâche dans le champ en bas du Backlog et cliquez "+ Ajouter". Des tâches sont déjà présentes par défaut.</p></div></div>
+      <div class="step-block"><div class="step-num">3</div><div class="step-content"><h4>Faites avancer les cartes de colonne en colonne</h4><p>Glissez une carte de "Backlog" → "En cours". Quand terminée, glissez-la → "Terminé". Si vous dépassez la limite WIP, la colonne devient rouge pour vous alerter.</p></div></div>
+      <div class="step-block"><div class="step-num">4</div><div class="step-content"><h4>Consultez les métriques de flux en temps réel</h4><p>Un panneau affiche : nombre total de tâches, % terminé, statut WIP (respecté ✅ ou dépassé ❌). Objectif : vider le Backlog sans jamais dépasser le WIP.</p></div></div>
+      <div class="step-block"><div class="step-num">5</div><div class="step-content"><h4>Demandez l'analyse IA du flux</h4><p>Cliquez sur <strong>"🤖 Analyse du flux"</strong> : l'IA identifie les goulots d'étranglement, suggère un ajustement du WIP et recommande des actions d'amélioration du flux.</p></div></div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- M6 -->
+<div class="page" id="m6">
+  <div class="mod-header m6"><div class="mod-num">Module 6</div><h2>🗺️ VSM — Value Stream Mapping</h2><p>Cartographiez votre flux de valeur et calculez le taux de valeur ajoutée.</p></div>
+  <div class="card">
+    <h3>📚 Rappel théorique — VSM et les 3 types d'étapes</h3>
+    <p>La <strong>VSM</strong> visualise l'intégralité du parcours d'un produit. Elle distingue ce qui apporte de la valeur de ce qui est du gaspillage (Muda en japonais).</p>
+    <div class="grid2">
+      <div class="success"><strong>✅ VA — Valeur Ajoutée</strong><br>Opération qui transforme physiquement le produit et pour laquelle le client paie.<br><br>Exemples : usinage, assemblage, peinture, test fonctionnel.</div>
+      <div class="danger"><strong>❌ NVA — Non Valeur Ajoutée</strong><br>Opération inutile à éliminer. Le client ne paie pas pour ça.<br><br>Exemples : déplacements inutiles, doubles contrôles, attentes entre postes.</div>
+    </div>
+    <h4>Les 3 KPIs calculés</h4>
+    <table>
+      <tr><th>KPI</th><th>Formule</th><th>Signification</th></tr>
+      <tr><td><strong>Temps de cycle</strong></td><td>Somme des temps de toutes les opérations</td><td>Durée totale de transformation active</td></tr>
+      <tr><td><strong>Lead Time</strong></td><td>Temps de cycle + tous les temps d'attente</td><td>Durée totale perçue par le client</td></tr>
+      <tr><td><strong>Taux VA</strong></td><td>(Temps VA ÷ Lead Time) × 100</td><td>% du temps réellement utile pour le client</td></tr>
+    </table>
+    <div class="tip"><strong>💡 En industrie, le taux VA est souvent inférieur à 5% !</strong> Un taux de 30% est déjà excellent. L'objectif est de l'augmenter en supprimant les opérations NVA et les temps d'attente.</div>
+  </div>
+  <div class="card">
+    <h3>🎮 Utilisation du module — Pas à pas</h3>
+    <div class="steps">
+      <div class="step-block"><div class="step-num">1</div><div class="step-content"><h4>Lisez le scénario de flux proposé</h4><p>L'IA décrit un processus industriel. Un tableau est pré-rempli avec les étapes, leurs durées et leur classification VA/NVA.</p></div></div>
+      <div class="step-block"><div class="step-num">2</div><div class="step-content"><h4>Remplissez ou vérifiez le tableau des étapes</h4><p>Pour chaque étape : nom de l'opération, temps de cycle (min), temps d'attente avant l'étape suivante (min), et classification VA / NVA.</p></div></div>
+      <div class="step-block"><div class="step-num">3</div><div class="step-content"><h4>Générez la VSM et les KPIs</h4><p>Cliquez sur <strong>"📊 Calculer & Visualiser"</strong>. Les 3 KPIs s'affichent et une timeline proportionnelle colore chaque étape en vert (VA), rouge (NVA) ou orange (Attente).</p></div></div>
+      <div class="step-block"><div class="step-num">4</div><div class="step-content"><h4>Identifiez les gaspillages à éliminer</h4><p>Repérez les étapes NVA les plus longues sur la timeline. Proposez dans votre analyse comment les réduire ou les supprimer (regroupement d'étapes, flux en ligne continu, automatisation, suppression d'un contrôle redondant…).</p></div></div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- M7 -->
+<div class="page" id="m7">
+  <div class="mod-header m7"><div class="mod-num">Module 7</div><h2>📈 Carte de Contrôle SPC</h2><p>Détectez les dérives statistiques d'un processus avec les règles de Nelson.</p></div>
+  <div class="card">
+    <h3>📚 Rappel théorique — Lignes et règles</h3>
+    <p>Le <strong>SPC (Statistical Process Control)</strong> surveille la stabilité d'un processus en temps réel grâce à des cartes de contrôle. On calcule 3 lignes à partir des données :</p>
+    <table>
+      <tr><th>Ligne</th><th>Formule</th><th>Interprétation</th></tr>
+      <tr><td style="color:#dc2626;font-weight:700;">UCL (limite haute)</td><td>X̄ + 3σ</td><td>Tout point au-dessus = anomalie à investiguer immédiatement</td></tr>
+      <tr><td style="color:var(--navy);font-weight:700;">X̄ (moyenne)</td><td>Somme ÷ N</td><td>Valeur cible centrale du processus</td></tr>
+      <tr><td style="color:#dc2626;font-weight:700;">LCL (limite basse)</td><td>X̄ − 3σ</td><td>Tout point en dessous = anomalie à investiguer immédiatement</td></tr>
+    </table>
+    <h4>Les 4 règles de Nelson principales à connaître</h4>
+    <table>
+      <tr><th>Règle</th><th>Signal détecté</th><th>Cause probable</th></tr>
+      <tr><td><strong>Règle 1</strong></td><td>1 point hors des limites UCL ou LCL</td><td>Cause spéciale immédiate (panne, erreur, matière défectueuse)</td></tr>
+      <tr><td><strong>Règle 2</strong></td><td>9 points consécutifs du même côté de la moyenne</td><td>Dérive progressive (outil qui s'use, température qui monte)</td></tr>
+      <tr><td><strong>Règle 3</strong></td><td>6 points consécutifs en tendance croissante ou décroissante</td><td>Tendance systématique, déréglage progressif</td></tr>
+      <tr><td><strong>Règle 4</strong></td><td>14 points alternant strictement haut/bas</td><td>Instabilité cyclique (deux machines alternées, deux opérateurs)</td></tr>
+    </table>
+    <div style="margin:1rem 0;">
+      <svg viewBox="0 0 520 235" width="100%" style="max-width:520px;display:block;margin:.5rem auto;">
+        <rect x="45" y="10" width="460" height="195" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
+        <line x1="45" y1="40" x2="505" y2="40" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="6,3"/>
+        <line x1="45" y1="107" x2="505" y2="107" stroke="#3b82f6" stroke-width="2"/>
+        <line x1="45" y1="175" x2="505" y2="175" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="6,3"/>
+        <text x="510" y="44" fill="#ef4444" font-size="8.5" font-weight="700" font-family="Inter,sans-serif">UCL</text>
+        <text x="510" y="111" fill="#3b82f6" font-size="8.5" font-weight="700" font-family="Inter,sans-serif">X̄</text>
+        <text x="510" y="179" fill="#ef4444" font-size="8.5" font-weight="700" font-family="Inter,sans-serif">LCL</text>
+        <polyline points="50,107 80,118 110,95 140,112 170,100 200,98 230,108 260,122 290,90 320,115 350,28 380,110 410,100 440,118 470,95" fill="none" stroke="#64748b" stroke-width="1.5"/>
+        <circle cx="50" cy="107" r="4" fill="#3b82f6"/><circle cx="80" cy="118" r="4" fill="#3b82f6"/>
+        <circle cx="110" cy="95" r="4" fill="#3b82f6"/><circle cx="140" cy="112" r="4" fill="#3b82f6"/>
+        <circle cx="170" cy="100" r="4" fill="#3b82f6"/><circle cx="200" cy="98" r="4" fill="#3b82f6"/>
+        <circle cx="230" cy="108" r="4" fill="#3b82f6"/><circle cx="260" cy="122" r="4" fill="#3b82f6"/>
+        <circle cx="290" cy="90" r="4" fill="#3b82f6"/><circle cx="320" cy="115" r="4" fill="#3b82f6"/>
+        <circle cx="350" cy="28" r="6" fill="#ef4444" stroke="white" stroke-width="2"/>
+        <rect x="290" y="8" width="120" height="18" rx="4" fill="#fef2f2" stroke="#ef4444"/>
+        <text x="350" y="20" text-anchor="middle" fill="#dc2626" font-size="8.5" font-weight="800" font-family="Inter,sans-serif">⚠ HORS LIMITE — Règle 1</text>
+        <circle cx="380" cy="110" r="4" fill="#3b82f6"/><circle cx="410" cy="100" r="4" fill="#3b82f6"/>
+        <circle cx="440" cy="118" r="4" fill="#3b82f6"/><circle cx="470" cy="95" r="4" fill="#3b82f6"/>
+        <text x="50" y="215" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="Inter,sans-serif">1</text>
+        <text x="170" y="215" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="Inter,sans-serif">5</text>
+        <text x="290" y="215" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="Inter,sans-serif">9</text>
+        <text x="350" y="215" text-anchor="middle" fill="#ef4444" font-size="8" font-weight="700" font-family="Inter,sans-serif">11</text>
+        <text x="470" y="215" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="Inter,sans-serif">15</text>
+        <text x="260" y="228" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="Inter,sans-serif">N° de mesure →   Carte de contrôle SPC · 1 point rouge = cause spéciale à investiguer</text>
+      </svg>
+    </div>
+    <div class="warning"><strong>⚠️ Confusion fréquente</strong> UCL/LCL sont des <strong>limites de contrôle</strong> calculées à partir des données du processus. Elles sont différentes des <strong>limites de spécification</strong> fixées par le client (tolérances). Ne les confondez pas !</div>
+  </div>
+  <div class="card">
+    <h3>🎮 Utilisation du module — Pas à pas</h3>
+    <div class="steps">
+      <div class="step-block"><div class="step-num">1</div><div class="step-content"><h4>Lisez le scénario de mesures</h4><p>L'IA génère un contexte (mesures de diamètre en mm, de poids en g, de résistance en Ω…) avec une série de valeurs pré-remplies. Minimum 10 valeurs pour une analyse valide.</p></div></div>
+      <div class="step-block"><div class="step-num">2</div><div class="step-content"><h4>Vérifiez ou modifiez les données</h4><p>Les mesures sont séparées par des virgules dans le champ texte. Modifiez-les si le scénario le demande.</p></div></div>
+      <div class="step-block"><div class="step-num">3</div><div class="step-content"><h4>Tracez la carte de contrôle</h4><p>Cliquez sur <strong>"📈 Tracer la carte"</strong>. Les points sont colorés : vert = dans les limites, rouge = hors limites. X̄, σ, UCL et LCL sont calculés et affichés automatiquement.</p></div></div>
+      <div class="step-block"><div class="step-num">4</div><div class="step-content"><h4>Demandez l'analyse IA des règles de Nelson</h4><p>Cliquez sur <strong>"🤖 Analyse IA"</strong>. L'IA vérifie toutes les règles de Nelson, identifie les violations, diagnostique si le processus est "sous contrôle" ou "hors contrôle" et propose des actions correctives.</p></div></div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- M8 -->
+<div class="page" id="m8">
+  <div class="mod-header m8"><div class="mod-num">Module 8</div><h2>⏱️ SMED — Changement Rapide de Série</h2><p>Réduisez les temps d'arrêt machine en convertissant les tâches internes en externes.</p></div>
+  <div class="card">
+    <h3>📚 Rappel théorique — La distinction Interne / Externe</h3>
+    <p>Le <strong>SMED (Single Minute Exchange of Die)</strong> développé par Shigeo Shingo vise à réduire le temps de changement de série à moins de 10 minutes. La clé : distinguer les tâches internes des externes.</p>
+    <div class="grid2">
+      <div class="danger"><strong>🔴 Tâches INTERNES</strong><br><br>S'effectuent <strong>obligatoirement machine à l'arrêt</strong>. Elles allongent directement le temps de changement et donc le temps de non-production.<br><br>Exemples : démonter l'ancien moule, fixer le nouveau, centrer l'outil, régler les paramètres machine, purger le circuit.</div>
+      <div class="success"><strong>🟢 Tâches EXTERNES</strong><br><br>Peuvent s'effectuer <strong>pendant que la machine tourne</strong>, avant ou après le changement. Elles ne ralentissent pas la production.<br><br>Exemples : préparer le nouveau moule à l'avance, préchauffer les outillages, remplir les documents, approvisionner les matières.</div>
+    </div>
+    <div style="margin:1rem 0;">
+      <svg viewBox="0 0 500 200" width="100%" style="max-width:500px;display:block;margin:.5rem auto;">
+        <text x="10" y="22" fill="#0d1b2a" font-size="10" font-weight="800" font-family="Inter,sans-serif">AVANT SMED</text>
+        <rect x="10" y="28" width="270" height="36" rx="5" fill="#ef4444"/>
+        <text x="145" y="51" text-anchor="middle" fill="white" font-size="9.5" font-weight="700" font-family="Inter,sans-serif">🔴 Internes — 60 min</text>
+        <rect x="280" y="28" width="200" height="36" rx="5" fill="#f97316"/>
+        <text x="380" y="51" text-anchor="middle" fill="white" font-size="9.5" font-weight="700" font-family="Inter,sans-serif">🟠 Externes à l'arrêt — 40 min</text>
+        <rect x="10" y="28" width="470" height="36" rx="5" fill="none" stroke="#dc2626" stroke-width="2"/>
+        <text x="245" y="78" text-anchor="middle" fill="#dc2626" font-size="8.5" font-weight="700" font-family="Inter,sans-serif">⏱ Machine arrêtée : 100 min</text>
+        <text x="10" y="108" fill="#0d1b2a" font-size="10" font-weight="800" font-family="Inter,sans-serif">APRÈS SMED</text>
+        <rect x="10" y="114" width="60" height="36" rx="5" fill="#22c55e"/>
+        <text x="40" y="132" text-anchor="middle" fill="white" font-size="8" font-weight="700" font-family="Inter,sans-serif">🟢 Ext.</text>
+        <text x="40" y="143" text-anchor="middle" fill="white" font-size="8" font-family="Inter,sans-serif">avant</text>
+        <rect x="75" y="114" width="270" height="36" rx="5" fill="#ef4444"/>
+        <text x="210" y="137" text-anchor="middle" fill="white" font-size="9.5" font-weight="700" font-family="Inter,sans-serif">🔴 Internes — 60 min (inchangé)</text>
+        <rect x="350" y="114" width="130" height="36" rx="5" fill="#22c55e"/>
+        <text x="415" y="132" text-anchor="middle" fill="white" font-size="8" font-weight="700" font-family="Inter,sans-serif">🟢 Ext. après</text>
+        <text x="415" y="143" text-anchor="middle" fill="white" font-size="8" font-family="Inter,sans-serif">machine relancée</text>
+        <rect x="75" y="114" width="270" height="36" rx="5" fill="none" stroke="#dc2626" stroke-width="2"/>
+        <text x="210" y="164" text-anchor="middle" fill="#059669" font-size="9" font-weight="800" font-family="Inter,sans-serif">⏱ Machine arrêtée : 60 min · GAIN = −40 min (−40%) 🎉</text>
+        <line x1="10" y1="180" x2="490" y2="180" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="250" y="193" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="Inter,sans-serif">Les tâches externes (🟢) se font pendant que la machine tourne → zéro perte de production</text>
+      </svg>
+    </div>
+    <h4>Les 3 étapes de la méthode SMED</h4>
+    <table>
+      <tr><th>Étape</th><th>Action</th><th>Gain typique</th></tr>
+      <tr><td><strong>1. Observer</strong></td><td>Filmer le changement complet, lister toutes les tâches, mesurer les durées précisément</td><td>Prise de conscience du potentiel</td></tr>
+      <tr><td><strong>2. Distinguer</strong></td><td>Classer chaque tâche en Interne (obligatoirement à l'arrêt) ou Externe (possible en marche)</td><td>25 à 40% du temps économisé</td></tr>
+      <tr><td><strong>3. Convertir</strong></td><td>Réorganiser pour faire le maximum en externe : préparation, standardisation des connexions, kits prêts à l'emploi</td><td>Jusqu'à 75% du temps économisé</td></tr>
+    </table>
+    <div class="tip"><strong>💡 Exemple réel</strong> Changer un moule d'injection plastique prend 4 heures. Après SMED (préparation anticipée + connexions standardisées + gabarit de réglage) : 45 minutes. Gain : -81% du temps d'arrêt.</div>
+  </div>
+  <div class="card">
+    <h3>🎮 Utilisation du module — Pas à pas</h3>
+    <div class="steps">
+      <div class="step-block"><div class="step-num">1</div><div class="step-content"><h4>Lisez le scénario de changement de série</h4><p>L'IA présente un contexte industriel (presse, machine CNC, ligne d'embouteillage, moulerie…) avec la liste complète des tâches du changement actuel et leurs durées en minutes.</p></div></div>
+      <div class="step-block"><div class="step-num">2</div><div class="step-content"><h4>Classez chaque tâche : Interne ou Externe ?</h4><p>Pour chaque ligne, utilisez le menu déroulant. Posez-vous la question : <em>"Est-ce vraiment impossible de faire cette tâche pendant que la machine tourne ?"</em> Si oui → Interne. Si non → Externe.</p></div></div>
+      <div class="step-block"><div class="step-num">3</div><div class="step-content"><h4>Calculez le gain SMED</h4><p>Cliquez sur <strong>"⏱️ Calculer le gain"</strong>. S'affichent : temps actuel total, temps optimisé (seulement les vraies internes), gain en minutes et en %. Un donut (Interne vs Externe) et un histogramme (Avant vs Après) illustrent la répartition.</p></div></div>
+      <div class="step-block"><div class="step-num">4</div><div class="step-content"><h4>Rédigez un plan d'action dans le champ prévu</h4><p>Proposez les mesures concrètes pour réaliser les conversions : préparation du prochain moule pendant la production en cours, standardisation des connexions, kits outillage pré-assemblés, etc.</p></div></div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- M9 -->
+<div class="page" id="m9">
+  <div class="mod-header m9"><div class="mod-num">Module 9</div><h2>🎓 Quiz Final & Certificat</h2><p>Validez l'ensemble du parcours et obtenez votre certificat de complétion.</p></div>
+  <div class="card">
+    <h3>📋 Conditions d'accès et règles spéciales</h3>
+    <div class="warning"><strong>⚠️ Prérequis absolus</strong> Le Quiz Final ne se débloque qu'après avoir validé les 8 modules précédents (score ≥ 60% sur chacun + bouton Valider cliqué).</div>
+    <div class="warning" style="margin-top:.6rem;"><strong>⚠️ Score minimum : 70% (7/10)</strong> Contrairement aux autres modules, il faut 7 bonnes réponses minimum sur 10 pour valider et obtenir le certificat.</div>
+  </div>
+  <div class="card">
+    <h3>🎮 Utilisation du module — Pas à pas</h3>
+    <div class="steps">
+      <div class="step-block"><div class="step-num">1</div><div class="step-content"><h4>Révisez avant de commencer</h4><p>Consultez le <strong>Mode Révision</strong> sur la page d'accueil pour relire tous vos feedbacks IA sauvegardés. Le quiz couvre tous les modules : PDCA, 5S, Ishikawa, Pareto, Kanban, VSM, SPC, SMED et concepts Lean/Six Sigma généraux.</p></div></div>
+      <div class="step-block"><div class="step-num">2</div><div class="step-content"><h4>Générez le quiz IA</h4><p>Cliquez sur <strong>"🤖 Générer le Quiz IA"</strong>. L'IA crée 10 questions QCM couvrant les 8 modules. Chaque question a 4 choix. Les questions sont différentes à chaque génération — impossible de "mémoriser" les réponses.</p></div></div>
+      <div class="step-block"><div class="step-num">3</div><div class="step-content"><h4>Répondez aux 10 questions</h4><p>Cliquez sur la réponse que vous pensez correcte — elle se surligne en bleu. Vous pouvez changer votre réponse avant de soumettre. Lisez chaque question et chaque proposition avec attention.</p></div></div>
+      <div class="step-block"><div class="step-num">4</div><div class="step-content"><h4>Soumettez et consultez vos résultats</h4><p>Cliquez sur <strong>"📊 Soumettre le Quiz"</strong>. Bonnes réponses en vert, erreurs en rouge avec la bonne réponse affichée. Votre score s'affiche en grand.</p></div></div>
+      <div class="step-block"><div class="step-num">5</div><div class="step-content"><h4>Si score ≥ 70% → Votre certificat s'affiche !</h4><p>Le <strong>certificat de complétion personnalisé</strong> apparaît avec votre nom, la liste des modules validés, votre score global et la date. Cliquez sur "🖨️ Imprimer" pour l'enregistrer en PDF.</p></div></div>
+    </div>
+    <div class="tip"><strong>💡 Si vous avez moins de 70%</strong> Consultez les réponses incorrectes affichées en rouge, revenez dans les modules concernés, relisez vos feedbacks IA via le Mode Révision, puis générez un nouveau quiz pour retenter.</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- RAPPORT -->
+<div class="page" id="s5">
+  <div class="section-header" style="background:linear-gradient(135deg,#047857,#059669);"><div class="sh-icon">📄</div><div><div class="sn">Rapport</div><h2>Mon rapport & envoi au professeur</h2><p>Comment partager votre progression avec votre professeur.</p></div></div>
+  <div class="card">
+    <h3>📄 Générer votre rapport</h3>
+    <p>En bas de la page d'accueil, cliquez sur <span class="mock-btn primary">📄 Mon rapport de progression</span></p>
+    <p style="margin-top:.7rem;">Une fenêtre s'ouvre avec le résumé complet de votre progression (temps passé, modules validés, scores, détail par module) et le <strong>code à envoyer au professeur</strong>.</p>
+  </div>
+  <div class="card">
+    <h3>📋 Le code à envoyer — Format simplifié</h3>
+    <div class="success"><strong>✅ Le code, c'est simplement votre nom et prénom</strong> Tel que vous l'avez saisi dans la plateforme. Plus de longue chaîne de caractères illisible.</div>
+    <p style="margin-top:.8rem;">Exemple — si vous vous êtes enregistré sous <strong>"Alice Martin"</strong> :</p>
+    <div style="background:var(--gray800);border-radius:10px;padding:.75rem 1.1rem;font-family:monospace;font-size:1rem;color:#e2e8f0;font-weight:700;margin:.8rem 0;">Alice Martin</div>
+    <div class="steps">
+      <div class="step-block"><div class="step-num">1</div><div class="step-content"><h4>Cliquez sur "📋 Copier le code"</h4><p>Votre nom est copié automatiquement dans le presse-papier.</p></div></div>
+      <div class="step-block"><div class="step-num">2</div><div class="step-content"><h4>Envoyez-le à votre professeur</h4><p>Collez-le dans un email, Teams, Moodle ou tout autre canal indiqué par votre professeur. Il utilisera votre nom pour retrouver vos résultats dans l'Espace Professeur.</p></div></div>
+    </div>
+    <div class="warning"><strong>⚠️ Le nom doit correspondre exactement</strong> à ce que vous avez tapé dans le champ "Votre nom" sur la page d'accueil — c'est la clé de votre sauvegarde.</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- FAQ -->
+<div class="page" id="s6">
+  <div class="section-header" style="background:linear-gradient(135deg,var(--purple),#9333ea);"><div class="sh-icon">❓</div><div><div class="sn">FAQ</div><h2>Questions fréquentes</h2></div></div>
+  <div class="card"><h3>❓ Je n'arrive pas à accéder au module suivant</h3><p>Vérifiez que vous avez obtenu ≥ 60% sur le module actuel <strong>ET</strong> cliqué sur le bouton "✅ Valider le module". Le bouton "Évaluer" donne un score mais ne valide pas — il faut impérativement cliquer sur Valider.</p></div>
+  <div class="card"><h3>❓ Le feedback IA ne fonctionne pas</h3><p>Vérifiez que la clé API est saisie dans le champ en haut à droite. Si la clé est correcte mais que ça ne marche pas, vérifiez votre connexion internet et demandez une nouvelle clé à votre professeur.</p></div>
+  <div class="card"><h3>❓ J'ai perdu ma progression</h3><p>Vérifiez que vous êtes sur le même navigateur et le même ordinateur, et que vous avez bien retapé votre prénom et nom <strong>exacts</strong> dans le champ "Votre nom". La progression est sauvegardée sous votre nom — il suffit de le resaisir correctement.</p></div>
+  <div class="card"><h3>❓ Deux étudiants sur le même ordinateur — comment faire ?</h3><p>Aucun problème. Chaque étudiant saisit son propre nom dans le champ "Votre nom". Les progressions sont <strong>entièrement séparées</strong> sous chaque nom. L'étudiant 2 tape son nom → ses données s'affichent (ou un parcours vierge s'il commence).</p></div>
+  <div class="card"><h3>❓ Mon certificat ne s'affiche pas après le quiz</h3><p>Vérifiez que votre score est bien ≥ 70% (7/10 minimum). Si insuffisant, relisez les réponses en rouge, révisez via le Mode Révision, puis générez un nouveau quiz.</p></div>
+  <div class="card"><h3>❓ Je veux recommencer un module depuis zéro</h3><p>Cliquez sur "🎲 Nouvel exercice" pour un nouveau scénario. Votre score actuel n'est remplacé que quand vous cliquez à nouveau sur "✅ Valider le module".</p></div>
+</div>
+
+<div style="background:var(--navy);color:rgba(255,255,255,.4);text-align:center;padding:2rem;font-size:.78rem;margin-top:2rem;">
+  <div style="color:rgba(255,255,255,.7);font-weight:800;font-size:1rem;margin-bottom:.4rem;">Outils pédagogiques — Manuel Étudiant</div>
+  <div>Plateforme pédagogique Amélioration Continue · Génie Industriel · Lean Six Sigma</div>
+  <div style="margin-top:.5rem;"><a href="https://nono612.github.io/Module-Pedagogique-Amelioration-Continue-FST/" style="color:var(--accent);text-decoration:none;font-weight:700;">nono612.github.io/Module-Pedagogique-Amelioration-Continue-FST/</a></div>
+</div>
+</body>
+</html>

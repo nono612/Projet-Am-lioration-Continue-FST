@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manuel Professeur – Outils Pédagogiques d'Amélioration Continue</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0d1b2a;--green:#059669;--accent:#f59e0b;--orange:#ea580c;--red:#dc2626;--purple:#7c3aed;--blue:#3b82f6;--gray50:#f8fafc;--gray100:#f1f5f9;--gray200:#e2e8f0;--gray400:#94a3b8;--gray600:#475569;--gray800:#1e293b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:var(--gray100);color:var(--gray800);line-height:1.7;}
+@media print{.no-print{display:none!important;}body{background:#fff;}.card,.tip,.warning,.step-block{box-shadow:none!important;border:1px solid #ddd!important;}}
+.cover{background:linear-gradient(135deg,#042f2e 0%,#065f46 50%,#047857 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;padding:3rem 2rem;position:relative;overflow:hidden;}
+.cover-orb1{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(5,150,105,.25),transparent 70%);top:-100px;right:-100px;}
+.cover-orb2{position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(16,185,129,.15),transparent 70%);bottom:-80px;left:0;}
+.cover-badge{background:linear-gradient(135deg,var(--green),#10b981);display:inline-block;padding:.4rem 1.2rem;border-radius:20px;font-size:.8rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:2rem;}
+.cover h1{font-size:3.5rem;font-weight:900;line-height:1.1;margin-bottom:1rem;}
+.cover h1 em{background:linear-gradient(90deg,#6ee7b7,#a7f3d0,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal;}
+.cover-sub{font-size:1.1rem;color:rgba(255,255,255,.65);max-width:540px;margin:0 auto 2.5rem;}
+.cover-chips{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2rem;}
+.cover-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:.3rem 1rem;font-size:.82rem;}
+.cover-meta{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.1);padding-top:1.5rem;}
+.cover-meta div{font-size:.78rem;color:rgba(255,255,255,.45);}
+.cover-meta strong{display:block;color:#fff;font-size:.95rem;margin-bottom:.2rem;}
+.toc{background:#fff;padding:2.5rem;max-width:860px;margin:2rem auto;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.08);}
+.toc h2{font-size:1.2rem;font-weight:800;margin-bottom:1.2rem;color:var(--navy);}
+.toc-list{list-style:none;}
+.toc-section a{display:flex;align-items:center;gap:.7rem;color:var(--gray600);text-decoration:none;padding:.4rem .5rem;border-radius:8px;font-size:.88rem;}
+.toc-section a:hover{background:var(--gray50);color:var(--navy);}
+.toc-num{min-width:26px;height:26px;border-radius:7px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;flex-shrink:0;}
+.toc-section.sub a{padding-left:2.5rem;font-size:.82rem;color:var(--gray400);}
+.page{max-width:860px;margin:0 auto;padding:2rem 1.2rem;}
+.section-header{background:linear-gradient(135deg,#042f2e,#065f46);color:#fff;border-radius:14px;padding:1.6rem 2rem;margin-bottom:2rem;display:flex;align-items:center;gap:1.2rem;}
+.section-header .sh-icon{width:52px;height:52px;background:rgba(255,255,255,.12);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0;}
+.section-header h2{font-size:1.3rem;font-weight:800;margin-bottom:.2rem;}
+.section-header p{font-size:.83rem;color:rgba(255,255,255,.6);}
+.sn{font-size:.66rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.4);margin-bottom:.3rem;}
+.card{background:#fff;border-radius:12px;padding:1.4rem;margin-bottom:1.1rem;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid var(--gray200);}
+.card h3{font-size:.98rem;font-weight:800;margin-bottom:.7rem;color:var(--navy);}
+.card h4{font-size:.88rem;font-weight:700;color:var(--navy);margin:.8rem 0 .35rem;}
+.card p,.card li{font-size:.87rem;color:var(--gray600);}
+.card ul{padding-left:1.2rem;margin:.4rem 0;}
+.card li{margin-bottom:.22rem;}
+.steps{margin:1rem 0;}
+.step-block{display:flex;gap:.9rem;margin-bottom:.9rem;background:#fff;border-radius:12px;padding:.9rem 1.1rem;box-shadow:0 2px 8px rgba(0,0,0,.05);border:1px solid var(--gray200);}
+.step-num{min-width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;flex-shrink:0;}
+.step-num.g{background:var(--green);}
+.step-content h4{font-size:.87rem;font-weight:800;color:var(--navy);margin-bottom:.25rem;}
+.step-content p{font-size:.83rem;color:var(--gray600);}
+.tip{background:#ecfdf5;border-left:4px solid var(--green);border-radius:0 10px 10px 0;padding:.85rem 1rem;margin:1rem 0;font-size:.84rem;color:#065f46;}
+.tip strong{display:block;margin-bottom:.15rem;}
+.warning{background:#fffbeb;border-left:4px solid var(--accent);border-radius:0 10px 10px 0;padding:.85rem 1rem;margin:1rem 0;font-size:.84rem;color:#92400e;}
+.warning strong{display:block;margin-bottom:.15rem;}
+.info{background:#eff6ff;border-left:4px solid var(--blue);border-radius:0 10px 10px 0;padding:.85rem 1rem;margin:1rem 0;font-size:.84rem;color:#1e40af;}
+.info strong{display:block;margin-bottom:.15rem;}
+.danger{background:#fef2f2;border-left:4px solid var(--red);border-radius:0 10px 10px 0;padding:.85rem 1rem;margin:1rem 0;font-size:.84rem;color:#991b1b;}
+.danger strong{display:block;margin-bottom:.15rem;}
+.success{background:#ecfdf5;border-left:4px solid var(--green);border-radius:0 10px 10px 0;padding:.85rem 1rem;margin:1rem 0;font-size:.84rem;color:#065f46;}
+.success strong{display:block;margin-bottom:.15rem;}
+table{width:100%;border-collapse:collapse;font-size:.83rem;margin:1rem 0;}
+th{background:var(--navy);color:#fff;padding:.55rem .85rem;text-align:left;font-weight:700;}
+td{padding:.5rem .85rem;border-bottom:1px solid var(--gray200);}
+tr:nth-child(even) td{background:var(--gray50);}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+@media(max-width:600px){.grid2{grid-template-columns:1fr;}.cover h1{font-size:2.2rem;}}
+.divider{border:none;border-top:2px solid var(--gray200);margin:2.5rem 0;}
+.mock-btn{display:inline-block;padding:.28rem .75rem;border-radius:7px;font-size:.73rem;font-weight:700;margin:.2rem;}
+.mock-btn.primary{background:var(--navy);color:#fff;}.mock-btn.green{background:var(--green);color:#fff;}
+.mock-btn.ghost{background:#fff;border:1.5px solid var(--gray200);color:var(--gray600);}
+.checklist{list-style:none;padding:0;}
+.checklist li{display:flex;align-items:flex-start;gap:.6rem;padding:.35rem 0;font-size:.86rem;color:var(--gray600);}
+.checklist li::before{content:'☐';font-size:.95rem;color:var(--gray400);flex-shrink:0;}
+.score-row{display:flex;align-items:center;gap:.8rem;padding:.5rem .8rem;border-radius:9px;background:var(--gray50);border:1px solid var(--gray200);margin:.25rem 0;font-size:.82rem;}
+.score-bar{flex:1;background:var(--gray200);border-radius:20px;height:7px;overflow:hidden;}
+.score-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--green),#34d399);}
+.score-fill.warn{background:linear-gradient(90deg,var(--accent),#fbbf24);}
+.score-fill.fail{background:var(--gray200);}
+.print-btn{position:fixed;bottom:1.5rem;right:1.5rem;background:linear-gradient(135deg,var(--green),#10b981);color:#fff;border:none;border-radius:50px;padding:.65rem 1.3rem;font-size:.83rem;font-weight:800;cursor:pointer;z-index:99;}
+::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px;}
+</style>
+</head>
+<body>
+<button class="print-btn no-print" onclick="window.print()">🖨️ Imprimer / PDF</button>
+
+<div class="cover">
+  <div class="cover-orb1"></div><div class="cover-orb2"></div>
+  <div style="position:relative;z-index:1;width:100%;max-width:680px;">
+    <div class="cover-badge">👨‍🏫 Manuel Professeur</div>
+    <h1>Guide pédagogique<br><em>Amélioration Continue</em></h1>
+    <p class="cover-sub">Tout ce qu'il faut savoir pour déployer la plateforme dans votre cours, suivre vos étudiants et évaluer leurs résultats.</p>
+    <div class="cover-chips">
+      <span class="cover-chip">🔑 Gestion des clés API</span><span class="cover-chip">📊 Tableau de bord classe</span>
+      <span class="cover-chip">👤 Codes par nom étudiant</span><span class="cover-chip">📥 Export CSV</span>
+      <span class="cover-chip">⏱️ Suivi du temps</span><span class="cover-chip">🎯 Objectifs pédagogiques</span>
+    </div>
+    <div class="cover-meta">
+      <div><strong>Accès dashboard</strong>Mot de passe : <span style="color:#6ee7b7;font-family:monospace;font-size:1rem;">prof2024</span></div>
+      <div><strong>Plateforme</strong>Outils pédagogiques · GitHub Pages</div>
+      <div><strong>Version</strong>2026 · IA Claude intégrée</div>
+    </div>
+  </div>
+</div>
+
+<div class="toc">
+  <h2>📋 Table des matières</h2>
+  <ul class="toc-list">
+    <li class="toc-section"><a href="#s1"><span class="toc-num">1</span> Présentation de la plateforme pour le professeur</a></li>
+    <li class="toc-section"><a href="#s2"><span class="toc-num" style="background:var(--green);">2</span> Déployer la plateforme dans votre cours</a></li>
+    <li class="toc-section sub"><a href="#s2a">2.1 URL d'accès et prérequis</a></li>
+    <li class="toc-section sub"><a href="#s2b">2.2 Obtenir et distribuer les clés API Claude</a></li>
+    <li class="toc-section sub"><a href="#s2c">2.3 Checklist de démarrage de séance</a></li>
+    <li class="toc-section"><a href="#s3"><span class="toc-num">3</span> L'Espace Professeur — Tableau de bord classe</a></li>
+    <li class="toc-section sub"><a href="#s3a">3.1 Comment y accéder</a></li>
+    <li class="toc-section sub"><a href="#s3b">3.2 Comment fonctionne le système de sauvegarde par nom</a></li>
+    <li class="toc-section sub"><a href="#s3c">3.3 Importer et retrouver les résultats des étudiants</a></li>
+    <li class="toc-section sub"><a href="#s3d">3.4 Lire le tableau des résultats</a></li>
+    <li class="toc-section sub"><a href="#s3e">3.5 Exporter en CSV</a></li>
+    <li class="toc-section"><a href="#s4"><span class="toc-num" style="background:var(--accent);">4</span> Objectifs pédagogiques par module</a></li>
+    <li class="toc-section"><a href="#s5"><span class="toc-num">5</span> Comment fonctionne l'évaluation IA</a></li>
+    <li class="toc-section"><a href="#s6"><span class="toc-num">6</span> Le rapport étudiant — Ce que vous recevez</a></li>
+    <li class="toc-section"><a href="#s7"><span class="toc-num">7</span> Conseils pour animer une séance</a></li>
+    <li class="toc-section"><a href="#s8"><span class="toc-num" style="background:var(--red);">8</span> FAQ Professeur</a></li>
+  </ul>
+</div>
+
+<!-- S1 -->
+<div class="page" id="s1">
+  <div class="section-header"><div class="sh-icon">🎓</div><div><div class="sn">Section 1</div><h2>Présentation de la plateforme pour le professeur</h2><p>Ce que la plateforme fait pour vous et vos étudiants.</p></div></div>
+  <div class="card">
+    <h3>🌐 La plateforme en une phrase</h3>
+    <p>Cette plateforme pédagogique web permet à vos étudiants de pratiquer les 9 outils Lean/Six Sigma les plus utilisés en Génie Industriel, avec des exercices corrigés automatiquement par l'IA Claude, une progression verrouillée par score, et un suivi de temps intégré.</p>
+    <div style="background:var(--navy);border-radius:10px;padding:.75rem 1.1rem;color:#6ee7b7;font-family:monospace;font-size:.85rem;font-weight:700;margin-top:.8rem;word-break:break-all;">https://nono612.github.io/Module-Pedagogique-Amelioration-Continue-FST/</div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <h3>✅ Ce que la plateforme fait automatiquement</h3>
+      <ul>
+        <li>Génère des problèmes industriels uniques pour chaque étudiant</li>
+        <li>Évalue les réponses avec un score en % par section</li>
+        <li>Fournit un feedback détaillé avec les réponses correctes</li>
+        <li>Verrouille la progression (60% requis pour passer au suivant)</li>
+        <li>Suit le temps passé par chaque étudiant sur la plateforme</li>
+        <li>Génère un quiz final de 10 questions QCM personnalisées</li>
+        <li>Émet un certificat de complétion nominatif</li>
+        <li>Sauvegarde la progression sous le nom de l'étudiant</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>👨‍🏫 Ce que vous faites en tant que professeur</h3>
+      <ul>
+        <li>Partagez l'URL avec vos étudiants</li>
+        <li>Distribuez une clé API Claude à votre classe</li>
+        <li>Demandez aux étudiants de vous envoyer leur nom en fin de séance</li>
+        <li>Saisissez les noms dans l'Espace Professeur</li>
+        <li>Consultez le tableau de classe et exportez en CSV</li>
+        <li>Notez les étudiants selon leurs scores par module</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <h3>📊 Les 9 modules et leurs objectifs</h3>
+    <table>
+      <tr><th>Module</th><th>Outil Lean/6σ</th><th>Type d'exercice</th><th>Score minimal</th></tr>
+      <tr><td><strong>M1</strong> PDCA</td><td>Roue de Deming</td><td>Remplissage des 4 quadrants (Plan/Do/Check/Act) sur scénario IA</td><td>60%</td></tr>
+      <tr><td><strong>M2</strong> 5S</td><td>Organisation atelier</td><td>Drag & drop — classement des éléments dans les 5 catégories</td><td>60%</td></tr>
+      <tr><td><strong>M3</strong> Ishikawa</td><td>Diagramme 5M</td><td>Construction du diagramme causes-effets avec 5 catégories M</td><td>60%</td></tr>
+      <tr><td><strong>M4</strong> Pareto</td><td>Règle 80/20</td><td>Saisie des fréquences de défauts + génération graphique automatique</td><td>60%</td></tr>
+      <tr><td><strong>M5</strong> Kanban</td><td>Gestion de flux</td><td>Simulation tableau avec colonnes Backlog/En cours/Terminé + WIP</td><td>60%</td></tr>
+      <tr><td><strong>M6</strong> VSM</td><td>Value Stream Map</td><td>Saisie des étapes (VA/NVA) + calcul taux de valeur ajoutée</td><td>60%</td></tr>
+      <tr><td><strong>M7</strong> SPC</td><td>Cartes de contrôle</td><td>Saisie de mesures + carte de contrôle + analyse règles de Nelson</td><td>60%</td></tr>
+      <tr><td><strong>M8</strong> SMED</td><td>Changement rapide</td><td>Classification Interne/Externe des tâches + calcul du gain en %</td><td>60%</td></tr>
+      <tr><td><strong>M9</strong> Quiz Final</td><td>Synthèse complète</td><td>10 questions QCM générées par IA sur l'ensemble des modules</td><td><strong>70%</strong></td></tr>
+    </table>
+    <div style="margin:1rem 0;">
+      <p style="font-size:.82rem;font-weight:700;color:var(--navy);margin-bottom:.6rem;">🔗 Chaîne de déverrouillage des modules :</p>
+      <svg viewBox="0 0 480 148" width="100%" style="max-width:480px;display:block;margin:.3rem auto;">
+        <rect x="5" y="10" width="66" height="48" rx="7" fill="#3b82f6"/>
+        <text x="38" y="31" text-anchor="middle" fill="white" font-size="9" font-weight="900" font-family="Inter,sans-serif">M1</text>
+        <text x="38" y="47" text-anchor="middle" fill="rgba(255,255,255,.8)" font-size="7.5" font-family="Inter,sans-serif">PDCA</text>
+        <text x="78" y="37" text-anchor="middle" fill="#059669" font-size="9" font-family="Inter,sans-serif">→</text>
+        <text x="78" y="47" text-anchor="middle" fill="#059669" font-size="6.5" font-family="Inter,sans-serif">60%</text>
+        <rect x="85" y="10" width="66" height="48" rx="7" fill="#ef4444"/>
+        <text x="118" y="31" text-anchor="middle" fill="white" font-size="9" font-weight="900" font-family="Inter,sans-serif">M2</text>
+        <text x="118" y="47" text-anchor="middle" fill="rgba(255,255,255,.8)" font-size="7.5" font-family="Inter,sans-serif">5S</text>
+        <text x="158" y="37" text-anchor="middle" fill="#059669" font-size="9" font-family="Inter,sans-serif">→</text>
+        <text x="158" y="47" text-anchor="middle" fill="#059669" font-size="6.5" font-family="Inter,sans-serif">60%</text>
+        <rect x="165" y="10" width="66" height="48" rx="7" fill="#8b5cf6"/>
+        <text x="198" y="31" text-anchor="middle" fill="white" font-size="9" font-weight="900" font-family="Inter,sans-serif">M3</text>
+        <text x="198" y="47" text-anchor="middle" fill="rgba(255,255,255,.8)" font-size="7.5" font-family="Inter,sans-serif">Ishikawa</text>
+        <text x="238" y="37" text-anchor="middle" fill="#059669" font-size="9" font-family="Inter,sans-serif">→</text>
+        <text x="238" y="47" text-anchor="middle" fill="#059669" font-size="6.5" font-family="Inter,sans-serif">60%</text>
+        <rect x="245" y="10" width="66" height="48" rx="7" fill="#f59e0b"/>
+        <text x="278" y="31" text-anchor="middle" fill="white" font-size="9" font-weight="900" font-family="Inter,sans-serif">M4</text>
+        <text x="278" y="47" text-anchor="middle" fill="rgba(255,255,255,.8)" font-size="7.5" font-family="Inter,sans-serif">Pareto</text>
+        <text x="318" y="37" text-anchor="middle" fill="#059669" font-size="9" font-family="Inter,sans-serif">→</text>
+        <text x="318" y="47" text-anchor="middle" fill="#059669" font-size="6.5" font-family="Inter,sans-serif">60%</text>
+        <rect x="325" y="10" width="66" height="48" rx="7" fill="#14b8a6"/>
+        <text x="358" y="31" text-anchor="middle" fill="white" font-size="9" font-weight="900" font-family="Inter,sans-serif">M5</text>
+        <text x="358" y="47" text-anchor="middle" fill="rgba(255,255,255,.8)" font-size="7.5" font-family="Inter,sans-serif">Kanban</text>
+        <path d="M 391,58 L 391,75 L 5,75 L 5,90" fill="none" stroke="#059669" stroke-width="1.5"/>
+        <polygon points="5,90 1,82 9,82" fill="#059669"/>
+        <rect x="5" y="95" width="66" height="48" rx="7" fill="#10b981"/>
+        <text x="38" y="116" text-anchor="middle" fill="white" font-size="9" font-weight="900" font-family="Inter,sans-serif">M6</text>
+        <text x="38" y="132" text-anchor="middle" fill="rgba(255,255,255,.8)" font-size="7.5" font-family="Inter,sans-serif">VSM</text>
+        <text x="78" y="122" text-anchor="middle" fill="#059669" font-size="9" font-family="Inter,sans-serif">→</text>
+        <text x="78" y="132" text-anchor="middle" fill="#059669" font-size="6.5" font-family="Inter,sans-serif">60%</text>
+        <rect x="85" y="95" width="66" height="48" rx="7" fill="#0ea5e9"/>
+        <text x="118" y="116" text-anchor="middle" fill="white" font-size="9" font-weight="900" font-family="Inter,sans-serif">M7</text>
+        <text x="118" y="132" text-anchor="middle" fill="rgba(255,255,255,.8)" font-size="7.5" font-family="Inter,sans-serif">SPC</text>
+        <text x="158" y="122" text-anchor="middle" fill="#059669" font-size="9" font-family="Inter,sans-serif">→</text>
+        <text x="158" y="132" text-anchor="middle" fill="#059669" font-size="6.5" font-family="Inter,sans-serif">60%</text>
+        <rect x="165" y="95" width="66" height="48" rx="7" fill="#f97316"/>
+        <text x="198" y="116" text-anchor="middle" fill="white" font-size="9" font-weight="900" font-family="Inter,sans-serif">M8</text>
+        <text x="198" y="132" text-anchor="middle" fill="rgba(255,255,255,.8)" font-size="7.5" font-family="Inter,sans-serif">SMED</text>
+        <text x="238" y="122" text-anchor="middle" fill="#7c3aed" font-size="9" font-family="Inter,sans-serif">→</text>
+        <text x="238" y="132" text-anchor="middle" fill="#7c3aed" font-size="6.5" font-weight="700" font-family="Inter,sans-serif">60%</text>
+        <rect x="245" y="92" width="75" height="55" rx="7" fill="#a855f7" stroke="#fbbf24" stroke-width="2"/>
+        <text x="282" y="113" text-anchor="middle" fill="white" font-size="9" font-weight="900" font-family="Inter,sans-serif">M9</text>
+        <text x="282" y="127" text-anchor="middle" fill="rgba(255,255,255,.8)" font-size="7.5" font-family="Inter,sans-serif">Quiz Final</text>
+        <text x="282" y="140" text-anchor="middle" fill="#fbbf24" font-size="7" font-weight="800" font-family="Inter,sans-serif">★ min. 70%</text>
+        <text x="240" y="148" text-anchor="middle" fill="#94a3b8" font-size="7.5" font-family="Inter,sans-serif">🔒 Chaque module se déverrouille quand le précédent est validé</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- S2 -->
+<div class="page" id="s2">
+  <div class="section-header"><div class="sh-icon">🚀</div><div><div class="sn">Section 2</div><h2>Déployer la plateforme dans votre cours</h2><p>Mise en place rapide pour une séance ou un semestre.</p></div></div>
+
+  <div id="s2a"><div class="card">
+    <h3>2.1 — URL d'accès et prérequis techniques</h3>
+    <table>
+      <tr><th>Élément</th><th>Requis</th><th>Détails</th></tr>
+      <tr><td>Navigateur web</td><td>✅ Oui</td><td>Chrome, Firefox, Edge ou Safari — version récente recommandée</td></tr>
+      <tr><td>Connexion internet</td><td>✅ Oui</td><td>Pour les appels à l'API Claude (génération IA)</td></tr>
+      <tr><td>Clé API Claude</td><td>✅ Oui</td><td>Pour les fonctions IA — voir section 2.2</td></tr>
+      <tr><td>Compte utilisateur</td><td>❌ Non</td><td>Aucun compte — progression sauvegardée sous le nom de l'étudiant</td></tr>
+      <tr><td>Installation logicielle</td><td>❌ Non</td><td>100% web, aucun téléchargement requis</td></tr>
+    </table>
+    <div class="warning"><strong>⚠️ Salle informatique partagée</strong> Prévenez vos étudiants que leur progression est liée au navigateur de la machine utilisée. Ils doivent <strong>vous envoyer leur nom en fin de séance</strong> pour que vous puissiez suivre leur progression.</div>
+  </div></div>
+
+  <div id="s2b"><div class="card">
+    <h3>2.2 — Obtenir et distribuer les clés API Claude</h3>
+    <p>Les fonctions IA utilisent l'API <strong>Claude Sonnet</strong> d'Anthropic. Une clé est nécessaire pour : générer les problèmes, évaluer les réponses, fournir les feedbacks et générer le quiz final.</p>
+    <h4>Option A — Une clé partagée pour toute la classe (recommandé)</h4>
+    <div class="steps">
+      <div class="step-block"><div class="step-num g">1</div><div class="step-content"><h4>Créez un compte Anthropic sur console.anthropic.com</h4><p>Utilisez votre adresse universitaire. Ajoutez un moyen de paiement ou utilisez les crédits d'essai offerts (suffisants pour une classe de 20-30 étudiants).</p></div></div>
+      <div class="step-block"><div class="step-num g">2</div><div class="step-content"><h4>Générez une clé dédiée dans "API Keys"</h4><p>Menu gauche → "API Keys" → "Create Key" → nommez-la (ex: "Cours Lean FST 2026"). La clé commence par <code style="font-size:.78rem;background:#f1f5f9;padding:.1rem .35rem;border-radius:4px;">sk-ant-api03-</code></p></div></div>
+      <div class="step-block"><div class="step-num g">3</div><div class="step-content"><h4>Partagez la clé en début de séance</h4><p>Écrivez-la au tableau ou projetez-la. Les étudiants la saisissent dans le champ "Clé API" en haut à droite du site. Elle disparaît à la fermeture de l'onglet — ils devront la resaisir à chaque session.</p></div></div>
+    </div>
+    <div class="tip"><strong>💰 Coût estimé</strong> Pour une classe de 30 étudiants qui complètent le parcours complet : <strong>2 à 5 €</strong> au total. Les crédits offerts lors de la création d'un compte couvrent généralement une classe entière.</div>
+    <div class="danger"><strong>🔒 Révoquez la clé après le cours</strong> Sur console.anthropic.com → API Keys → Révoquez la clé dédiée après la séance pour éviter tout usage non autorisé.</div>
+    <h4>Option B — Chaque étudiant crée sa propre clé (plus autonome)</h4>
+    <p>Demandez à chaque étudiant de créer son propre compte Anthropic (gratuit, crédits d'essai suffisants). Cette option est plus autonome mais demande 5-10 minutes de configuration en début de première séance.</p>
+  </div></div>
+
+  <div id="s2c"><div class="card">
+    <h3>2.3 — Checklist de démarrage de séance</h3>
+    <p><strong>Avant que les étudiants commencent :</strong></p>
+    <ul class="checklist">
+      <li>Vérifier que la plateforme est accessible (ouvrir l'URL dans votre navigateur)</li>
+      <li>Préparer la clé API Claude à partager et vérifier qu'elle fonctionne</li>
+      <li>Informer les étudiants qu'ils doivent saisir leur <strong>prénom et nom complets</strong> (pas de pseudo)</li>
+      <li>Rappeler que deux étudiants sur le même ordinateur ont des progressions séparées (chacun tape son nom)</li>
+      <li>Préciser qu'ils doivent vous envoyer leur <strong>prénom et nom exacts</strong> en fin de séance</li>
+    </ul>
+    <p style="margin-top:.8rem;"><strong>En fin de séance :</strong></p>
+    <ul class="checklist">
+      <li>Demander à chaque étudiant de cliquer sur "📄 Mon rapport de progression"</li>
+      <li>Demander à chaque étudiant de cliquer sur "📋 Copier le code" et de vous l'envoyer</li>
+      <li>Collecter tous les noms avant de fermer l'Espace Professeur</li>
+    </ul>
+  </div></div>
+</div>
+
+<hr class="divider">
+
+<!-- S3 -->
+<div class="page" id="s3">
+  <div class="section-header"><div class="sh-icon">📊</div><div><div class="sn">Section 3</div><h2>L'Espace Professeur — Tableau de bord classe</h2><p>Accéder, importer et analyser les résultats de vos étudiants.</p></div></div>
+
+  <div id="s3a"><div class="card">
+    <h3>3.1 — Comment accéder à l'Espace Professeur</h3>
+    <div class="steps">
+      <div class="step-block"><div class="step-num">1</div><div class="step-content"><h4>Ouvrez la plateforme sur votre navigateur</h4><p>Faites défiler la page d'accueil vers le bas jusqu'à la section "Espace Professeur".</p></div></div>
+      <div class="step-block"><div class="step-num">2</div><div class="step-content"><h4>Cliquez sur "👨‍🏫 Espace Professeur"</h4><p>Une fenêtre de dialogue apparaît vous demandant un mot de passe.</p></div></div>
+      <div class="step-block"><div class="step-num">3</div><div class="step-content"><h4>Saisissez le mot de passe : <code style="font-size:.9rem;background:#f1f5f9;padding:.1rem .4rem;border-radius:4px;">prof2024</code></h4><p>Le tableau de bord classe s'ouvre.</p></div></div>
+    </div>
+    <div class="warning"><strong>⚠️ Ne laissez pas l'Espace Professeur ouvert sur un poste étudiant.</strong> Fermez la fenêtre modale quand vous avez terminé votre consultation.</div>
+  </div></div>
+
+  <div id="s3b"><div class="card">
+    <h3>3.2 — Comment fonctionne le nouveau système de sauvegarde par nom</h3>
+    <div class="success">
+      <strong>✅ Nouveau système simplifié</strong>
+      La progression de chaque étudiant est désormais sauvegardée dans le navigateur sous son <strong>prénom + nom exact</strong> tel qu'il l'a tapé dans le champ "Votre nom" de la page d'accueil. Plus de code Base64 illisible — le "code" transmis par l'étudiant est simplement son nom.
+    </div>
+    <h4>Ce que ça change pour vous :</h4>
+    <ul>
+      <li>L'étudiant vous envoie juste son <strong>nom et prénom</strong> (ex : "Alice Martin")</li>
+      <li>Deux étudiants sur le même ordinateur ont des sauvegardes totalement indépendantes</li>
+      <li>Vous retrouvez la progression d'un étudiant en saisissant son nom dans l'Espace Professeur</li>
+      <li>Plus facile à lire et vérifier qu'une longue chaîne Base64</li>
+    </ul>
+    <div class="info"><strong>ℹ️ Important pour la notation</strong> Demandez à vos étudiants de saisir leur vrai prénom et nom complets dès le début — c'est la clé de leur sauvegarde. S'ils utilisent un pseudo ou abrégent leur nom, leur progression sera introuvable.</div>
+    <div style="margin:1rem 0;">
+      <svg viewBox="0 0 560 100" width="100%" style="max-width:560px;display:block;margin:.3rem auto;">
+        <rect x="5" y="15" width="105" height="55" rx="8" fill="#1a3a6e"/>
+        <text x="57" y="37" text-anchor="middle" fill="white" font-size="9" font-weight="800" font-family="Inter,sans-serif">👨‍🎓 Étudiant</text>
+        <text x="57" y="52" text-anchor="middle" fill="rgba(255,255,255,.75)" font-size="7.5" font-family="Inter,sans-serif">Saisit son nom</text>
+        <text x="57" y="63" text-anchor="middle" fill="rgba(255,255,255,.75)" font-size="7.5" font-family="Inter,sans-serif">dans la plateforme</text>
+        <text x="120" y="44" text-anchor="middle" fill="#059669" font-size="10" font-family="Inter,sans-serif">→</text>
+        <rect x="130" y="15" width="105" height="55" rx="8" fill="#1a3a6e"/>
+        <text x="182" y="37" text-anchor="middle" fill="white" font-size="9" font-weight="800" font-family="Inter,sans-serif">📄 Rapport</text>
+        <text x="182" y="52" text-anchor="middle" fill="rgba(255,255,255,.75)" font-size="7.5" font-family="Inter,sans-serif">Clique "Mon rapport"</text>
+        <text x="182" y="63" text-anchor="middle" fill="rgba(255,255,255,.75)" font-size="7.5" font-family="Inter,sans-serif">→ copie son nom</text>
+        <text x="245" y="44" text-anchor="middle" fill="#059669" font-size="10" font-family="Inter,sans-serif">→</text>
+        <rect x="255" y="15" width="105" height="55" rx="8" fill="#1a3a6e"/>
+        <text x="307" y="37" text-anchor="middle" fill="white" font-size="9" font-weight="800" font-family="Inter,sans-serif">📨 Envoi</text>
+        <text x="307" y="52" text-anchor="middle" fill="rgba(255,255,255,.75)" font-size="7.5" font-family="Inter,sans-serif">Envoie son nom</text>
+        <text x="307" y="63" text-anchor="middle" fill="rgba(255,255,255,.75)" font-size="7.5" font-family="Inter,sans-serif">au professeur</text>
+        <text x="370" y="44" text-anchor="middle" fill="#059669" font-size="10" font-family="Inter,sans-serif">→</text>
+        <rect x="380" y="15" width="105" height="55" rx="8" fill="#042f2e"/>
+        <text x="432" y="37" text-anchor="middle" fill="white" font-size="9" font-weight="800" font-family="Inter,sans-serif">👨‍🏫 Professeur</text>
+        <text x="432" y="52" text-anchor="middle" fill="rgba(255,255,255,.75)" font-size="7.5" font-family="Inter,sans-serif">Saisit le nom dans</text>
+        <text x="432" y="63" text-anchor="middle" fill="#6ee7b7" font-size="7.5" font-weight="700" font-family="Inter,sans-serif">l'Espace Professeur</text>
+        <text x="280" y="93" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="Inter,sans-serif">→ Les résultats de l'étudiant apparaissent automatiquement dans le tableau de bord</text>
+      </svg>
+    </div>
+  </div></div>
+
+  <div id="s3c"><div class="card">
+    <h3>3.3 — Importer et retrouver les résultats des étudiants</h3>
+    <p>Dans l'Espace Professeur, vous verrez une zone de texte où saisir les noms des étudiants.</p>
+    <div class="steps">
+      <div class="step-block"><div class="step-num">1</div><div class="step-content"><h4>Collectez les noms de tous vos étudiants</h4><p>Chaque étudiant vous a envoyé son nom via le bouton "Mon rapport de progression" → "Copier le code". Vous recevez des noms simples comme "Alice Martin", "Bob Dupont", etc.</p></div></div>
+      <div class="step-block"><div class="step-num">2</div><div class="step-content"><h4>Saisissez les noms dans la zone de texte</h4><p>Collez les noms reçus, un par ligne. L'ordre n'a pas d'importance. Vous pouvez coller toute une classe d'un coup.</p></div></div>
+      <div class="step-block"><div class="step-num">3</div><div class="step-content"><h4>Cliquez sur "📥 Analyser"</h4><p>La plateforme cherche dans le localStorage du navigateur la progression de chaque nom saisi et remplit le tableau automatiquement.</p></div></div>
+    </div>
+    <div class="warning"><strong>⚠️ L'Espace Professeur lit les données du navigateur local</strong> Il fonctionne donc mieux si vous consultez la plateforme depuis le même ordinateur que les étudiants ont utilisé, ou si vous exportez les données en CSV depuis chaque poste.</div>
+  </div></div>
+
+  <div id="s3d"><div class="card">
+    <h3>3.4 — Lire le tableau des résultats</h3>
+    <p>Le tableau affiche une ligne par étudiant avec les colonnes suivantes :</p>
+    <table>
+      <tr><th>Colonne</th><th>Contenu</th><th>Comment l'utiliser</th></tr>
+      <tr><td><strong>Nom</strong></td><td>Prénom + nom saisi par l'étudiant</td><td>Identifiant unique — vérifiez que c'est le bon étudiant</td></tr>
+      <tr><td><strong>Temps</strong></td><td>Durée totale passée sur la plateforme</td><td>Indicateur d'implication et de sérieux</td></tr>
+      <tr><td><strong>Modules validés</strong></td><td>X / 9 (ex : 5/9)</td><td>Avancement dans le parcours</td></tr>
+      <tr><td><strong>Score moyen</strong></td><td>Moyenne des scores de tous les modules tentés</td><td>Performance globale de l'étudiant</td></tr>
+      <tr><td><strong>M1 → M9</strong></td><td>Score de chaque module (%)</td><td>Identifier les modules difficiles pour l'étudiant ou pour la classe</td></tr>
+      <tr><td><strong>Date</strong></td><td>Date de génération du rapport</td><td>Vérifier que le rapport correspond à la bonne séance</td></tr>
+    </table>
+    <p style="margin-top:.8rem;">Exemple de lecture :</p>
+    <div style="background:var(--gray50);border-radius:10px;padding:1rem;font-size:.83rem;">
+      <div style="font-weight:800;margin-bottom:.5rem;color:var(--navy);">Alice Martin · ⏱️ 3h 20min · 7/9 modules · Moy. 74%</div>
+      <div class="score-row"><span style="min-width:28px;font-weight:700;">M1</span><div class="score-bar"><div class="score-fill" style="width:85%;"></div></div><span>85% ✅</span></div>
+      <div class="score-row"><span style="min-width:28px;font-weight:700;">M2</span><div class="score-bar"><div class="score-fill" style="width:70%;"></div></div><span>70% ✅</span></div>
+      <div class="score-row"><span style="min-width:28px;font-weight:700;">M3</span><div class="score-bar"><div class="score-fill warn" style="width:62%;"></div></div><span>62% ✅</span></div>
+      <div class="score-row"><span style="min-width:28px;font-weight:700;">M4</span><div class="score-bar"><div class="score-fill" style="width:90%;"></div></div><span>90% ✅</span></div>
+      <div class="score-row"><span style="min-width:28px;font-weight:700;">M7</span><div class="score-bar"><div class="score-fill fail" style="width:0%;"></div></div><span style="color:var(--gray400);">🔒 Non atteint</span></div>
+    </div>
+    <div class="info" style="margin-top:.8rem;"><strong>📌 Lecture des scores</strong> Vert = validé (≥60%) · Orange = juste à la limite (60-70%) · Gris = non tenté ou non validé. Un étudiant bloqué en M3 n'a pas pu accéder à M4+.</div>
+  </div></div>
+
+  <div id="s3e"><div class="card">
+    <h3>3.5 — Exporter en CSV</h3>
+    <p>Après avoir chargé les noms, cliquez sur <span class="mock-btn green">📥 Exporter CSV</span>. Un fichier <code style="font-size:.78rem;background:#f1f5f9;padding:.1rem .35rem;border-radius:4px;">greenlab_classe_YYYY-MM-DD.csv</code> se télécharge avec toutes les colonnes (nom, temps en minutes, M1 à M9, score moyen, modules validés, date).</p>
+    <div class="tip"><strong>💡 Import dans Excel</strong> Fichier → Ouvrir → sélectionnez le CSV → séparateur virgule → les colonnes se remplissent. Vous pouvez ensuite trier, filtrer et calculer les statistiques de classe.</div>
+  </div></div>
+</div>
+
+<hr class="divider">
+
+<!-- S4 -->
+<div class="page" id="s4">
+  <div class="section-header"><div class="sh-icon">🎯</div><div><div class="sn">Section 4</div><h2>Objectifs pédagogiques par module</h2><p>Ce que chaque module évalue, les compétences visées et les erreurs fréquentes.</p></div></div>
+
+  <div class="card">
+    <h3>🔄 Module 1 — Cycle PDCA</h3>
+    <div class="grid2">
+      <div>
+        <h4>Compétences évaluées</h4>
+        <ul>
+          <li>Formuler un objectif SMART précis avec données chiffrées dans le PLAN</li>
+          <li>Distinguer clairement les 4 phases sans confusion</li>
+          <li>Décrire des actions concrètes dans le DO (pas répéter le PLAN)</li>
+          <li>Mesurer des KPIs précis dans le CHECK</li>
+          <li>Proposer une standardisation réelle dans le ACT</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Erreurs fréquentes des étudiants</h4>
+        <ul>
+          <li>Objectif vague dans le PLAN ("améliorer la qualité" sans chiffre)</li>
+          <li>DO = copier-coller du PLAN avec les mêmes actions prévues</li>
+          <li>CHECK sans aucun indicateur chiffré, juste "ça s'est bien passé"</li>
+          <li>ACT = "continuer" sans standardisation concrète</li>
+          <li>Confondre PLAN et ACT (penser qu'ACT = "faire les actions")</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tip"><strong>📌 Conseil pédagogique</strong> Encouragez les étudiants à générer 2-3 problèmes différents. L'IA adapte le scénario à chaque tentative — idéal pour consolider la structure PDCA sur des contextes variés.</div>
+  </div>
+
+  <div class="card">
+    <h3>🧹 Module 2 — Démarche 5S</h3>
+    <div class="grid2">
+      <div>
+        <h4>Compétences évaluées</h4>
+        <ul>
+          <li>Mémoriser les 5 S dans l'ordre et leur signification précise</li>
+          <li>Classer correctement des éléments dans la bonne catégorie</li>
+          <li>Distinguer Seiton (ranger) de Seiketsu (standardiser le rangement)</li>
+          <li>Comprendre que Shitsuke concerne la discipline comportementale</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Erreurs fréquentes</h4>
+        <ul>
+          <li>Confondre Seiso (nettoyer) et Seiri (éliminer)</li>
+          <li>"Planning de nettoyage affiché" classé dans Seiso → c'est Seiketsu</li>
+          <li>"Audit 5S mensuel" classé dans Seiketsu → c'est Shitsuke</li>
+          <li>Oublier que Shitsuke est comportemental, pas procédural</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🐟 Module 3 — Ishikawa (5M)</h3>
+    <div class="grid2">
+      <div>
+        <h4>Compétences évaluées</h4>
+        <ul>
+          <li>Identifier les 5 catégories M et ce qu'elles couvrent</li>
+          <li>Formuler des causes précises, actionnables et distinctes</li>
+          <li>Équilibrer les causes sur toutes les catégories (≥ 2 par M)</li>
+          <li>Distinguer cause et effet</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Erreurs fréquentes</h4>
+        <ul>
+          <li>Mettre l'effet comme cause (ex: "les rebuts sont élevés" dans Matière)</li>
+          <li>Oublier systématiquement la catégorie Milieu</li>
+          <li>Causes trop vagues ("mauvaise qualité" sans précision)</li>
+          <li>Toutes les causes dans une seule catégorie</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📊 Module 4 — Pareto</h3>
+    <div class="grid2">
+      <div>
+        <h4>Compétences évaluées</h4>
+        <ul>
+          <li>Trier les causes par fréquence décroissante (avant de cumuler)</li>
+          <li>Calculer les % individuels et les % cumulés correctement</li>
+          <li>Identifier les "vitaux peu nombreux" (causes avant 80% cumulés)</li>
+          <li>Proposer des actions ciblées sur les vitaux identifiés</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Erreurs fréquentes</h4>
+        <ul>
+          <li>Cumuler sans avoir trié par ordre décroissant d'abord</li>
+          <li>Proposer d'agir sur tous les défauts (ignorer la règle 80/20)</li>
+          <li>Erreur de calcul sur les pourcentages cumulés</li>
+          <li>Confondre % individuel et % cumulé</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📋 Module 5 — Kanban</h3>
+    <div class="grid2">
+      <div>
+        <h4>Compétences évaluées</h4>
+        <ul>
+          <li>Comprendre le rôle et l'importance de la limite WIP</li>
+          <li>Identifier les goulots d'étranglement dans le flux</li>
+          <li>Respecter le principe de flux tiré (ne commencer que si capacité disponible)</li>
+          <li>Analyser les métriques de flux (% terminé, tâches en attente)</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Erreurs fréquentes</h4>
+        <ul>
+          <li>Dépasser la limite WIP sans considérer les conséquences</li>
+          <li>Confondre Backlog (attente) et liste de priorités</li>
+          <li>Ne pas voir qu'un WIP trop élevé ralentit les délais individuels</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🗺️ Module 6 — VSM</h3>
+    <div class="grid2">
+      <div>
+        <h4>Compétences évaluées</h4>
+        <ul>
+          <li>Distinguer les étapes VA / NVA / Attente avec précision</li>
+          <li>Calculer correctement le Lead Time et le Taux VA</li>
+          <li>Identifier les gaspillages (Mudas) les plus impactants</li>
+          <li>Proposer des actions pour améliorer le taux VA</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Erreurs fréquentes</h4>
+        <ul>
+          <li>Qualifier un contrôle qualité de VA (c'est souvent NVA)</li>
+          <li>Oublier les temps d'attente dans le calcul du Lead Time</li>
+          <li>Confondre temps de cycle (opération) et Lead Time (total)</li>
+          <li>Penser qu'un taux VA de 5% est mauvais (c'est en fait courant)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📈 Module 7 — SPC</h3>
+    <div class="grid2">
+      <div>
+        <h4>Compétences évaluées</h4>
+        <ul>
+          <li>Calculer X̄, σ, UCL et LCL à partir des données</li>
+          <li>Identifier les points hors limites sur la carte</li>
+          <li>Appliquer les règles de Nelson (1, 2, 3, 4 au minimum)</li>
+          <li>Distinguer cause commune (bruit) et cause spéciale (signal)</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Erreurs fréquentes</h4>
+        <ul>
+          <li>Confondre UCL/LCL (limites de contrôle) avec les spécifications client</li>
+          <li>Réagir à chaque variation normale (surcontrôle — augmente la variabilité)</li>
+          <li>Ne pas détecter une tendance de 6-9 points consécutifs (règles 2 et 3)</li>
+          <li>Oublier qu'un processus peut être "sous contrôle" mais hors spécification</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>⏱️ Module 8 — SMED</h3>
+    <div class="grid2">
+      <div>
+        <h4>Compétences évaluées</h4>
+        <ul>
+          <li>Distinguer avec précision tâches internes et externes</li>
+          <li>Calculer le temps de changement actuel et le gain potentiel</li>
+          <li>Identifier les tâches les plus rentables à externaliser</li>
+          <li>Proposer un plan de conversion concret et réaliste</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Erreurs fréquentes</h4>
+        <ul>
+          <li>Classer "vérification du nouveau moule" en externe (c'est interne — machine à l'arrêt)</li>
+          <li>Confondre "réduire la durée d'une tâche interne" avec "l'externaliser"</li>
+          <li>Ne proposer aucune mesure concrète de conversion dans le plan d'action</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🎓 Module 9 — Quiz Final</h3>
+    <p>L'IA génère <strong>10 questions QCM</strong> couvrant l'ensemble du parcours. Le quiz est différent à chaque génération. Score minimum : <strong>70% (7/10)</strong>. Sans clé API, un quiz de démonstration pré-enregistré est utilisé.</p>
+    <div class="tip"><strong>📌 Conseil</strong> Encouragez les étudiants à relire leurs feedbacks IA sauvegardés (Mode Révision) avant de tenter le quiz final. C'est la meilleure préparation disponible sur la plateforme.</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- S5 -->
+<div class="page" id="s5">
+  <div class="section-header"><div class="sh-icon">🤖</div><div><div class="sn">Section 5</div><h2>Comment fonctionne l'évaluation IA</h2><p>Comprendre comment l'IA évalue et note les travaux des étudiants.</p></div></div>
+  <div class="card">
+    <h3>🧠 Le modèle d'évaluation en 2 temps</h3>
+    <div class="grid2">
+      <div class="info"><strong>📊 Étape 1 — Scoring</strong> L'IA attribue un score de 0 à 100% à chaque section. Elle évalue : complétude, précision, cohérence avec le problème posé, pertinence des actions proposées.</div>
+      <div class="tip"><strong>📝 Étape 2 — Feedback</strong> L'IA génère un texte avec : ce qui était bien fait, ce qui était incorrect ou incomplet, et les <strong>réponses modèles complètes</strong> que l'étudiant peut étudier pour progresser.</div>
+    </div>
+    <h4>Critères généraux d'évaluation</h4>
+    <table>
+      <tr><th>Critère</th><th>Poids estimé</th><th>Description</th></tr>
+      <tr><td><strong>Complétude</strong></td><td>~30%</td><td>Tous les champs sont remplis, aucune section laissée vide ou avec "N/A"</td></tr>
+      <tr><td><strong>Précision</strong></td><td>~30%</td><td>Données chiffrées, indicateurs mesurables, détails techniques pertinents</td></tr>
+      <tr><td><strong>Cohérence</strong></td><td>~25%</td><td>La réponse correspond bien au problème posé dans le scénario généré</td></tr>
+      <tr><td><strong>Pertinence</strong></td><td>~15%</td><td>Les actions proposées sont réalistes et applicables en contexte industriel</td></tr>
+    </table>
+    <div class="warning"><strong>⚠️ L'IA n'est pas infaillible</strong> Des réponses créatives mais correctes peuvent parfois être sous-notées. Considérez les scores de la plateforme comme un outil formatif (auto-évaluation), non comme la note finale formelle.</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- S6 -->
+<div class="page" id="s6">
+  <div class="section-header"><div class="sh-icon">📄</div><div><div class="sn">Section 6</div><h2>Le rapport étudiant — Ce que vous recevez</h2><p>Contenu du rapport et nouveau format simplifié.</p></div></div>
+  <div class="card">
+    <h3>📋 Nouveau format simplifié — Le "code" est le nom de l'étudiant</h3>
+    <div class="success">
+      <strong>✅ Changement important</strong>
+      Le "code" que l'étudiant vous envoie n'est plus une longue chaîne Base64 illisible. C'est désormais simplement son <strong>prénom et nom</strong>, tel qu'il les a saisis dans le champ "Votre nom" de la plateforme.
+    </div>
+    <p style="margin-top:.8rem;">Exemple de ce que vous recevez de chaque étudiant :</p>
+    <div style="background:var(--gray800);border-radius:10px;padding:.7rem 1rem;font-family:monospace;font-size:.95rem;color:#e2e8f0;font-weight:700;margin:.8rem 0;">Alice Martin</div>
+    <h4>Ce que contient la sauvegarde (visible dans l'Espace Professeur) :</h4>
+    <table>
+      <tr><th>Donnée</th><th>Format</th><th>Utilité pour la notation</th></tr>
+      <tr><td><strong>Nom complet</strong></td><td>Texte libre</td><td>Identification de l'étudiant</td></tr>
+      <tr><td><strong>Temps total</strong></td><td>En minutes</td><td>Mesure de l'implication et du travail fourni</td></tr>
+      <tr><td><strong>Modules validés</strong></td><td>Nombre (0-9)</td><td>Avancement dans le parcours</td></tr>
+      <tr><td><strong>Score moyen global</strong></td><td>Pourcentage</td><td>Performance globale</td></tr>
+      <tr><td><strong>Score par module (M1→M9)</strong></td><td>% chacun</td><td>Performance détaillée par compétence</td></tr>
+      <tr><td><strong>Date du rapport</strong></td><td>JJ/MM/AAAA</td><td>Vérifier que le rapport correspond à la bonne séance</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h3>📬 Channels de réception des noms étudiants</h3>
+    <div class="grid2">
+      <ul>
+        <li>📧 Email (un email par étudiant avec son nom)</li>
+        <li>💬 Teams / Slack / WhatsApp (message direct)</li>
+        <li>📋 Moodle (devoir texte "Envoyez votre nom")</li>
+      </ul>
+      <ul>
+        <li>📝 Google Forms (champ "Votre nom complet sur la plateforme")</li>
+        <li>📑 Document partagé (Google Docs, liste)</li>
+      </ul>
+    </div>
+    <div class="tip"><strong>💡 Recommandation Google Forms</strong> Créez un formulaire avec deux champs : "Votre nom complet (tel que saisi sur la plateforme)" et "Votre groupe/promo". Les réponses arrivent automatiquement dans un Google Sheet — copiez la colonne de noms dans l'Espace Professeur d'un coup.</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- S7 -->
+<div class="page" id="s7">
+  <div class="section-header"><div class="sh-icon">💡</div><div><div class="sn">Section 7</div><h2>Conseils pour animer une séance</h2><p>Tirer le meilleur parti de la plateforme en cours.</p></div></div>
+  <div class="card">
+    <h3>⏰ Planning d'une séance type (3h)</h3>
+    <table>
+      <tr><th>Durée</th><th>Activité</th></tr>
+      <tr><td><strong>0:00 – 0:15</strong></td><td>Introduction : contexte du module, rappel théorique, démo rapide de l'interface</td></tr>
+      <tr><td><strong>0:15 – 0:20</strong></td><td>Configuration : chaque étudiant ouvre le site, saisit son nom complet et la clé API</td></tr>
+      <tr><td><strong>0:20 – 1:30</strong></td><td>Travail autonome sur le(s) module(s) du jour</td></tr>
+      <tr><td><strong>1:30 – 1:45</strong></td><td>Pause + questions, débriefing intermédiaire</td></tr>
+      <tr><td><strong>1:45 – 2:45</strong></td><td>Suite du travail + consultation des feedbacks IA</td></tr>
+      <tr><td><strong>2:45 – 3:00</strong></td><td>Génération du rapport, envoi du nom au professeur, débriefing collectif</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h3>🎯 Stratégies pédagogiques</h3>
+    <div class="grid2">
+      <div class="tip" style="margin:0;"><strong>🔄 Entraînement multi-scénarios</strong> Chaque étudiant génère 3 problèmes différents (bouton "Nouvel exercice") et garde le meilleur score. Encourage la persévérance.</div>
+      <div class="tip" style="margin:0;"><strong>👥 Binôme puis individuel</strong> Premier module en binôme pour comprendre l'interface, puis travail individuel. Réduit l'effet "premier contact" déroutant.</div>
+      <div class="tip" style="margin:0;"><strong>📊 Correction collective</strong> Projetez un feedback IA anonymisé au tableau et discutez-le collectivement. Les "réponses modèles" IA sont d'excellents supports de cours.</div>
+      <div class="tip" style="margin:0;"><strong>⏱️ Défi chronométré</strong> Donnez 20 min par module. Ceux qui finissent avant peuvent avancer au suivant ou aider leurs camarades — chacun soumet son propre rapport.</div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>📝 Grille de notation suggérée</h3>
+    <table>
+      <tr><th>Note</th><th>Critères de la plateforme</th></tr>
+      <tr><td><strong>Très Bien (A)</strong></td><td>9/9 modules validés + score moyen ≥ 80% + certificat obtenu</td></tr>
+      <tr><td><strong>Bien (B)</strong></td><td>≥ 7 modules validés + score moyen ≥ 70%</td></tr>
+      <tr><td><strong>Assez Bien (C)</strong></td><td>≥ 5 modules validés + score moyen ≥ 60%</td></tr>
+      <tr><td><strong>Passable (D)</strong></td><td>≥ 3 modules tentés + temps ≥ 1h (implication démontrée)</td></tr>
+      <tr><td><strong>Insuffisant (F)</strong></td><td>Moins de 3 modules tentés / rapport non envoyé</td></tr>
+    </table>
+    <div class="info"><strong>💡 Recommandation</strong> Utilisez les scores de la plateforme comme composante formative (30-40% de la note globale), complétée par une évaluation en présentiel ou un QCM traditionnel pour les 60-70% restants.</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- S8 -->
+<div class="page" id="s8">
+  <div class="section-header"><div class="sh-icon">❓</div><div><div class="sn">Section 8</div><h2>FAQ Professeur</h2></div></div>
+
+  <div class="card"><h3>❓ Un étudiant a saisi un prénom différent de son vrai nom — comment retrouver sa progression ?</h3><p>La progression est sauvegardée exactement sous le nom tapé. Si l'étudiant a tapé "Ali" au lieu de "Ali Benali", saisissez "Ali" dans l'Espace Professeur pour retrouver sa progression. Pour la suite, demandez-lui de saisir son nom complet et exact.</p></div>
+
+  <div class="card"><h3>❓ Deux étudiants ont le même prénom et nom — comment les distinguer ?</h3><p>Demandez-leur dès le début de saisir <strong>prénom + nom + numéro d'étudiant</strong> (ex: "Alice Martin 20231234"). C'est la clé de sauvegarde — elle doit être unique pour chaque étudiant.</p></div>
+
+  <div class="card"><h3>❓ Un étudiant a perdu sa progression en changeant d'ordinateur</h3><p>La progression est dans le localStorage du navigateur — liée à une machine précise. Si l'étudiant a changé de poste, sa progression n'est pas récupérable automatiquement. Accordez-lui du temps supplémentaire ou notez uniquement ce qui a pu être sauvegardé.</p></div>
+
+  <div class="card"><h3>❓ L'IA ne répond plus en cours de séance — que faire ?</h3><p><strong>1.</strong> Vérifiez la clé API (expirée ou incorrecte) sur console.anthropic.com. <strong>2.</strong> Vérifiez la connexion internet de la salle. <strong>3.</strong> En dernier recours, les étudiants peuvent continuer en mode "sans IA" avec les exercices pré-enregistrés et la correction statique — la progression et le score fonctionnent toujours.</p></div>
+
+  <div class="card"><h3>❓ Puis-je utiliser la plateforme sur Moodle ?</h3><p>Oui — intégrez la plateforme via une iframe dans votre cours Moodle. Pour la collecte des rapports, créez un devoir Moodle de type "Texte en ligne" où les étudiants collent leur nom (leur "code").</p></div>
+
+  <div class="card"><h3>❓ Les scores IA sont-ils fiables pour noter formellement ?</h3><p>L'évaluation IA est cohérente sur des critères structurels, mais peut manquer de nuance sur des réponses très originales. Recommandation : <strong>30-40% de la note en formatif</strong> (plateforme) + 60-70% en évaluation traditionnelle en présentiel.</p></div>
+</div>
+
+<div style="background:#042f2e;color:rgba(255,255,255,.4);text-align:center;padding:2rem;font-size:.78rem;margin-top:2rem;">
+  <div style="color:rgba(255,255,255,.7);font-weight:800;font-size:1rem;margin-bottom:.4rem;">Outils pédagogiques — Manuel Professeur</div>
+  <div>Plateforme pédagogique Amélioration Continue · Génie Industriel · Lean Six Sigma</div>
+  <div style="margin-top:.5rem;"><a href="https://nono612.github.io/Module-Pedagogique-Amelioration-Continue-FST/" style="color:#6ee7b7;text-decoration:none;font-weight:700;">nono612.github.io/Module-Pedagogique-Amelioration-Continue-FST/</a></div>
+  <div style="margin-top:.8rem;padding-top:.8rem;border-top:1px solid rgba(255,255,255,.1);">Mot de passe espace professeur : <span style="font-family:monospace;color:#6ee7b7;font-weight:700;">prof2024</span></div>
+</div>
+</body>
+</html>

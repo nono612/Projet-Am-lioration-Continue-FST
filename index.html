@@ -658,8 +658,7 @@ textarea{resize:vertical;min-height:80px;}
 <!-- ══════════════ HEADER ══════════════ -->
 <header>
   <div class="logo">
-    <div class="logo-badge">GL</div>
-    <div class="logo-title">GREEN<em>LAB</em></div>
+    <img src="fst_logo.png" alt="FST Tanger" style="height:52px;width:auto;display:block;">
   </div>
   <div class="header-right">
     <div class="api-field">
@@ -695,7 +694,7 @@ textarea{resize:vertical;min-height:80px;}
     <div class="hero-orb2"></div>
     <div class="hero-content">
       <div class="hero-tag">🎓 Génie Industriel · Lean · Six Sigma</div>
-      <h1>Lab d'<span class="hl">Amélioration</span><br>Continue</h1>
+      <h1>Outils pédagogique de l'<span class="hl">Amélioration</span><br>Continue</h1>
       <p class="hero-sub">Parcours pédagogique interactif — maîtrisez les outils Lean et Six Sigma à travers 9 modules pratiques avec intelligence artificielle intégrée.</p>
       <div class="hero-stats">
         <div class="stat-box">
@@ -1465,6 +1464,7 @@ const MODULES=[
 ];
 
 let state=JSON.parse(localStorage.getItem('greenlab_v2')||'{}');
+if(state.studentName){const _named=localStorage.getItem(state.studentName);if(_named)state=JSON.parse(_named);}
 state.scores=state.scores||{};
 state.completed=state.completed||[];
 state.studentName=state.studentName||'';
@@ -1485,8 +1485,9 @@ state.feedbacks=state.feedbacks||{};
 let paretoC=null,spcC=null,vsmC=null,smedPieC=null,smedBarC=null,quizAnswers={},quizData=[];
 let _moduleStartTs=null,_moduleActiveId=null;
 
-function save(){localStorage.setItem('greenlab_v2',JSON.stringify(state));}
-function saveName(){state.studentName=document.getElementById('studentName').value;save();}
+function storageKey(){return state.studentName||'greenlab_v2';}
+function save(){localStorage.setItem(storageKey(),JSON.stringify(state));}
+function saveName(){const old=storageKey();state.studentName=document.getElementById('studentName').value.trim();if(old!==storageKey())localStorage.removeItem(old);save();}
 
 /* Dictionnaire 202 mots : indices 0-100 = non validé (score=index), 101-201 = validé (score=index-101) */
 const SESSION_WORDS=[
@@ -4009,8 +4010,7 @@ function openStudentReport(){
   const completed=state.completed||[];
   const avg=Object.values(scores).length?Math.round(Object.values(scores).reduce((a,b)=>a+b,0)/Object.values(scores).length):0;
   const date=new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
-  const report={name,time,scores,completed,avg,date};
-  const code=btoa(unescape(encodeURIComponent(JSON.stringify(report))));
+  const code=name;
   document.getElementById('studentReportModal').style.display='flex';
   document.getElementById('studentReportContent').innerHTML=`
     <div style="background:linear-gradient(135deg,#0d1b2a,#1a3a6e);border-radius:14px;padding:1.5rem;color:#fff;margin-bottom:1.2rem;">
