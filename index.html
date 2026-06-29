@@ -4026,7 +4026,12 @@ function formatTime(ms){
   const min=Math.floor(ms/60000),h=Math.floor(min/60),m=min%60;
   return h>0?`${h}h ${m}min`:min>0?`${min} min`:'< 1 min';
 }
-function updateTimeDisplay(){const el=document.getElementById('statTime');if(el)el.textContent=formatTime(getTotalTime());}
+function getModuleTime(){
+  const stored=Object.values(state.timers||{}).reduce((a,b)=>a+b,0);
+  const current=(_moduleActiveId&&_moduleStartTs)?Math.floor((Date.now()-_moduleStartTs)/1000):0;
+  return (stored+current)*1000;
+}
+function updateTimeDisplay(){const el=document.getElementById('statTime');if(el)el.textContent=formatTime(getModuleTime());}
 setInterval(updateTimeDisplay,30000);
 
 /* ══ RAPPORT ÉTUDIANT ══ */
