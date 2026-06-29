@@ -1669,23 +1669,29 @@ function renderGrid(){
 }
 
 /* ── Validation ── */
+const _moduleNames={1:'Cycle PDCA',2:'Méthode 5S',3:'Diagramme Ishikawa',4:'Analyse de Pareto',5:'Tableau Kanban',6:'Value Stream Mapping',7:'Cartes de contrôle SPC',8:'SMED',9:'Quiz Final'};
 function validateModule(n,scoreFn){
   const score=scoreFn();
   state.scores[n]=score;
-  const pass=score>=(n===9?70:60);
+  const minScore=n===9?70:60;
+  const pass=score>=minScore;
   if(pass&&!state.completed.includes(n)){state.completed.push(n);state.completed.sort((a,b)=>a-b);}
   save();updateNav();
   const el=document.getElementById('m'+n);
   let box=el.querySelector('.score-result');
   if(!box){box=document.createElement('div');el.querySelector('.ccard:last-child').appendChild(box);}
   box.className='score-result '+(pass?'pass':'fail');
+  const encouragement=pass
+    ?(score>=90?'🏆 Excellent ! Maîtrise parfaite !':score>=75?'⭐ Très bien !':'✅ Module validé !')
+    :(score>=40?'💪 Presque ! Révisez et réessayez.':'📖 Relisez le cours et réessayez.');
   box.innerHTML=`
     <div class="score-ring" style="color:${pass?'var(--green)':'var(--red)'};">${score}%</div>
-    <div>
-      <div style="font-weight:800;font-size:1rem;color:${pass?'var(--green)':'var(--red)'};">${pass?'✅ Module validé !':'❌ Score insuffisant'}</div>
-      <div style="font-size:.8rem;color:var(--gray400);margin-top:.2rem;">Score : ${score}% — Minimum : ${n===9?70:60}%</div>
-      ${!pass?'<div style="font-size:.8rem;color:var(--red);margin-top:.2rem;">Complétez mieux les champs et réessayez.</div>':''}
-      ${pass&&n<9?`<div style="font-size:.8rem;color:var(--green);margin-top:.2rem;">🎉 Module ${n+1} débloqué !</div>`:''}
+    <div style="flex:1;">
+      <div style="font-weight:800;font-size:1rem;color:${pass?'var(--green)':'var(--red)'};">${encouragement}</div>
+      <div style="font-size:.8rem;color:var(--gray400);margin-top:.2rem;">Score : ${score}% — Minimum requis : ${minScore}%</div>
+      ${pass?`<div style="font-size:.78rem;margin-top:.5rem;padding:.4rem .7rem;background:rgba(5,150,105,.07);border-radius:8px;color:#065f46;">📚 <strong>${_moduleNames[n]}</strong> maîtrisé${n<9?' — compétence ajoutée à votre radar':' — parcours complet validé !'}</div>`:''}
+      ${!pass?`<div style="font-size:.8rem;color:var(--red);margin-top:.3rem;">Score insuffisant (${score}% / ${minScore}% requis). Complétez mieux vos réponses et réessayez.</div>`:''}
+      ${pass&&n<9?`<div style="font-size:.8rem;color:var(--green);margin-top:.3rem;font-weight:700;">🔓 Module ${n+1} débloqué !</div>`:''}
     </div>`;
   if(pass&&n===9)showCertificate();
 }
@@ -4032,7 +4038,7 @@ function getModuleTime(){
   return (stored+current)*1000;
 }
 function updateTimeDisplay(){const el=document.getElementById('statTime');if(el)el.textContent=formatTime(getModuleTime());}
-setInterval(updateTimeDisplay,30000);
+setInterval(updateTimeDisplay,5000);
 
 /* ══ RAPPORT ÉTUDIANT ══ */
 function openStudentReport(){
@@ -4199,7 +4205,7 @@ window.addEventListener('DOMContentLoaded',()=>{
         <input type="password" id="cvApiKey" placeholder="gsk_..." oninput="cvSyncKey(this.value)"
           style="width:100%;border:1.5px solid #c4b5fd;border-radius:8px;padding:.45rem .7rem;font-size:.82rem;font-family:'Inter',sans-serif;outline:none;transition:border .2s;box-sizing:border-box;"
           onfocus="this.style.borderColor='#7c3aed'" onblur="this.style.borderColor='#c4b5fd'">
-        <div style="font-size:.7rem;color:#9ca3af;margin-top:.3rem;">Clé gratuite sur <strong>console.groq.com</strong> · Nécessaire pour analyser votre CV et générer les exercices</div>
+        <div style="font-size:.7rem;color:#9ca3af;margin-top:.3rem;">Clé gratuite sur <strong>console.groq.com</strong> · Nécessaire pour analyser votre CV et générer les exercices · <span style="color:#a78bfa;">Elle sera automatiquement copiée dans le champ en haut du site</span></div>
       </div>
       <!-- ÉTAPE 2 : Dépôt CV -->
       <div style="font-size:.78rem;font-weight:800;color:#374151;margin-bottom:.4rem;">📄 Étape 2 — Déposez votre CV (PDF)</div>
@@ -4232,7 +4238,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     <div class="adm-hdr">
       <div>
         <div style="font-weight:900;font-size:1.05rem;">🔑 Dashboard Administrateur</div>
-        <div style="font-size:.72rem;opacity:.78;margin-top:.15rem;">GREEN LAB · Suivi pédagogique — Génie Industriel</div>
+        <div style="font-size:.72rem;opacity:.78;margin-top:.15rem;">Outils pédagogiques · Suivi pédagogique — Génie Industriel</div>
       </div>
       <button onclick="closeAdminDashboard()" style="background:rgba(255,255,255,.18);border:none;color:#fff;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:1.3rem;line-height:1;display:flex;align-items:center;justify-content:center;">×</button>
     </div>
