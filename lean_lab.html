@@ -1567,9 +1567,13 @@ function importSession(){
   if(!raw){el.innerHTML='<div class="alert alert-warning" style="margin:0;">⚠️ Entrez votre prénom.</div>';return;}
   const saved=localStorage.getItem('ac_session_'+raw);
   if(!saved){el.innerHTML='<div class="alert alert-danger" style="margin:0;">❌ Aucune session trouvée pour ce prénom sur cet ordinateur.</div>';return;}
-  sessionStorage.setItem('greenlab_v2',saved);
-  el.innerHTML='<div class="alert alert-success" style="margin:0;">✅ Session restaurée ! Rechargement…</div>';
-  setTimeout(()=>location.reload(),1200);
+  const restored=JSON.parse(saved);
+  Object.keys(restored).forEach(k=>state[k]=restored[k]);
+  sessionStorage.setItem(storageKey(),saved);
+  if(state.studentName){const nf=document.getElementById('studentName');if(nf)nf.value=state.studentName;}
+  updateNav();updateTimeDisplay();checkBadges();renderRadarChart();
+  el.innerHTML=`<div class="alert alert-success" style="margin:0;">✅ Session restaurée — ${state.completed.length}/9 modules retrouvés !</div>`;
+  document.getElementById('importCode').value='';
 }
 function copySessionCode(){
   const el=document.getElementById('exportCode');if(!el)return;
