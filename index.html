@@ -3299,7 +3299,7 @@ function showCertificate(){
       <div class="cert-inner">
         <div class="cert-seal">🏆</div>
         <div class="cert-title">CERTIFICAT DE COMPLÉTION</div>
-        <div class="cert-sub">GREEN LAB · Formation Amélioration Continue · Génie Industriel</div>
+        <div class="cert-sub">FST Tanger · Formation Amélioration Continue · Génie Industriel</div>
         <div style="font-size:.9rem;opacity:.6;margin-bottom:.3rem;">Ce certificat est décerné à</div>
         <div class="cert-name">${name}</div>
         <div class="cert-line"></div>
@@ -3339,7 +3339,7 @@ document.addEventListener('keydown',function(e){
   if(e.key==='Escape'&&_adminOpen){closeAdminDashboard();return;}
   if(e.ctrlKey&&e.shiftKey&&e.key==='A'){
     e.preventDefault();
-    const pwd=prompt('🔐 Mode Administrateur — GREEN LAB\nMot de passe :');
+    const pwd=prompt('🔐 Mode Administrateur — FST Tanger\nMot de passe :');
     if(pwd===null)return;
     if(pwd.trim().toUpperCase()===ADMIN_PWD){
       openAdminDashboard();
@@ -3870,9 +3870,9 @@ function downloadResultsPDF(){
   doc.setFillColor(124,58,237);doc.rect(0,52,W,3,'F');
   doc.setFillColor(245,158,11);doc.rect(M,52,22,3,'F');
   doc.setTextColor(255,255,255);
-  doc.setFont('helvetica','bold');doc.setFontSize(26);doc.text('GREEN LAB',M,22);
+  doc.setFont('helvetica','bold');doc.setFontSize(18);doc.text("Outils Pédagogiques d'Amélioration Continue",M,22);
   doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setTextColor(196,181,253);
-  doc.text("Lab d'Amelioration Continue - Genie Industriel",M,32);
+  doc.text('FST Tanger — Génie Industriel',M,32);
   doc.setFont('helvetica','bold');doc.setFontSize(13);doc.setTextColor(245,158,11);
   doc.text('RAPPORT DE RESULTATS',M,44);
 
@@ -3942,7 +3942,7 @@ function downloadResultsPDF(){
 
   doc.setDrawColor(226,232,240);doc.line(M,H-12,W-M,H-12);
   doc.setFontSize(7);doc.setFont('helvetica','italic');doc.setTextColor(148,163,184);
-  doc.text('GREEN LAB - Rapport personnel - Page 1/2',W/2,H-7,{align:'center'});
+  doc.text('Outils Pédagogiques d\'Amélioration Continue – FST Tanger · Page 1/2',W/2,H-7,{align:'center'});
 
   // === PAGE 2 : BADGES, NIVEAUX, TIMERS ===
   doc.addPage();
@@ -3977,46 +3977,11 @@ function downloadResultsPDF(){
   doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(13,27,42);
   doc.text('Total : '+fmtTime(totalSec),M+CW-2,y2+4,{align:'right'});y2+=12;
 
-  // Niveaux exercices IA
-  doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(13,27,42);doc.text('🎲  Niveaux d\'exercices IA atteints (M2–M8)',M,y2);y2+=4;
-  doc.setDrawColor(226,232,240);doc.line(M,y2,W-M,y2);y2+=5;
-  const exMods=[{id:2,n:'5S'},{id:3,n:'Ishikawa'},{id:4,n:'Pareto'},{id:5,n:'Kanban'},{id:6,n:'VSM'},{id:7,n:'SPC'},{id:8,n:'SMED'}];
-  const lvLabel=n=>n>=7?'Expert':n>=3?'Intermédiaire':'Débutant';
-  const lvColor=n=>n>=7?[220,38,38]:n>=3?[217,119,6]:[5,150,105];
-  const bW=(CW-18)/7;
-  exMods.forEach((m,i)=>{
-    const cnt=state.exLevels[m.id]||0;const lbl=lvLabel(cnt);const[cr,cg,cb]=lvColor(cnt);
-    const bx=M+i*(bW+3);
-    doc.setFillColor(cr,cg,cb);doc.rect(bx,y2,bW,3,'F');
-    doc.setFillColor(248,250,252);doc.rect(bx,y2+3,bW,22,'F');
-    doc.setDrawColor(226,232,240);doc.rect(bx,y2,bW,25,'S');
-    doc.setTextColor(cr,cg,cb);doc.setFont('helvetica','bold');doc.setFontSize(7);doc.text(lbl,bx+bW/2,y2+12,{align:'center'});
-    doc.setTextColor(13,27,42);doc.setFontSize(8.5);doc.text(cnt+'',bx+bW/2,y2+20,{align:'center'});
-    doc.setTextColor(100,116,139);doc.setFontSize(6.5);doc.text('M'+m.id+' '+m.n,bx+bW/2,y2+26,{align:'center'});
-  });
-  y2+=38;
-
-  // Badges débloqués
-  doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(13,27,42);doc.text('🏅  Badges débloqués',M,y2);y2+=4;
-  doc.setDrawColor(226,232,240);doc.line(M,y2,W-M,y2);y2+=6;
-  const bCols=4;const bSz=(CW-bCols*3)/bCols;
-  BADGES.forEach((b,i)=>{
-    const ok=state.badges.includes(b.id);
-    const bx=M+(i%bCols)*(bSz+3);if(i%bCols===0&&i>0)y2+=28;
-    doc.setFillColor(ok?240:248,ok?244:250,ok?255:252);doc.rect(bx,y2,bSz,22,'F');
-    doc.setDrawColor(ok?196:226,ok?181:232,ok?253:240);doc.rect(bx,y2,bSz,22,'S');
-    doc.setFont('helvetica','bold');doc.setFontSize(14);doc.setTextColor(ok?99:200,ok?102:200,ok?241:200);
-    doc.text('?',bx+bSz/2,y2+11,{align:'center'});
-    doc.setFont('helvetica',ok?'bold':'normal');doc.setFontSize(6.5);doc.setTextColor(ok?13:180,ok?27:180,ok?42:180);
-    doc.text(b.name,bx+bSz/2,y2+18,{align:'center'});
-    if(ok){doc.setFontSize(5.5);doc.setTextColor(5,150,105);doc.text('✓ Débloqué',bx+bSz/2,y2+21,{align:'center'});}
-  });
-
   doc.setDrawColor(226,232,240);doc.line(M,H-12,W-M,H-12);
   doc.setFontSize(7);doc.setFont('helvetica','italic');doc.setTextColor(148,163,184);
-  doc.text('GREEN LAB - Rapport personnel - Page 2/2',W/2,H-7,{align:'center'});
+  doc.text('Outils Pédagogiques d\'Amélioration Continue – FST Tanger · Page 2/2',W/2,H-7,{align:'center'});
 
-  doc.save('GREEN_LAB_Rapport_'+sName.replace(/\s+/g,'_')+'_'+new Date().toISOString().slice(0,10)+'.pdf');
+  doc.save('Rapport_AC_FST_'+sName.replace(/\s+/g,'_')+'_'+new Date().toISOString().slice(0,10)+'.pdf');
 }
 
 /* ══ TIME TRACKING ══ */
@@ -4055,7 +4020,7 @@ function openStudentReport(){
     <div style="background:linear-gradient(135deg,#0d1b2a,#1a3a6e);border-radius:14px;padding:1.5rem;color:#fff;margin-bottom:1.2rem;">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
         <div>
-          <div style="font-size:.68rem;opacity:.5;text-transform:uppercase;letter-spacing:.5px;">Rapport GREEN LAB</div>
+          <div style="font-size:.68rem;opacity:.5;text-transform:uppercase;letter-spacing:.5px;">Rapport de progression</div>
           <div style="font-size:1.5rem;font-weight:800;margin:.3rem 0;">${name}</div>
           <div style="font-size:.78rem;opacity:.6;">${date}</div>
         </div>
