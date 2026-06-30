@@ -751,18 +751,10 @@ textarea{resize:vertical;min-height:80px;}
     </div>
     <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
       <div style="flex:1;min-width:220px;">
-        <div style="font-weight:700;font-size:.82rem;color:#374151;margin-bottom:.3rem;">💾 Sauvegarder ma progression</div>
-        <div style="font-size:.74rem;color:#6b7280;margin-bottom:.6rem;line-height:1.5;">Générez un code et conservez-le (email, notes téléphone…). Il contient toute votre progression.</div>
-        <button class="btn btn-primary btn-sm" onclick="exportSession()">Générer mon code</button>
+        <div style="font-weight:700;font-size:.82rem;color:#374151;margin-bottom:.3rem;">🪪 Mon identifiant</div>
+        <div style="font-size:.74rem;color:#6b7280;margin-bottom:.6rem;line-height:1.5;">Affichez votre prénom — c'est votre identifiant à communiquer à votre professeur.</div>
+        <button class="btn btn-primary btn-sm" onclick="exportSession()">Afficher mon prénom</button>
         <div id="exportResult" style="margin-top:.6rem;"></div>
-      </div>
-      <div style="width:1px;background:var(--gray200);flex-shrink:0;align-self:stretch;"></div>
-      <div style="flex:1;min-width:220px;">
-        <div style="font-weight:700;font-size:.82rem;color:#374151;margin-bottom:.3rem;">📥 Restaurer ma session</div>
-        <div style="font-size:.74rem;color:#6b7280;margin-bottom:.6rem;line-height:1.5;">Collez votre code pour retrouver exactement votre progression sur cet ordinateur.</div>
-        <input type="text" id="importCode" placeholder="ex : CIMENT-BRONZE-CARGO" style="width:100%;border:1.5px solid var(--gray200);border-radius:8px;padding:.45rem .6rem;font-size:.82rem;font-weight:600;font-family:'Inter',sans-serif;outline:none;transition:border .2s;letter-spacing:.3px;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--gray200)'" onkeydown="if(event.key==='Enter')importSession()">
-        <button class="btn btn-green btn-sm" onclick="importSession()" style="margin-top:.4rem;">Restaurer ma session</button>
-        <div id="importResult" style="margin-top:.4rem;"></div>
       </div>
       <div style="width:1px;background:var(--gray200);flex-shrink:0;align-self:stretch;"></div>
       <div style="flex:1;min-width:220px;">
@@ -1544,15 +1536,13 @@ function _encodeModule(done,score){const s=Math.min(100,Math.max(0,Math.round(sc
 function _decodeModule(word){const idx=SESSION_WORDS.indexOf(word.trim().toUpperCase());if(idx<0||idx>201)throw new Error('mot inconnu: '+word);return idx<=100?{done:false,score:idx}:{done:true,score:idx-101};}
 
 function exportSession(){
-  const scores=state.scores||{},completed=state.completed||[];
-  const words=[];
-  for(let i=1;i<=9;i++) words.push(_encodeModule(completed.includes(i),scores[i]||0));
-  while(words.length>1&&words[words.length-1]==='DEBUT') words.pop();
-  const code=words.join('-');
-  document.getElementById('exportResult').innerHTML=`
+  const el=document.getElementById('exportResult');
+  const prenom=(state.studentName||'').trim().split(' ')[0];
+  if(!prenom){el.innerHTML='<div class="alert alert-warning" style="margin:0;">⚠️ Entrez d\'abord votre prénom dans le champ "Votre nom".</div>';return;}
+  el.innerHTML=`
     <div style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:9px;padding:.55rem .75rem;">
-      <div style="font-size:.68rem;color:#6b7280;margin-bottom:.25rem;">Votre code de session :</div>
-      <div id="exportCode" style="font-size:1rem;font-weight:800;color:#1e293b;letter-spacing:.5px;line-height:1.9;word-break:break-all;">${code}</div>
+      <div style="font-size:.68rem;color:#6b7280;margin-bottom:.25rem;">Votre identifiant :</div>
+      <div id="exportCode" style="font-size:1.2rem;font-weight:900;color:#1e293b;letter-spacing:.5px;">${prenom}</div>
       <button class="btn btn-ghost btn-sm" onclick="copySessionCode()" style="margin-top:.3rem;">📋 Copier</button>
     </div>`;
 }
