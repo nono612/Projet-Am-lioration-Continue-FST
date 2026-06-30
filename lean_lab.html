@@ -1517,7 +1517,8 @@ function storageKey(){return state.studentName||'greenlab_v2';}
 function prenomKey(){const p=(state.studentName||'').trim().split(' ')[0].toUpperCase();return p?'ac_session_'+p:null;}
 function save(){
   const s=JSON.stringify(state);
-  sessionStorage.setItem(storageKey(),s);
+  sessionStorage.setItem('greenlab_v2',s);
+  if(state.studentName)sessionStorage.setItem(state.studentName,s);
   const pk=prenomKey();if(pk)localStorage.setItem(pk,s);
 }
 function saveName(){const old=storageKey();state.studentName=document.getElementById('studentName').value.trim();if(old!==storageKey())sessionStorage.removeItem(old);save();}
