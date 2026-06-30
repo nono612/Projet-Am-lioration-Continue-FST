@@ -286,8 +286,8 @@ tr:nth-child(even) td{background:var(--gray50);}
   <div id="s3a"><div class="card">
     <h3>3.1 — Comment accéder à l'Espace Professeur</h3>
     <div class="steps">
-      <div class="step-block"><div class="step-num">1</div><div class="step-content"><h4>Ouvrez la plateforme sur votre navigateur</h4><p>Faites défiler la page d'accueil vers le bas jusqu'à la section "Espace Professeur".</p></div></div>
-      <div class="step-block"><div class="step-num">2</div><div class="step-content"><h4>Cliquez sur "👨‍🏫 Espace Professeur"</h4><p>Une fenêtre de dialogue apparaît vous demandant un mot de passe.</p></div></div>
+      <div class="step-block"><div class="step-num">1</div><div class="step-content"><h4>Ouvrez la plateforme sur votre navigateur</h4><p>Faites défiler la page d'accueil jusqu'en bas, sous le bouton "Mon rapport de progression".</p></div></div>
+      <div class="step-block"><div class="step-num">2</div><div class="step-content"><h4>Cliquez sur le lien "Espace Professeur"</h4><p>Ce lien discret (texte grisé souligné) est volontairement peu visible pour ne pas attirer l'attention des étudiants. Une fenêtre vous demande le mot de passe.</p></div></div>
       <div class="step-block"><div class="step-num">3</div><div class="step-content"><h4>Saisissez le mot de passe : <code style="font-size:.9rem;background:#f1f5f9;padding:.1rem .4rem;border-radius:4px;">prof2024</code></h4><p>Le tableau de bord classe s'ouvre.</p></div></div>
     </div>
     <div class="warning"><strong>⚠️ Ne laissez pas l'Espace Professeur ouvert sur un poste étudiant.</strong> Fermez la fenêtre modale quand vous avez terminé votre consultation.</div>
@@ -370,8 +370,18 @@ tr:nth-child(even) td{background:var(--gray50);}
 
   <div id="s3e"><div class="card">
     <h3>3.5 — Exporter en CSV</h3>
-    <p>Après avoir chargé les noms, cliquez sur <span class="mock-btn green">📥 Exporter CSV</span>. Un fichier <code style="font-size:.78rem;background:#f1f5f9;padding:.1rem .35rem;border-radius:4px;">greenlab_etudiants_YYYY-MM-DD.csv</code> se télécharge avec toutes les colonnes (nom, temps en minutes, M1 à M9, score moyen, modules validés, date).</p>
+    <p>Après avoir chargé les noms, cliquez sur <span class="mock-btn green">📥 Exporter CSV</span>. Un fichier <code style="font-size:.78rem;background:#f1f5f9;padding:.1rem .35rem;border-radius:4px;">rapport_ac_fst_YYYY-MM-DD.csv</code> se télécharge avec toutes les colonnes (nom, temps en minutes, M1 à M9, score moyen, modules validés, date).</p>
     <div class="tip"><strong>💡 Import dans Excel</strong> Fichier → Ouvrir → sélectionnez le CSV → séparateur virgule → les colonnes se remplissent. Vous pouvez ensuite trier, filtrer et calculer les statistiques de classe.</div>
+  </div></div>
+
+  <div id="s3f"><div class="card">
+    <h3>3.6 — Graphique de classe</h3>
+    <p>Dès qu'au moins un étudiant est chargé, un <strong>graphique en barres</strong> s'affiche automatiquement sous le tableau. Il présente pour chaque étudiant :</p>
+    <ul>
+      <li><strong>Barres colorées (score moyen) :</strong> vert si ≥ 70 %, orange si ≥ 50 %, rouge en dessous</li>
+      <li><strong>Barres violettes translucides (modules validés) :</strong> permet de visualiser l'avancement du parcours</li>
+    </ul>
+    <div class="tip"><strong>💡 Utilisation en séance</strong> Projetez l'Espace Professeur au tableau lors d'un bilan de groupe — le graphique donne une vue instantanée de la distribution des scores sans avoir à lire le tableau ligne par ligne.</div>
   </div></div>
 </div>
 

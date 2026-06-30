@@ -829,6 +829,14 @@ textarea{resize:vertical;min-height:80px;}
     </div>
   </div>
 
+  <!-- Bannière félicitations fin de parcours -->
+  <div id="completionBanner" style="display:none;background:linear-gradient(135deg,#065f46,#059669);border-radius:16px;padding:1.5rem 2rem;margin-bottom:1.5rem;text-align:center;box-shadow:0 8px 30px rgba(5,150,105,.35);">
+    <div style="font-size:2rem;margin-bottom:.4rem;">🏆</div>
+    <div style="font-size:1.1rem;font-weight:900;color:#fff;margin-bottom:.3rem;">Parcours complet !</div>
+    <div style="font-size:.82rem;color:rgba(255,255,255,.85);margin-bottom:1rem;">Félicitations — Vous avez validé les 9 modules du parcours Amélioration Continue.</div>
+    <button class="btn btn-gold btn-sm" onclick="openStudentReport()">📄 Télécharger mon rapport PDF</button>
+  </div>
+
   <!-- Mode Révision feedbacks IA -->
   <div style="background:#fff;border-radius:14px;padding:1rem 1.5rem;box-shadow:var(--shadow);border:1px solid var(--gray200);margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;">
     <div>
@@ -838,9 +846,9 @@ textarea{resize:vertical;min-height:80px;}
     <button class="btn btn-ghost btn-sm" onclick="showRevisionModal()" style="border-color:#ddd6fe;color:#7c3aed;font-weight:700;">📖 Revoir mes feedbacks</button>
   </div>
   <!-- Actions rapport / professeur -->
-  <div style="display:flex;justify-content:center;gap:.8rem;margin-top:1.2rem;flex-wrap:wrap;">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:.5rem;margin-top:1.2rem;">
     <button class="btn btn-primary" onclick="openStudentReport()">📄 Mon rapport de progression</button>
-    <button class="btn btn-ghost" onclick="openTeacherDashboard()">👨‍🏫 Espace Professeur</button>
+    <button onclick="openTeacherDashboard()" style="background:none;border:none;font-size:.72rem;color:#94a3b8;cursor:pointer;text-decoration:underline;padding:.2rem .5rem;" title="Réservé aux enseignants">Espace Professeur</button>
   </div>
 </div>
 
@@ -1472,6 +1480,10 @@ textarea{resize:vertical;min-height:80px;}
       </div>
     </div>
     <div id="teacherTableWrap"><div class="alert alert-info">Aucun étudiant chargé.</div></div>
+    <div id="teacherChartWrap" style="display:none;margin-top:1.2rem;">
+      <div class="ccard-title">Scores par étudiant</div>
+      <div style="position:relative;height:200px;"><canvas id="teacherChart"></canvas></div>
+    </div>
   </div>
 </div>
 
@@ -1480,15 +1492,15 @@ textarea{resize:vertical;min-height:80px;}
    STATE
 ══════════════════════════════════════════ */
 const MODULES=[
-  {id:1,name:'PDCA Interactif',icon:'🔄',desc:'Cycle Plan-Do-Check-Act avec feedback IA'},
-  {id:2,name:'5S Simulation',icon:'🧹',desc:'Classez les éléments dans les bonnes catégories'},
-  {id:3,name:'Ishikawa (5M)',icon:'🐟',desc:'Diagramme causes-effets + suggestions IA'},
-  {id:4,name:'Analyse de Pareto',icon:'📊',desc:'Diagramme 80/20 avec interprétation IA'},
-  {id:5,name:'Kanban Board',icon:'📋',desc:'Tableau Kanban interactif avec limites WIP'},
-  {id:6,name:'VSM Simplifié',icon:'🗺️',desc:'Value Stream Mapping et taux valeur ajoutée'},
-  {id:7,name:'Carte de Contrôle SPC',icon:'📈',desc:'Cartes de contrôle et règles de Nelson IA'},
-  {id:8,name:'SMED Simulator',icon:'⏱️',desc:'Changement de série rapide, calcul du gain'},
-  {id:9,name:'Quiz Final IA',icon:'🎓',desc:'QCM dynamique IA – 70% requis + certificat'}
+  {id:1,name:'PDCA Interactif',icon:'🔄',desc:'Cycle Plan-Do-Check-Act avec feedback IA',time:'~20 min'},
+  {id:2,name:'5S Simulation',icon:'🧹',desc:'Classez les éléments dans les bonnes catégories',time:'~25 min'},
+  {id:3,name:'Ishikawa (5M)',icon:'🐟',desc:'Diagramme causes-effets + suggestions IA',time:'~20 min'},
+  {id:4,name:'Analyse de Pareto',icon:'📊',desc:'Diagramme 80/20 avec interprétation IA',time:'~15 min'},
+  {id:5,name:'Kanban Board',icon:'📋',desc:'Tableau Kanban interactif avec limites WIP',time:'~20 min'},
+  {id:6,name:'VSM Simplifié',icon:'🗺️',desc:'Value Stream Mapping et taux valeur ajoutée',time:'~25 min'},
+  {id:7,name:'Carte de Contrôle SPC',icon:'📈',desc:'Cartes de contrôle et règles de Nelson IA',time:'~20 min'},
+  {id:8,name:'SMED Simulator',icon:'⏱️',desc:'Changement de série rapide, calcul du gain',time:'~20 min'},
+  {id:9,name:'Quiz Final IA',icon:'🎓',desc:'QCM dynamique IA – 70% requis + certificat',time:'~30 min'}
 ];
 
 let state=JSON.parse(sessionStorage.getItem('greenlab_v2')||'{}');
@@ -1582,13 +1594,17 @@ function copySessionCode(){
   const btn=event.currentTarget;btn.textContent='✅ Copié !';
   setTimeout(()=>btn.textContent='📋 Copier',2200);
 }
-function saveKey(){}
+function saveKey(){
+  const v=document.getElementById('apiKey')?.value||'';
+  if(v.trim())sessionStorage.setItem('ac_groq_key',v.trim());
+}
 function getKey(){
   const el=document.getElementById('apiKey');
   return (el&&el.value.trim())||'';
 }
 function cvSyncKey(v){
   const h=document.getElementById('apiKey');if(h)h.value=v;
+  if(v.trim())sessionStorage.setItem('ac_groq_key',v.trim());
   const keyStep=document.getElementById('cvKeyStep');
   if(keyStep&&v.trim()){keyStep.style.border='2px solid #a78bfa';keyStep.style.background='#f5f3ff';}
 }
@@ -1637,6 +1653,7 @@ function updateNav(){
   const sd=document.getElementById('statDone');if(sd)sd.textContent=done;
   const sa=document.getElementById('statAvg');
   if(sa){const sc=Object.values(state.scores);sa.textContent=sc.length?Math.round(sc.reduce((a,b)=>a+b,0)/sc.length)+'%':'–';}
+  const cb=document.getElementById('completionBanner');if(cb)cb.style.display=done>=9?'block':'none';
   renderGrid();
   renderRadarChart();
   checkBadges();
@@ -1663,6 +1680,7 @@ function renderGrid(){
       <div class="mod-card-body">
         <h3>${m.name}</h3>
         <p>${m.desc}</p>
+        <div style="font-size:.68rem;color:#94a3b8;margin-top:.3rem;">⏱️ ${m.time}</div>
         ${score!==null?`<div class="mod-score-row"><div class="mod-score-track"><div class="mod-score-fill" style="width:${score}%"></div></div><span class="mod-score-val">${score}%</span></div>`:''}
       </div>`;
     if(!locked)d.onclick=()=>goModule(m.id);
@@ -4126,6 +4144,24 @@ function renderTeacherTable(){
     <div class="kpi-box"><div class="kpi-val">${avgScore}%</div><div class="kpi-lbl">Score moyen classe</div></div>
   </div>`;
   el.innerHTML=html;
+  // Graphique barres
+  const cw=document.getElementById('teacherChartWrap');
+  if(cw&&teacherStudents.length){
+    cw.style.display='block';
+    const ctx=document.getElementById('teacherChart').getContext('2d');
+    if(window._teacherChart)window._teacherChart.destroy();
+    window._teacherChart=new Chart(ctx,{
+      type:'bar',
+      data:{
+        labels:sorted.map(s=>s.name),
+        datasets:[
+          {label:'Score moyen (%)',data:sorted.map(s=>s.avg||0),backgroundColor:sorted.map(s=>(s.avg||0)>=70?'rgba(5,150,105,.75)':(s.avg||0)>=50?'rgba(245,158,11,.75)':'rgba(239,68,68,.75)'),borderRadius:6,borderSkipped:false},
+          {label:'Modules validés (/9)',data:sorted.map(s=>(s.completed?.length||0)*11.1),backgroundColor:'rgba(99,102,241,.3)',borderRadius:6,borderSkipped:false}
+        ]
+      },
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:11}}}},scales:{y:{min:0,max:100,ticks:{stepSize:20,callback:v=>v+'%'},grid:{color:'rgba(0,0,0,.05)'}},x:{grid:{display:false},ticks:{font:{size:11}}}}}
+    });
+  }else if(cw)cw.style.display='none';
 }
 function exportTeacherCSV(){
   if(!teacherStudents.length){alert('Aucune donnée.');return;}
@@ -4134,13 +4170,15 @@ function exportTeacherCSV(){
   const rows=teacherStudents.map(s=>[s.name,Math.round((s.time||0)/60000),s.completed?.length||0,s.avg||0,...mods.map(m=>s.scores?.[m.id]??''),s.date||'']);
   const csv=[h,...rows].map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
   const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,﻿'+encodeURIComponent(csv);
-  a.download='greenlab_classe_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+  a.download='rapport_ac_fst_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
 }
 
 /* ══ INIT ══ */
 window.addEventListener('DOMContentLoaded',()=>{
   updateNav();loadPDCA();initPareto();renderParetoRows();
   if(state.studentName)document.getElementById('studentName').value=state.studentName;
+  const savedKey=sessionStorage.getItem('ac_groq_key');
+  if(savedKey){const kf=document.getElementById('apiKey');if(kf)kf.value=savedKey;const cf=document.getElementById('cvApiKey');if(cf)cf.value=savedKey;}
   // CV modal setup
   const inp=document.getElementById('cvFileInput');
   const drop=document.getElementById('cvDropZone');
