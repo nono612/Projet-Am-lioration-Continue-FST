@@ -1491,8 +1491,8 @@ const MODULES=[
   {id:9,name:'Quiz Final IA',icon:'🎓',desc:'QCM dynamique IA – 70% requis + certificat'}
 ];
 
-let state=JSON.parse(localStorage.getItem('greenlab_v2')||'{}');
-if(state.studentName){const _named=localStorage.getItem(state.studentName);if(_named)state=JSON.parse(_named);}
+let state=JSON.parse(sessionStorage.getItem('greenlab_v2')||'{}');
+if(state.studentName){const _named=sessionStorage.getItem(state.studentName);if(_named)state=JSON.parse(_named);}
 state.scores=state.scores||{};
 state.completed=state.completed||[];
 state.studentName=state.studentName||'';
@@ -1514,8 +1514,8 @@ let paretoC=null,spcC=null,vsmC=null,smedPieC=null,smedBarC=null,quizAnswers={},
 let _moduleStartTs=null,_moduleActiveId=null;
 
 function storageKey(){return state.studentName||'greenlab_v2';}
-function save(){localStorage.setItem(storageKey(),JSON.stringify(state));}
-function saveName(){const old=storageKey();state.studentName=document.getElementById('studentName').value.trim();if(old!==storageKey())localStorage.removeItem(old);save();}
+function save(){sessionStorage.setItem(storageKey(),JSON.stringify(state));}
+function saveName(){const old=storageKey();state.studentName=document.getElementById('studentName').value.trim();if(old!==storageKey())sessionStorage.removeItem(old);save();}
 
 /* Dictionnaire 202 mots : indices 0-100 = non validé (score=index), 101-201 = validé (score=index-101) */
 const SESSION_WORDS=[
@@ -1573,7 +1573,7 @@ function importSession(){
     const newScores={};const newCompleted=[];
     parts.forEach((word,i)=>{const mod=i+1;const {done,score}=_decodeModule(word);newScores[mod]=score;if(done)newCompleted.push(mod);});
     const newState={...state,scores:newScores,completed:newCompleted.sort((a,b)=>a-b)};
-    localStorage.setItem('greenlab_v2',JSON.stringify(newState));
+    sessionStorage.setItem('greenlab_v2',JSON.stringify(newState));
     el.innerHTML='<div class="alert alert-success" style="margin:0;">✅ Session restaurée ! Rechargement…</div>';
     setTimeout(()=>location.reload(),1400);
   }catch(e){
@@ -4148,8 +4148,8 @@ window.addEventListener('DOMContentLoaded',()=>{
     drop.addEventListener('dragleave',function(){this.classList.remove('drag');});
     drop.addEventListener('drop',function(e){e.preventDefault();this.classList.remove('drag');const f=e.dataTransfer.files[0];if(f)handleCVFile(f);});
   }
-  // N'afficher la modale que si aucun CV n'a encore été analysé
-  if(!state.domain)showCVModal();
+  // Modal CV uniquement si l'étudiant a déjà un nom (session en cours) mais pas encore de CV
+  if(state.studentName&&!state.domain)showCVModal();
   updateTimeDisplay();
   // Watchers pour mode révision
   _watchFeedbackDiv('pdcaAI',1);
