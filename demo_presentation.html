@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Démo — Outil Pédagogique Amélioration Continue · FST Tanger</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:#0d1b2a;color:#fff;overflow:hidden;height:100vh;}
+.deck{position:relative;width:100vw;height:100vh;overflow:hidden;}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4.5rem 3.5rem 4rem;opacity:0;transform:translateX(60px);transition:opacity .35s,transform .35s;pointer-events:none;}
+.slide.active{opacity:1;transform:none;pointer-events:all;}
+.slide.exit{opacity:0;transform:translateX(-60px);}
+/* bg themes */
+.bg-hero{background:linear-gradient(135deg,#0d1b2a,#162f55);}
+.bg-m1{background:linear-gradient(160deg,#0d1b2a,#0f2d56);}
+.bg-m2{background:linear-gradient(160deg,#0d1b2a,#3b0a0a);}
+.bg-m3{background:linear-gradient(160deg,#0d1b2a,#052e16);}
+.bg-m4{background:linear-gradient(160deg,#0d1b2a,#451a03);}
+.bg-m5{background:linear-gradient(160deg,#0d1b2a,#083344);}
+.bg-m6{background:linear-gradient(160deg,#0d1b2a,#1e1b4b);}
+.bg-m7{background:linear-gradient(160deg,#0d1b2a,#500724);}
+.bg-m8{background:linear-gradient(160deg,#0d1b2a,#431407);}
+.bg-m9{background:linear-gradient(160deg,#0d1b2a,#1a1a2e);}
+.bg-admin{background:linear-gradient(160deg,#0d1b2a,#2e1065);}
+/* chrome */
+.topbar{position:fixed;top:0;left:0;right:0;height:50px;background:rgba(13,27,42,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;padding:0 1.8rem;z-index:100;}
+.topbar img{height:34px;}
+.topbar-title{font-size:.68rem;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.5px;}
+.slide-ctr{font-size:.72rem;font-weight:800;color:rgba(255,255,255,.3);}
+.pbar{position:fixed;top:50px;left:0;right:0;height:2px;background:rgba(255,255,255,.05);z-index:99;}
+.pbar-fill{height:100%;background:linear-gradient(90deg,#f59e0b,#ef4444);transition:width .35s;}
+.navctrl{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:.8rem;z-index:100;}
+.nbtn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);color:#fff;border-radius:9px;padding:.45rem 1.2rem;font-size:.78rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .2s;}
+.nbtn:hover{background:rgba(255,255,255,.13);}
+.nbtn:disabled{opacity:.25;cursor:not-allowed;}
+.dots{display:flex;gap:.35rem;align-items:center;}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.18);cursor:pointer;transition:.3s;}
+.dot.on{background:#f59e0b;width:18px;border-radius:3px;}
+/* layout helpers */
+.row{display:flex;gap:1.2rem;width:100%;max-width:1020px;align-items:flex-start;}
+.col{flex:1;display:flex;flex-direction:column;gap:.8rem;}
+.box{width:100%;max-width:1020px;}
+/* white card */
+.wc{background:#fff;border-radius:14px;padding:1.1rem 1.3rem;color:#1e293b;box-shadow:0 6px 30px rgba(0,0,0,.28);}
+.wc-title{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:#94a3b8;margin-bottom:.7rem;display:flex;align-items:center;gap:.4rem;}
+.wc-title::after{content:'';flex:1;height:1px;background:#e2e8f0;}
+/* dark card */
+.dc{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:1.1rem 1.3rem;}
+/* section tag */
+.stag{display:inline-flex;align-items:center;gap:.3rem;border-radius:20px;padding:.28rem .8rem;font-size:.65rem;font-weight:800;margin-bottom:.4rem;letter-spacing:.3px;}
+.st-blue{background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.3);}
+.st-red{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);}
+.st-green{background:rgba(16,185,129,.15);color:#34d399;border:1px solid rgba(16,185,129,.3);}
+.st-amber{background:rgba(245,158,11,.15);color:#fbbf24;border:1px solid rgba(245,158,11,.3);}
+.st-cyan{background:rgba(6,182,212,.15);color:#22d3ee;border:1px solid rgba(6,182,212,.3);}
+.st-purple{background:rgba(139,92,246,.15);color:#a78bfa;border:1px solid rgba(139,92,246,.3);}
+.st-pink{background:rgba(236,72,153,.15);color:#f472b6;border:1px solid rgba(236,72,153,.3);}
+.st-orange{background:rgba(249,115,22,.15);color:#fb923c;border:1px solid rgba(249,115,22,.3);}
+.st-indigo{background:rgba(99,102,241,.15);color:#818cf8;border:1px solid rgba(99,102,241,.3);}
+/* headings */
+.sh1{font-size:2.6rem;font-weight:900;line-height:1.15;text-align:center;margin-bottom:.7rem;}
+.sh2{font-size:1.55rem;font-weight:900;margin-bottom:.35rem;}
+.sh3{font-size:1.1rem;font-weight:800;margin-bottom:.25rem;}
+.hl{color:#f59e0b;}
+.sub{font-size:.85rem;color:rgba(255,255,255,.5);line-height:1.65;max-width:600px;text-align:center;margin-bottom:1.3rem;}
+/* pills */
+.pill{display:inline-flex;align-items:center;gap:.25rem;border-radius:20px;padding:.22rem .65rem;font-size:.68rem;font-weight:700;}
+.p-blue{background:#eff6ff;color:#1d4ed8;}
+.p-green{background:#f0fdf4;color:#166534;}
+.p-amber{background:#fff7ed;color:#c2410c;}
+.p-purple{background:#f5f3ff;color:#6d28d9;}
+.p-red{background:#fef2f2;color:#991b1b;}
+/* mockup header */
+.mh{background:linear-gradient(90deg,#0d1b2a,#162f55);border-radius:10px;padding:.6rem 1rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem;}
+.mh img{height:30px;}
+.mh-right{display:flex;gap:.5rem;align-items:center;}
+.mh-api{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:.18rem .55rem;font-size:.6rem;color:rgba(255,255,255,.4);}
+.mh-prog{background:rgba(245,158,11,.15);color:#f59e0b;border-radius:20px;padding:.17rem .55rem;font-size:.6rem;font-weight:800;}
+/* mock nav */
+.mnav{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.7rem;}
+.mn{border-radius:5px;padding:.2rem .5rem;font-size:.58rem;font-weight:700;border:none;cursor:default;}
+.mn-h{background:#0d1b2a;color:#fff;}
+.mn-1{background:#dbeafe;color:#1d4ed8;}
+.mn-2{background:#fee2e2;color:#991b1b;}
+.mn-3{background:#d1fae5;color:#065f46;}
+.mn-4{background:#fef3c7;color:#92400e;}
+.mn-5{background:#cffafe;color:#164e63;}
+.mn-6{background:#ede9fe;color:#5b21b6;}
+.mn-7{background:#fce7f3;color:#9d174d;}
+.mn-8{background:#fff7ed;color:#c2410c;}
+.mn-9{background:#ecfdf5;color:#065f46;}
+/* progress bar mini */
+.pbar-mini{background:#e2e8f0;border-radius:4px;height:6px;overflow:hidden;margin-top:.25rem;}
+.pbar-fill-mini{height:100%;border-radius:4px;}
+/* PDCA */
+.pdca{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;}
+.pq{border-radius:9px;padding:.7rem .85rem;font-size:.7rem;line-height:1.5;}
+.pq b{display:block;font-size:.72rem;margin-bottom:.3rem;}
+.q-plan{background:#eff6ff;border:1.5px solid #bfdbfe;}.q-plan b{color:#1d4ed8;}
+.q-do{background:#f0fdf4;border:1.5px solid #bbf7d0;}.q-do b{color:#15803d;}
+.q-check{background:#fefce8;border:1.5px solid #fde68a;}.q-check b{color:#a16207;}
+.q-act{background:#fef2f2;border:1.5px solid #fecaca;}.q-act b{color:#b91c1c;}
+/* AI box */
+.ai{background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1.5px solid #c4b5fd;border-radius:11px;padding:.85rem 1rem;font-size:.71rem;color:#3730a3;line-height:1.6;}
+.ai-hd{font-weight:800;color:#4f46e5;margin-bottom:.4rem;}
+.score{display:inline-flex;align-items:center;gap:.3rem;background:#059669;color:#fff;border-radius:20px;padding:.18rem .65rem;font-size:.7rem;font-weight:800;}
+/* theory grid */
+.tgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;}
+.tcard{border-radius:10px;padding:.7rem .8rem;text-align:center;font-size:.7rem;}
+.tcard .ico{font-size:1.4rem;margin-bottom:.35rem;}
+.tcard b{display:block;font-weight:800;margin-bottom:.2rem;}
+/* btn mock */
+.bm{display:inline-flex;align-items:center;gap:.3rem;border-radius:8px;padding:.38rem .9rem;font-size:.68rem;font-weight:700;border:none;cursor:default;}
+.bm-p{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;}
+.bm-g{background:linear-gradient(135deg,#059669,#047857);color:#fff;}
+.bm-a{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;}
+.bm-v{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;}
+.bm-gh{background:transparent;border:1px solid #e2e8f0;color:#64748b;}
+/* stat boxes */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;max-width:700px;}
+.sbox{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:13px;padding:.9rem;text-align:center;}
+.snum{font-size:1.7rem;font-weight:900;color:#f59e0b;}
+.slbl{font-size:.63rem;color:rgba(255,255,255,.45);margin-top:.15rem;}
+/* kanban */
+.kb-col{background:#f8fafc;border-radius:9px;padding:.6rem;border:1.5px solid #e2e8f0;flex:1;}
+.kb-title{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:.4rem;display:flex;justify-content:space-between;}
+.wip{background:#fef3c7;color:#92400e;border-radius:8px;padding:.03rem .35rem;font-size:.55rem;}
+.kc{background:#fff;border-radius:6px;padding:.35rem .5rem;margin-bottom:.3rem;font-size:.62rem;border-left:3px solid #3b82f6;box-shadow:0 1px 3px rgba(0,0,0,.07);}
+.kc.red{border-left-color:#ef4444;} .kc.green{border-left-color:#10b981;} .kc.amber{border-left-color:#f59e0b;}
+/* spc */
+.spc-wrap{background:#f8fafc;border-radius:10px;border:1.5px solid #e2e8f0;padding:.6rem;}
+.spc-body{position:relative;height:80px;margin:.3rem 0;}
+.spc-line{position:absolute;left:0;right:0;height:1px;}
+.spc-pts{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-around;padding:0 .4rem;}
+.sdot{width:7px;height:7px;border-radius:50%;background:#3b82f6;}
+.sdot.out{background:#ef4444;}
+/* vsm */
+.vsm{display:flex;align-items:center;gap:.35rem;overflow-x:auto;padding:.4rem 0;}
+.vbox{background:#dbeafe;border:1.5px solid #93c5fd;border-radius:8px;padding:.35rem .55rem;text-align:center;font-size:.58rem;font-weight:700;color:#1d4ed8;flex-shrink:0;min-width:60px;}
+.vbox.red{background:#fee2e2;border-color:#fca5a5;color:#991b1b;}
+.vbox.green{background:#dcfce7;border-color:#86efac;color:#166534;}
+.varr{color:#94a3b8;font-size:.9rem;flex-shrink:0;}
+.vdata{background:#fef9c3;border:1.5px dashed #fbbf24;border-radius:5px;padding:.18rem .4rem;font-size:.55rem;color:#92400e;font-weight:700;}
+/* smed */
+.smed-row{display:flex;gap:.35rem;align-items:center;margin-bottom:.3rem;font-size:.62rem;}
+.sint{background:#fee2e2;color:#991b1b;border-radius:5px;padding:.1rem .4rem;font-size:.56rem;font-weight:800;flex-shrink:0;}
+.sext{background:#d1fae5;color:#065f46;border-radius:5px;padding:.1rem .4rem;font-size:.56rem;font-weight:800;flex-shrink:0;}
+.sbar{flex:1;background:#f1f5f9;border-radius:3px;height:8px;overflow:hidden;}
+.sbar-fill{height:100%;border-radius:3px;}
+/* quiz */
+.qq{background:#fff;border-radius:11px;padding:.85rem 1rem;margin-bottom:.5rem;border:1.5px solid #e2e8f0;}
+.qq .qt{font-size:.77rem;font-weight:700;color:#1e293b;margin-bottom:.5rem;}
+.qopt{display:flex;align-items:center;gap:.4rem;font-size:.67rem;padding:.25rem .4rem;border-radius:5px;margin-bottom:.2rem;}
+.qopt.ok{background:#f0fdf4;color:#166534;font-weight:700;}
+.qopt.sel{background:#eff6ff;color:#1d4ed8;}
+.qr{width:11px;height:11px;border-radius:50%;border:2px solid #cbd5e1;flex-shrink:0;}
+.qr.f{background:#2563eb;border-color:#2563eb;}
+.qr.ok{background:#16a34a;border-color:#16a34a;}
+/* cert */
+.cert{background:linear-gradient(135deg,#0d1b2a,#162f55);border-radius:14px;padding:1.3rem 1.8rem;border:2px solid rgba(245,158,11,.35);box-shadow:0 0 40px rgba(245,158,11,.12);text-align:center;}
+.cert-seal{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);border-radius:7px;padding:.25rem .55rem;font-size:.6rem;color:#fbbf24;font-weight:700;}
+/* admin */
+.atab{display:flex;gap:.35rem;margin-bottom:.6rem;}
+.at{background:#f1f5f9;border-radius:6px;padding:.25rem .65rem;font-size:.62rem;font-weight:700;color:#64748b;cursor:default;}
+.at.on{background:#7c3aed;color:#fff;}
+.rtable{width:100%;font-size:.62rem;border-collapse:collapse;}
+.rtable th{background:#f8fafc;padding:.3rem .55rem;font-weight:800;color:#64748b;text-align:left;border-bottom:1.5px solid #e2e8f0;}
+.rtable td{padding:.3rem .55rem;border-bottom:1px solid #f1f5f9;}
+/* key shortcut */
+.key{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:5px;padding:.08rem .38rem;font-size:.68rem;font-weight:700;font-family:monospace;}
+/* five-s bars */
+.fsrow{display:flex;justify-content:space-between;align-items:center;font-size:.63rem;margin-bottom:.3rem;}
+.fsbw{width:70px;background:#e2e8f0;border-radius:3px;height:5px;overflow:hidden;}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div style="display:flex;align-items:center;gap:.8rem;">
+    <img src="fst_logo.png" alt="FST">
+    <span class="topbar-title">OUTIL PÉDAGOGIQUE · AMÉLIORATION CONTINUE · FST TANGER</span>
+  </div>
+  <span class="slide-ctr" id="sc">1 / 34</span>
+</div>
+<div class="pbar"><div class="pbar-fill" id="pf" style="width:3%"></div></div>
+
+<div class="deck" id="deck">
+
+<!-- ═══ S1 COUVERTURE ═══ -->
+<div class="slide bg-hero active" id="s1">
+  <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none;">
+    <div style="position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(245,158,11,.12),transparent 70%);top:-80px;right:-80px;"></div>
+    <div style="position:absolute;width:300px;height:300px;background:radial-gradient(circle,rgba(59,130,246,.1),transparent 70%);bottom:-60px;left:-60px;"></div>
+  </div>
+  <div style="text-align:center;position:relative;z-index:1;">
+    <img src="fst_logo.png" style="height:85px;margin:0 auto 1.3rem;display:block;filter:drop-shadow(0 4px 20px rgba(0,0,0,.5));" alt="FST">
+    <div class="stag st-amber" style="margin:0 auto .6rem;">Présentation & Démonstration</div>
+    <h1 class="sh1">Outil Pédagogique<br><span class="hl">Amélioration Continue</span></h1>
+    <p class="sub" style="margin:0 auto 1.3rem;">Plateforme interactive Lean &amp; Six Sigma — 9 modules avec Intelligence Artificielle intégrée · FST Tanger</p>
+    <div class="stats" style="margin:0 auto;">
+      <div class="sbox"><div class="snum">9</div><div class="slbl">Modules interactifs</div></div>
+      <div class="sbox"><div class="snum">IA</div><div class="slbl">Groq intégrée</div></div>
+      <div class="sbox"><div class="snum">PDF</div><div class="slbl">Rapport &amp; Cert.</div></div>
+      <div class="sbox"><div class="snum">100%</div><div class="slbl">Web · Sans install.</div></div>
+    </div>
+    <div style="margin-top:1.2rem;font-size:.68rem;color:rgba(255,255,255,.25);">← → pour naviguer · Espace pour avancer</div>
+  </div>
+</div>
+
+<!-- ═══ S2 CONNEXION ═══ -->
+<div class="slide bg-hero" id="s2">
+  <div class="stag st-blue" style="margin-bottom:.3rem;">Étape 1 — Accès à la plateforme</div>
+  <h2 class="sh2">Connexion &amp; <span class="hl">Configuration</span></h2>
+  <p style="font-size:.8rem;color:rgba(255,255,255,.5);margin-bottom:1rem;max-width:560px;">L'étudiant accède au site via son navigateur, saisit son profil et configure sa clé IA Groq gratuite.</p>
+  <div class="row">
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">🌐 Accès direct</div>
+        <div style="font-size:.74rem;color:#374151;margin-bottom:.5rem;">Aucune installation — 100% navigateur web.</div>
+        <div style="background:#f8fafc;border-radius:7px;padding:.45rem .7rem;font-family:monospace;font-size:.68rem;color:#2563eb;border:1px solid #e2e8f0;word-break:break-all;">https://nono612.github.io/Module-Pedagogique-Amelioration-Continue-FST/</div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">🔑 Clé API Groq</div>
+        <div style="font-size:.72rem;color:#374151;line-height:1.5;margin-bottom:.5rem;">L'IA est alimentée par Groq (clé gratuite). Elle est saisie dans le header et <strong>jamais sauvegardée</strong>.</div>
+        <div style="display:flex;gap:.4rem;flex-wrap:wrap;"><span class="pill p-green">✓ Gratuit</span><span class="pill p-blue">console.groq.com</span><span class="pill p-amber">⚡ Rapide</span></div>
+      </div>
+    </div>
+    <div style="background:#fff;border-radius:16px;padding:1.4rem 1.6rem;color:#1e293b;box-shadow:0 8px 40px rgba(0,0,0,.3);max-width:360px;width:100%;">
+      <div style="text-align:center;margin-bottom:1rem;"><div style="font-size:2.2rem;">🎓</div><div style="font-weight:900;font-size:.9rem;color:#0d1b2a;">Outil Pédagogique Amélioration Continue</div><div style="font-size:.68rem;color:#64748b;margin-top:.15rem;">FST Tanger · Génie Industriel</div></div>
+      <div style="margin-bottom:.55rem;"><label style="font-size:.65rem;font-weight:700;color:#374151;display:block;margin-bottom:.25rem;">Votre prénom &amp; nom</label><input style="width:100%;border:1.5px solid #3b82f6;border-radius:7px;padding:.4rem .6rem;font-size:.78rem;background:#eff6ff;font-family:'Inter',sans-serif;" value="Youssef Tahir" readonly></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.55rem;">
+        <div><label style="font-size:.62rem;font-weight:700;color:#374151;display:block;margin-bottom:.2rem;">Secteur</label><input style="width:100%;border:1.5px solid #3b82f6;border-radius:6px;padding:.35rem .5rem;font-size:.68rem;background:#eff6ff;font-family:'Inter',sans-serif;" value="Aéronautique" readonly></div>
+        <div><label style="font-size:.62rem;font-weight:700;color:#374151;display:block;margin-bottom:.2rem;">Poste</label><input style="width:100%;border:1.5px solid #3b82f6;border-radius:6px;padding:.35rem .5rem;font-size:.68rem;background:#eff6ff;font-family:'Inter',sans-serif;" value="Technicien" readonly></div>
+      </div>
+      <div style="margin-bottom:.7rem;"><label style="font-size:.62rem;font-weight:700;color:#374151;display:block;margin-bottom:.2rem;">Entreprise</label><input style="width:100%;border:1.5px solid #3b82f6;border-radius:6px;padding:.38rem .55rem;font-size:.68rem;background:#eff6ff;font-family:'Inter',sans-serif;" value="PRECISION MAROC" readonly></div>
+      <div class="bm bm-p" style="width:100%;justify-content:center;">🚀 Commencer le parcours</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S3 TABLEAU DE BORD ═══ -->
+<div class="slide bg-hero" id="s3">
+  <div class="stag st-blue" style="margin-bottom:.3rem;">Étape 2 — Vue d'ensemble</div>
+  <h2 class="sh2">Tableau de bord — <span class="hl">9 Modules</span></h2>
+  <p style="font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:.8rem;">Navigation entre les modules, suivi de progression globale, radar de compétences et accès aux outils (PDF, session, manuels).</p>
+  <div class="box">
+    <div class="wc" style="padding:.9rem 1.1rem;">
+      <div class="mh"><img src="fst_logo.png" alt="FST"><div class="mh-right"><div class="mh-api">Clé Groq ••••</div><div class="mh-prog">3 / 9 modules</div></div></div>
+      <div class="mnav"><span class="mn mn-h">🏠 Accueil</span><span class="mn mn-1">🔄 PDCA</span><span class="mn mn-2">🧹 5S</span><span class="mn mn-3">🐟 Ishikawa</span><span class="mn mn-4">📊 Pareto</span><span class="mn mn-5">📋 Kanban</span><span class="mn mn-6">🗺️ VSM</span><span class="mn mn-7">📈 SPC</span><span class="mn mn-8">⏱️ SMED</span><span class="mn mn-9">🎓 Quiz</span></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;">
+        <div style="border-radius:10px;border:1.5px solid #e2e8f0;padding:.7rem;position:relative;overflow:hidden;"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:#3b82f6;border-radius:10px 10px 0 0;"></div><div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:1.2rem;">🔄</span><span style="font-size:.58rem;font-weight:700;color:#059669;">✅ 88%</span></div><div style="font-size:.7rem;font-weight:800;color:#1e293b;margin-top:.2rem;">M1 — PDCA</div><div style="font-size:.6rem;color:#64748b;">Cycle Plan-Do-Check-Act</div></div>
+        <div style="border-radius:10px;border:1.5px solid #e2e8f0;padding:.7rem;position:relative;overflow:hidden;"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:#ef4444;border-radius:10px 10px 0 0;"></div><div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:1.2rem;">🧹</span><span style="font-size:.58rem;font-weight:700;color:#059669;">✅ 75%</span></div><div style="font-size:.7rem;font-weight:800;color:#1e293b;margin-top:.2rem;">M2 — 5S</div><div style="font-size:.6rem;color:#64748b;">Audit atelier industriel</div></div>
+        <div style="border-radius:10px;border:1.5px solid #e2e8f0;padding:.7rem;position:relative;overflow:hidden;"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:#10b981;border-radius:10px 10px 0 0;"></div><div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:1.2rem;">🐟</span><span style="font-size:.58rem;font-weight:700;color:#059669;">✅ 92%</span></div><div style="font-size:.7rem;font-weight:800;color:#1e293b;margin-top:.2rem;">M3 — Ishikawa</div><div style="font-size:.6rem;color:#64748b;">Diagramme causes–effets</div></div>
+        <div style="border-radius:10px;border:1.5px solid #e2e8f0;padding:.7rem;position:relative;overflow:hidden;"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:#f59e0b;border-radius:10px 10px 0 0;"></div><div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:1.2rem;">📊</span><span style="font-size:.58rem;font-weight:700;color:#94a3b8;">— À faire</span></div><div style="font-size:.7rem;font-weight:800;color:#1e293b;margin-top:.2rem;">M4 — Pareto</div><div style="font-size:.6rem;color:#64748b;">Loi 80/20</div></div>
+        <div style="border-radius:10px;border:1.5px solid #e2e8f0;padding:.7rem;position:relative;overflow:hidden;"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:#06b6d4;border-radius:10px 10px 0 0;"></div><div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:1.2rem;">📋</span><span style="font-size:.58rem;font-weight:700;color:#94a3b8;">— À faire</span></div><div style="font-size:.7rem;font-weight:800;color:#1e293b;margin-top:.2rem;">M5 — Kanban</div><div style="font-size:.6rem;color:#64748b;">Flux tiré · WIP limits</div></div>
+        <div style="border-radius:10px;border:1.5px solid #e2e8f0;padding:.7rem;position:relative;overflow:hidden;"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:#8b5cf6;border-radius:10px 10px 0 0;"></div><div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:1.2rem;">🗺️</span><span style="font-size:.58rem;font-weight:700;color:#94a3b8;">— À faire</span></div><div style="font-size:.7rem;font-weight:800;color:#1e293b;margin-top:.2rem;">M6 — VSM</div><div style="font-size:.6rem;color:#64748b;">Cartographie des flux</div></div>
+      </div>
+      <div style="margin-top:.6rem;display:flex;gap:.5rem;align-items:center;">
+        <div style="flex:1;"><div style="font-size:.6rem;font-weight:700;color:#374151;display:flex;justify-content:space-between;margin-bottom:.2rem;"><span>Progression globale</span><span>33%</span></div><div class="pbar-mini"><div class="pbar-fill-mini" style="width:33%;background:linear-gradient(90deg,#3b82f6,#06b6d4);"></div></div></div>
+        <div class="bm bm-p" style="font-size:.6rem;">📄 Rapport PDF</div>
+        <div class="bm bm-gh" style="font-size:.6rem;">📖 Manuel étudiant</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S4 M1 THÉORIE ═══ -->
+<div class="slide bg-m1" id="s4">
+  <div class="stag st-blue">🔄 Module 1 — PDCA · Théorie</div>
+  <h2 class="sh2">Le Cycle <span style="color:#60a5fa;">PDCA</span> — Roue de Deming</h2>
+  <p style="font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:.9rem;">Le cycle PDCA (Plan-Do-Check-Act) est le fondement de toute démarche d'amélioration continue. Il structure la résolution de problèmes en 4 phases itératives.</p>
+  <div class="row">
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📘 Les 4 phases du cycle</div>
+        <div class="pdca">
+          <div class="pq q-plan"><b>🔵 PLAN — Planifier</b>Définir le problème, fixer un objectif SMART, planifier les actions correctives.</div>
+          <div class="pq q-do"><b>🟢 DO — Réaliser</b>Mettre en œuvre les actions planifiées à petite échelle ou sur le terrain.</div>
+          <div class="pq q-check"><b>🟡 CHECK — Vérifier</b>Mesurer les résultats obtenus et les comparer aux objectifs fixés.</div>
+          <div class="pq q-act"><b>🔴 ACT — Agir</b>Standardiser si succès, corriger si échec, puis relancer un nouveau cycle.</div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">🎯 Applications industrielles</div>
+        <div style="font-size:.72rem;line-height:1.7;color:#374151;">
+          <div style="margin-bottom:.4rem;">• <strong>Réduction des rebuts</strong> : identifier les défauts, agir sur les paramètres machines</div>
+          <div style="margin-bottom:.4rem;">• <strong>Amélioration des délais</strong> : analyser les goulots, réorganiser la production</div>
+          <div style="margin-bottom:.4rem;">• <strong>Optimisation qualité</strong> : standardiser les bonnes pratiques après vérification</div>
+          <div>• <strong>Réduction des coûts</strong> : cibler les gaspillages (MUDA) et les éliminer</div>
+        </div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">⚡ Spécificité de ce module</div>
+        <div style="display:flex;flex-direction:column;gap:.35rem;">
+          <div style="display:flex;gap:.5rem;align-items:flex-start;font-size:.7rem;color:#374151;"><span style="font-size:1rem;flex-shrink:0;">🤖</span><span><strong>IA génère un problème</strong> industriel adapté à votre secteur (aéro, auto, pharma…)</span></div>
+          <div style="display:flex;gap:.5rem;align-items:flex-start;font-size:.7rem;color:#374151;"><span style="font-size:1rem;flex-shrink:0;">✍️</span><span><strong>4 quadrants à remplir</strong> : chacun avec 2 champs détaillés</span></div>
+          <div style="display:flex;gap:.5rem;align-items:flex-start;font-size:.7rem;color:#374151;"><span style="font-size:1rem;flex-shrink:0;">📊</span><span><strong>Évaluation automatique</strong> + feedback IA détaillé + correction type</span></div>
+          <div style="display:flex;gap:.5rem;align-items:flex-start;font-size:.7rem;color:#374151;"><span style="font-size:1rem;flex-shrink:0;">⭐</span><span>Difficulté <strong>progressive</strong> : Débutant → Intermédiaire → Expert</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S5 M1 EXERCICE ═══ -->
+<div class="slide bg-m1" id="s5">
+  <div class="stag st-blue">🔄 Module 1 — PDCA · Exercice</div>
+  <h2 class="sh2">Résolution d'un <span style="color:#60a5fa;">Problème Industriel</span></h2>
+  <div class="row">
+    <div class="col">
+      <div style="background:linear-gradient(135deg,#1e3a5f,#1a3a6e);border-radius:12px;padding:.9rem 1.1rem;border:1.5px solid rgba(96,165,250,.3);">
+        <div style="font-size:.6rem;font-weight:800;color:#93c5fd;letter-spacing:.8px;margin-bottom:.4rem;">🤖 PROBLÈME GÉNÉRÉ PAR L'IA · AÉRONAUTIQUE</div>
+        <div style="font-size:.76rem;line-height:1.65;color:rgba(255,255,255,.88);">L'atelier d'usinage de <strong style="color:#fbbf24;">PRECISION MAROC</strong> enregistre un taux de rebuts de <strong style="color:#f87171;">8,2%</strong> sur les pièces structurales. La cadence cible est 120 pièces/h mais la production plafonne à 96 pièces. Des plaintes clients sur la tolérance dimensionnelle ont été remontées. <strong>Proposez un plan d'amélioration PDCA complet.</strong></div>
+        <div style="margin-top:.5rem;display:flex;gap:.4rem;"><span class="pill p-blue" style="background:rgba(59,130,246,.2);color:#93c5fd;font-size:.6rem;">🏭 Aéronautique</span><span class="pill p-amber" style="background:rgba(245,158,11,.15);color:#fbbf24;font-size:.6rem;">⭐⭐ Intermédiaire</span></div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">✍️ Réponses de l'étudiant — 4 quadrants</div>
+        <div class="pdca">
+          <div class="pq q-plan"><b>🔵 PLAN</b>Objectif : réduire rebuts de 8,2% à 3% en 6 sem. Actions : audit machines CNC, révision gammes, formation opérateurs.</div>
+          <div class="pq q-do"><b>🟢 DO</b>Recalibrage 3 centres d'usinage, remplacement inserts usés, session formation 2j pour 12 opérateurs.</div>
+          <div class="pq q-check"><b>🟡 CHECK</b>Rebuts à 3,1% en semaine 5 (objectif quasi atteint). Cadence montée à 114/h. KPI hebdo suivi.</div>
+          <div class="pq q-act"><b>🔴 ACT</b>Procédure standardisée, management visuel, prochain cycle : réduire les temps de setup SMED.</div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">🔢 Objectif SMART — Détail PLAN</div>
+        <div style="font-size:.7rem;color:#374151;line-height:1.6;background:#f8fafc;border-radius:8px;padding:.6rem .8rem;border:1px solid #e2e8f0;">
+          <div><strong>S</strong>pécifique : réduire le taux de rebuts sur ligne CNC-3</div>
+          <div><strong>M</strong>esurable : de 8,2% à ≤ 3%</div>
+          <div><strong>A</strong>tteignable : ressources internes disponibles</div>
+          <div><strong>R</strong>éaliste : basé sur historique d'améliorations similaires</div>
+          <div><strong>T</strong>emporel : dans les 6 semaines suivantes</div>
+        </div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">🎲 Génération &amp; Difficulté adaptative</div>
+        <div style="font-size:.7rem;color:#374151;margin-bottom:.5rem;">L'IA adapte la complexité du problème au niveau de l'étudiant :</div>
+        <div style="display:flex;flex-direction:column;gap:.3rem;">
+          <div style="background:#f0fdf4;border-radius:7px;padding:.4rem .6rem;font-size:.68rem;border-left:3px solid #10b981;"><strong>⭐ Débutant</strong> (0–2 ex.) — Contexte simple, 1 cause identifiée, peu de données</div>
+          <div style="background:#fef9ee;border-radius:7px;padding:.4rem .6rem;font-size:.68rem;border-left:3px solid #f59e0b;"><strong>⭐⭐ Intermédiaire</strong> (3–6 ex.) — Multi-causes, indicateurs chiffrés, contraintes temps</div>
+          <div style="background:#fef2f2;border-radius:7px;padding:.4rem .6rem;font-size:.68rem;border-left:3px solid #ef4444;"><strong>⭐⭐⭐ Expert</strong> (7+ ex.) — Problème complexe multi-sites, arbitrages, coûts inclus</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+        <span class="bm bm-p">📊 Évaluer</span>
+        <span class="bm bm-a">🤖 Feedback IA</span>
+        <span class="bm bm-v">📖 Correction</span>
+        <span class="bm bm-g">✅ Valider</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S6 M1 FEEDBACK ═══ -->
+<div class="slide bg-m1" id="s6">
+  <div class="stag st-blue">🔄 Module 1 — PDCA · Résultats</div>
+  <h2 class="sh2">Évaluation &amp; <span style="color:#60a5fa;">Feedback IA</span></h2>
+  <div class="row">
+    <div class="col">
+      <div class="ai">
+        <div class="ai-hd">🤖 Analyse Groq — Feedback personnalisé</div>
+        <div style="margin-bottom:.45rem;"><span class="score">✅ Score : 88 / 100</span></div>
+        <div style="margin-bottom:.4rem;"><strong>Points forts :</strong> Objectif SMART complet avec indicateur chiffré (8,2% → 3%) et délai précis (6 semaines). Phase DO cohérente avec les causes identifiées. Standardisation explicitement mentionnée dans ACT.</div>
+        <div style="margin-bottom:.4rem;"><strong>Axes d'amélioration :</strong> La phase CHECK pourrait inclure un tableau de suivi hebdomadaire des KPIs. La phase ACT gagnerait à mentionner un plan de contrôle statistique (SPC) pour pérenniser les gains.</div>
+        <div><strong>Verdict :</strong> Très bon cycle PDCA, structuré et ancré dans la réalité du secteur aéronautique. Approche professionnelle.</div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">📊 Détail de l'évaluation par quadrant</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;">
+          <div style="display:flex;justify-content:space-between;font-size:.68rem;align-items:center;background:#f8fafc;border-radius:6px;padding:.35rem .5rem;">
+            <span>🔵 PLAN</span><div><div class="pbar-mini" style="width:60px;"><div class="pbar-fill-mini" style="width:95%;background:#3b82f6;"></div></div><span style="font-size:.6rem;font-weight:700;color:#3b82f6;">24/25</span></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.68rem;align-items:center;background:#f8fafc;border-radius:6px;padding:.35rem .5rem;">
+            <span>🟢 DO</span><div><div class="pbar-mini" style="width:60px;"><div class="pbar-fill-mini" style="width:88%;background:#10b981;"></div></div><span style="font-size:.6rem;font-weight:700;color:#10b981;">22/25</span></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.68rem;align-items:center;background:#f8fafc;border-radius:6px;padding:.35rem .5rem;">
+            <span>🟡 CHECK</span><div><div class="pbar-mini" style="width:60px;"><div class="pbar-fill-mini" style="width:80%;background:#f59e0b;"></div></div><span style="font-size:.6rem;font-weight:700;color:#f59e0b;">20/25</span></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.68rem;align-items:center;background:#f8fafc;border-radius:6px;padding:.35rem .5rem;">
+            <span>🔴 ACT</span><div><div class="pbar-mini" style="width:60px;"><div class="pbar-fill-mini" style="width:88%;background:#ef4444;"></div></div><span style="font-size:.6rem;font-weight:700;color:#ef4444;">22/25</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📖 Correction type (extrait)</div>
+        <div style="font-size:.7rem;color:#374151;line-height:1.6;">
+          <div style="margin-bottom:.4rem;"><strong style="color:#1d4ed8;">PLAN idéal :</strong> Diagramme Ishikawa préalable pour identifier toutes les causes (machine, méthode, matière). Objectif SMART lié à l'OEE (Overall Equipment Effectiveness).</div>
+          <div style="margin-bottom:.4rem;"><strong style="color:#15803d;">DO idéal :</strong> Déploiement pilote sur 1 ligne avant généralisation. Suivi quotidien en QRQC (Quick Response Quality Control).</div>
+          <div><strong style="color:#a16207;">CHECK idéal :</strong> Carte de contrôle SPC avec UCL/LCL, capabilité Cp/Cpk mesuré avant et après.</div>
+        </div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">💾 Mode révision IA</div>
+        <div style="font-size:.72rem;color:#374151;line-height:1.5;margin-bottom:.5rem;">Le feedback IA est <strong>sauvegardé automatiquement</strong> dans le mode révision. L'étudiant peut le relire à tout moment depuis l'accueil.</div>
+        <div style="background:#f5f3ff;border-radius:8px;padding:.5rem .7rem;font-size:.68rem;color:#5b21b6;border:1.5px solid #ddd6fe;">📖 <strong>1 feedback sauvegardé</strong> — M1 PDCA · Youssef Tahir · Score 88%</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#065f46,#059669);border-radius:10px;padding:.7rem 1rem;text-align:center;">
+        <div style="font-size:.72rem;font-weight:900;color:#fff;margin-bottom:.2rem;">✅ Module 1 — PDCA Validé !</div>
+        <div style="font-size:.62rem;color:rgba(255,255,255,.75);">Score 88% · Supérieur au minimum requis de 60%</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S7 M2 THÉORIE ═══ -->
+<div class="slide bg-m2" id="s7">
+  <div class="stag st-red">🧹 Module 2 — 5S · Théorie</div>
+  <h2 class="sh2">La Démarche <span style="color:#f87171;">5S</span> — Organisation du Poste</h2>
+  <p style="font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:.9rem;">Le 5S est une méthode japonaise d'organisation et de standardisation des postes de travail, fondement du Lean Manufacturing.</p>
+  <div class="row">
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">🇯🇵 Les 5 étapes</div>
+        <div style="display:flex;flex-direction:column;gap:.4rem;">
+          <div style="background:#fef2f2;border-radius:8px;padding:.55rem .75rem;border-left:4px solid #ef4444;"><div style="font-size:.72rem;font-weight:800;color:#b91c1c;">🗑️ SEIRI — Trier</div><div style="font-size:.65rem;color:#374151;margin-top:.15rem;">Éliminer tout ce qui est inutile au poste de travail. Séparer le nécessaire du superflu.</div></div>
+          <div style="background:#fef9ee;border-radius:8px;padding:.55rem .75rem;border-left:4px solid #f59e0b;"><div style="font-size:.72rem;font-weight:800;color:#b45309;">📦 SEITON — Ranger</div><div style="font-size:.65rem;color:#374151;margin-top:.15rem;">Une place pour chaque chose, chaque chose à sa place. Visualisation immédiate.</div></div>
+          <div style="background:#f0fdf4;border-radius:8px;padding:.55rem .75rem;border-left:4px solid #10b981;"><div style="font-size:.72rem;font-weight:800;color:#166534;">🧽 SEISO — Nettoyer</div><div style="font-size:.65rem;color:#374151;margin-top:.15rem;">Nettoyage systématique = inspection. Détecter anomalies avant qu'elles causent des pannes.</div></div>
+          <div style="background:#eff6ff;border-radius:8px;padding:.55rem .75rem;border-left:4px solid #3b82f6;"><div style="font-size:.72rem;font-weight:800;color:#1d4ed8;">📋 SEIKETSU — Standardiser</div><div style="font-size:.65rem;color:#374151;margin-top:.15rem;">Définir des règles et procédures pour maintenir les 3 premiers S. Affichage visuel.</div></div>
+          <div style="background:#f5f3ff;border-radius:8px;padding:.55rem .75rem;border-left:4px solid #8b5cf6;"><div style="font-size:.72rem;font-weight:800;color:#5b21b6;">🏆 SHITSUKE — Maintenir</div><div style="font-size:.65rem;color:#374151;margin-top:.15rem;">Discipline et rigueur pour pérenniser les 4 S. Audits réguliers et implication du management.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📉 Gains mesurés après 5S</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-bottom:.6rem;">
+          <div style="background:#f0fdf4;border-radius:8px;padding:.5rem;text-align:center;border:1px solid #bbf7d0;"><div style="font-size:1rem;font-weight:900;color:#059669;">-30%</div><div style="font-size:.6rem;color:#374151;">Accidents du travail</div></div>
+          <div style="background:#eff6ff;border-radius:8px;padding:.5rem;text-align:center;border:1px solid #bfdbfe;"><div style="font-size:1rem;font-weight:900;color:#2563eb;">-25%</div><div style="font-size:.6rem;color:#374151;">Temps recherche outils</div></div>
+          <div style="background:#fef9ee;border-radius:8px;padding:.5rem;text-align:center;border:1px solid #fde68a;"><div style="font-size:1rem;font-weight:900;color:#d97706;">+15%</div><div style="font-size:.6rem;color:#374151;">Productivité globale</div></div>
+          <div style="background:#fef2f2;border-radius:8px;padding:.5rem;text-align:center;border:1px solid #fecaca;"><div style="font-size:1rem;font-weight:900;color:#dc2626;">-20%</div><div style="font-size:.6rem;color:#374151;">Défauts qualité</div></div>
+        </div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">⚡ Spécificité de ce module</div>
+        <div style="display:flex;flex-direction:column;gap:.35rem;font-size:.7rem;color:#374151;">
+          <div style="display:flex;gap:.5rem;align-items:flex-start;"><span>🏷️</span><span><strong>18 problèmes à classifier</strong> par glisser-déposer dans les 5 familles S</span></div>
+          <div style="display:flex;gap:.5rem;align-items:flex-start;"><span>📋</span><span><strong>Audit complet 25 critères</strong> avec notation de 0 à 4 points chacun</span></div>
+          <div style="display:flex;gap:.5rem;align-items:flex-start;"><span>🤖</span><span><strong>Génération IA</strong> d'un nouvel atelier industriel avec difficulté croissante</span></div>
+          <div style="display:flex;gap:.5rem;align-items:flex-start;"><span>📊</span><span><strong>Radar 5S</strong> visuel montrant les forces et faiblesses par dimension</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S8 M2 CLASSIFICATION ═══ -->
+<div class="slide bg-m2" id="s8">
+  <div class="stag st-red">🧹 Module 2 — 5S · Exercice 1</div>
+  <h2 class="sh2">Classification des <span style="color:#f87171;">18 Problèmes</span> — Drag &amp; Drop</h2>
+  <div class="row">
+    <div class="col">
+      <div style="background:linear-gradient(135deg,#3b0a0a,#1a0505);border-radius:12px;padding:.9rem 1.1rem;border:1.5px solid rgba(248,113,113,.3);">
+        <div style="font-size:.6rem;font-weight:800;color:#fca5a5;letter-spacing:.8px;margin-bottom:.4rem;">🏭 MISE EN SITUATION — PRECISION MAROC</div>
+        <div style="font-size:.73rem;line-height:1.65;color:rgba(255,255,255,.85);">Lors d'un audit de l'atelier d'usinage, <strong style="color:#fbbf24;">18 problèmes ont été identifiés</strong>. Classez chaque problème dans la bonne catégorie 5S. Certains semblent similaires — lisez bien les définitions avant de classifier.</div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">🏷️ Problèmes à classifier (exemples)</div>
+        <div style="display:flex;flex-wrap:wrap;gap:.35rem;">
+          <div style="background:#fee2e2;border-radius:7px;padding:.3rem .55rem;font-size:.62rem;border-left:3px solid #ef4444;">Outillage périmé sur établis</div>
+          <div style="background:#fef9ee;border-radius:7px;padding:.3rem .55rem;font-size:.62rem;border-left:3px solid #f59e0b;">Outils sans emplacement fixe</div>
+          <div style="background:#f0fdf4;border-radius:7px;padding:.3rem .55rem;font-size:.62rem;border-left:3px solid #10b981;">Copeaux sous CNC</div>
+          <div style="background:#eff6ff;border-radius:7px;padding:.3rem .55rem;font-size:.62rem;border-left:3px solid #3b82f6;">Pas de procédure affichée</div>
+          <div style="background:#fef2f2;border-radius:7px;padding:.3rem .55rem;font-size:.62rem;border-left:3px solid #ef4444;">Cartons vides dans allée</div>
+          <div style="background:#fef9ee;border-radius:7px;padding:.3rem .55rem;font-size:.62rem;border-left:3px solid #f59e0b;">Matières mal étiquetées</div>
+          <div style="background:#f5f3ff;border-radius:7px;padding:.3rem .55rem;font-size:.62rem;border-left:3px solid #8b5cf6;">Pas d'audit planning affiché</div>
+          <div style="background:#f0fdf4;border-radius:7px;padding:.3rem .55rem;font-size:.62rem;border-left:3px solid #10b981;">Taches huile non nettoyées</div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📂 Résultat de classification</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;">
+          <div style="background:#fef2f2;border-radius:8px;padding:.5rem;">
+            <div style="font-size:.6rem;font-weight:800;color:#b91c1c;margin-bottom:.3rem;">🗑️ SEIRI (4 items)</div>
+            <div style="font-size:.58rem;color:#374151;line-height:1.6;">• Outillage périmé<br>• Cartons vides<br>• Pièces rebut stockées<br>• Docs obsolètes</div>
+          </div>
+          <div style="background:#fef9ee;border-radius:8px;padding:.5rem;">
+            <div style="font-size:.6rem;font-weight:800;color:#b45309;margin-bottom:.3rem;">📦 SEITON (4 items)</div>
+            <div style="font-size:.58rem;color:#374151;line-height:1.6;">• Outils sans emplacement<br>• Matières mal étiquetées<br>• Câbles non rangés<br>• Stocks non identifiés</div>
+          </div>
+          <div style="background:#f0fdf4;border-radius:8px;padding:.5rem;">
+            <div style="font-size:.6rem;font-weight:800;color:#166534;margin-bottom:.3rem;">🧽 SEISO (4 items)</div>
+            <div style="font-size:.58rem;color:#374151;line-height:1.6;">• Copeaux sous CNC<br>• Taches huile<br>• Filtres encrassés<br>• Vitres sales</div>
+          </div>
+          <div style="background:#eff6ff;border-radius:8px;padding:.5rem;">
+            <div style="font-size:.6rem;font-weight:800;color:#1d4ed8;margin-bottom:.3rem;">📋 SEIKETSU (3 items)</div>
+            <div style="font-size:.58rem;color:#374151;line-height:1.6;">• Pas de procédure affichée<br>• Indicateurs absents<br>• Zones non délimitées</div>
+          </div>
+        </div>
+        <div style="margin-top:.4rem;background:#f5f3ff;border-radius:8px;padding:.4rem .55rem;font-size:.62rem;color:#5b21b6;"><strong>Score classification :</strong> 16/18 correct · 89% ✅</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S9 M2 AUDIT ═══ -->
+<div class="slide bg-m2" id="s9">
+  <div class="stag st-red">🧹 Module 2 — 5S · Exercice 2</div>
+  <h2 class="sh2">Audit <span style="color:#f87171;">5S</span> — 25 Critères de notation</h2>
+  <div class="row">
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📋 Grille d'audit — Extrait (5 critères / 25)</div>
+        <table style="width:100%;font-size:.63rem;border-collapse:collapse;">
+          <tr style="background:#f8fafc;"><th style="padding:.3rem .5rem;text-align:left;font-weight:800;color:#64748b;border-bottom:1.5px solid #e2e8f0;">Critère</th><th style="padding:.3rem .5rem;text-align:center;color:#64748b;border-bottom:1.5px solid #e2e8f0;">0</th><th style="padding:.3rem .5rem;text-align:center;color:#64748b;border-bottom:1.5px solid #e2e8f0;">1</th><th style="padding:.3rem .5rem;text-align:center;color:#64748b;border-bottom:1.5px solid #e2e8f0;">2</th><th style="padding:.3rem .5rem;text-align:center;color:#64748b;border-bottom:1.5px solid #e2e8f0;">3</th><th style="padding:.3rem .5rem;text-align:center;color:#64748b;border-bottom:1.5px solid #e2e8f0;">4</th><th style="padding:.3rem .5rem;text-align:center;color:#64748b;border-bottom:1.5px solid #e2e8f0;">Note</th></tr>
+          <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:.3rem .5rem;color:#374151;">Absence d'éléments inutiles</td><td style="text-align:center;padding:.3rem;"></td><td style="text-align:center;padding:.3rem;"></td><td style="text-align:center;padding:.3rem;font-size:.9rem;">●</td><td style="text-align:center;padding:.3rem;"></td><td style="text-align:center;padding:.3rem;"></td><td style="text-align:center;padding:.3rem;font-weight:800;color:#f59e0b;">2/4</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:.3rem .5rem;color:#374151;">Identification emplacements outils</td><td style="text-align:center;padding:.3rem;"></td><td style="text-align:center;padding:.3rem;"></td><td style="text-align:center;padding:.3rem;"></td><td style="text-align:center;padding:.3rem;font-size:.9rem;">●</td><td style="text-align:center;padding:.3rem;"></td><td style="text-align:center;padding:.3rem;font-weight:800;color:#10b981;">3/4</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:.3rem .5rem;color:#374151;">Propreté des machines</td><td style="text-align:center;padding:.3rem;"></td><td style="text-align:center;padding:.3rem;font-size:.9rem;">●</td><td style="text-align:center;padding:.3rem;"></td><td style="text-align:center;padding:.3rem;"></td><td style="text-align:center;padding:.3rem;"></td><td style="text-align:center;padding:.3rem;font-weight:800;color:#ef4444;">1/4</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:.3rem .5rem;color:#374151;">Procédures affichées au poste</td><td style="text-align:center;padding:.3rem;"></td><td style="text-align:center;padding:.3rem;"></td><td style="text-align:center;padding:.3rem;"></td><td style="text-align:center;padding:.3rem;font-size:.9rem;">●</td><td style="text-align:center;padding:.3rem;"></td><td style="text-align:center;padding:.3rem;font-weight:800;color:#10b981;">3/4</td></tr>
+          <tr><td style="padding:.3rem .5rem;color:#374151;">Respect planning d'audit</td><td style="text-align:center;padding:.3rem;"></td><td style="text-align:center;padding:.3rem;"></td><td style="text-align:center;padding:.3rem;font-size:.9rem;">●</td><td style="text-align:center;padding:.3rem;"></td><td style="text-align:center;padding:.3rem;"></td><td style="text-align:center;padding:.3rem;font-weight:800;color:#f59e0b;">2/4</td></tr>
+        </table>
+        <div style="font-size:.62rem;color:#64748b;margin-top:.3rem;font-style:italic;">… 20 critères supplémentaires ·  Score total : 74/100</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📊 Résultats Audit 5S — Score global : 74/100</div>
+        <div style="display:flex;flex-direction:column;gap:.35rem;margin-bottom:.6rem;">
+          <div class="fsrow"><span>🗑️ Seiri</span><div style="display:flex;align-items:center;gap:.4rem;"><div class="fsbw"><div style="width:60%;height:5px;background:#ef4444;border-radius:3px;"></div></div><span style="font-size:.62rem;font-weight:700;color:#ef4444;">12/20</span></div></div>
+          <div class="fsrow"><span>📦 Seiton</span><div style="display:flex;align-items:center;gap:.4rem;"><div class="fsbw"><div style="width:80%;height:5px;background:#f59e0b;border-radius:3px;"></div></div><span style="font-size:.62rem;font-weight:700;color:#f59e0b;">16/20</span></div></div>
+          <div class="fsrow"><span>🧽 Seiso</span><div style="display:flex;align-items:center;gap:.4rem;"><div class="fsbw"><div style="width:85%;height:5px;background:#10b981;border-radius:3px;"></div></div><span style="font-size:.62rem;font-weight:700;color:#10b981;">17/20</span></div></div>
+          <div class="fsrow"><span>📋 Seiketsu</span><div style="display:flex;align-items:center;gap:.4rem;"><div class="fsbw"><div style="width:70%;height:5px;background:#3b82f6;border-radius:3px;"></div></div><span style="font-size:.62rem;font-weight:700;color:#3b82f6;">14/20</span></div></div>
+          <div class="fsrow"><span>🏆 Shitsuke</span><div style="display:flex;align-items:center;gap:.4rem;"><div class="fsbw"><div style="width:75%;height:5px;background:#8b5cf6;border-radius:3px;"></div></div><span style="font-size:.62rem;font-weight:700;color:#8b5cf6;">15/20</span></div></div>
+        </div>
+        <div style="background:#fef9ee;border-radius:8px;padding:.5rem .7rem;font-size:.68rem;color:#92400e;border:1.5px solid #fde68a;margin-bottom:.5rem;">
+          <strong>🔴 Point critique — SEIRI :</strong> 12/20 — Trop d'éléments inutiles sur les postes. Action prioritaire : journée tri + évacuation des encombrants.
+        </div>
+        <div class="ai" style="padding:.6rem .8rem;">
+          <div class="ai-hd" style="font-size:.7rem;">🤖 Recommandation IA</div>
+          <div style="font-size:.67rem;">Démarrer par un chantier Seiri intensif (1 journée). Mettre en place des étiquettes rouges pour identifier le superflu. La propreté (Seiso) est déjà satisfaisante — capitaliser dessus pour motiver l'équipe.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ S10 M3 THÉORIE ═══ -->
+
+<div class="slide bg-m3" id="s10">
+  <div class="stag st-green">🐟 Module 3 — Ishikawa · Théorie</div>
+  <h2 class="sh2">Diagramme <span style="color:#34d399;">Ishikawa</span> — Causes &amp; Effets</h2>
+  <p style="font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:.9rem;">Le diagramme en arête de poisson (Ishikawa) structure l'analyse des causes d'un problème selon les 5M. C'est l'outil de base du diagnostic qualité.</p>
+  <div class="row">
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">🦴 Les 5M — Familles de causes</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;">
+          <div style="background:#eff6ff;border-radius:8px;padding:.55rem .7rem;"><div style="font-size:.68rem;font-weight:800;color:#1d4ed8;margin-bottom:.25rem;">⚙️ MACHINE</div><div style="font-size:.62rem;color:#374151;">Équipements, outillage, calibration, usure, pannes, réglages</div></div>
+          <div style="background:#f0fdf4;border-radius:8px;padding:.55rem .7rem;"><div style="font-size:.68rem;font-weight:800;color:#166534;margin-bottom:.25rem;">👷 MAIN D'ŒUVRE</div><div style="font-size:.62rem;color:#374151;">Formation, compétences, fatigue, communication, motivation</div></div>
+          <div style="background:#fef9ee;border-radius:8px;padding:.55rem .7rem;"><div style="font-size:.68rem;font-weight:800;color:#92400e;margin-bottom:.25rem;">📋 MÉTHODE</div><div style="font-size:.62rem;color:#374151;">Procédures, gammes, modes opératoires, organisation</div></div>
+          <div style="background:#fef2f2;border-radius:8px;padding:.55rem .7rem;"><div style="font-size:.68rem;font-weight:800;color:#991b1b;margin-bottom:.25rem;">🧱 MATIÈRE</div><div style="font-size:.62rem;color:#374151;">Matières premières, composants, fournisseurs, stockage</div></div>
+          <div style="background:#f5f3ff;border-radius:8px;padding:.55rem .7rem;grid-column:span 2;"><div style="font-size:.68rem;font-weight:800;color:#5b21b6;margin-bottom:.25rem;">🌡️ MILIEU</div><div style="font-size:.62rem;color:#374151;">Environnement, température, humidité, bruit, éclairage, poussières</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">🎯 Démarche de construction</div>
+        <div style="display:flex;flex-direction:column;gap:.35rem;font-size:.7rem;color:#374151;">
+          <div style="display:flex;gap:.5rem;"><span style="background:#d1fae5;color:#065f46;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;flex-shrink:0;">1</span><span><strong>Définir l'effet</strong> (tête du poisson) : le problème à analyser clairement formulé</span></div>
+          <div style="display:flex;gap:.5rem;"><span style="background:#d1fae5;color:#065f46;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;flex-shrink:0;">2</span><span><strong>Brainstorming</strong> par famille de causes (5M) avec l'équipe</span></div>
+          <div style="display:flex;gap:.5rem;"><span style="background:#d1fae5;color:#065f46;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;flex-shrink:0;">3</span><span><strong>Approfondissement</strong> avec la méthode des "5 Pourquoi" par cause</span></div>
+          <div style="display:flex;gap:.5rem;"><span style="background:#d1fae5;color:#065f46;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;flex-shrink:0;">4</span><span><strong>Priorisation</strong> des causes avec Pareto (fréquence × gravité)</span></div>
+          <div style="display:flex;gap:.5rem;"><span style="background:#d1fae5;color:#065f46;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;flex-shrink:0;">5</span><span><strong>Identifier la cause racine</strong> et définir l'action corrective</span></div>
+        </div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">⚡ Spécificité de ce module</div>
+        <div style="display:flex;flex-direction:column;gap:.35rem;font-size:.7rem;color:#374151;">
+          <div style="display:flex;gap:.5rem;"><span>🐟</span><span><strong>Construction guidée</strong> du diagramme par saisie dans chaque branche 5M</span></div>
+          <div style="display:flex;gap:.5rem;"><span>🎯</span><span><strong>Identification cause racine</strong> avec justification et hiérarchisation</span></div>
+          <div style="display:flex;gap:.5rem;"><span>🤖</span><span><strong>Validation IA</strong> : cohérence entre causes identifiées et secteur industriel</span></div>
+          <div style="display:flex;gap:.5rem;"><span>🔗</span><span><strong>Lien avec Pareto</strong> : les causes Ishikawa alimentent le module M4</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S11 M3 EXERCICE ═══ -->
+<div class="slide bg-m3" id="s11">
+  <div class="stag st-green">🐟 Module 3 — Ishikawa · Exercice</div>
+  <h2 class="sh2">Construction du <span style="color:#34d399;">Diagramme</span> — PRECISION MAROC</h2>
+  <div class="row">
+    <div class="col">
+      <div style="background:linear-gradient(135deg,#052e16,#064e3b);border-radius:12px;padding:.9rem 1.1rem;border:1.5px solid rgba(52,211,153,.3);margin-bottom:.6rem;">
+        <div style="font-size:.6rem;font-weight:800;color:#6ee7b7;letter-spacing:.8px;margin-bottom:.3rem;">🎯 PROBLÈME À ANALYSER</div>
+        <div style="font-size:.78rem;font-weight:800;color:#fff;">Taux de rebuts de 8,2% sur pièces aéronautiques</div>
+        <div style="font-size:.7rem;color:rgba(255,255,255,.7);margin-top:.3rem;">Atelier d'usinage PRECISION MAROC — Ligne CNC</div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">🔍 Causes identifiées par l'étudiant</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;">
+          <div style="background:#eff6ff;border-radius:8px;padding:.5rem;"><div style="font-size:.6rem;font-weight:800;color:#1d4ed8;margin-bottom:.3rem;">⚙️ MACHINE</div><div style="font-size:.6rem;color:#374151;line-height:1.6;">• CNC mal calibrée (6 mois)<br>• Vibrations excessives broche<br>• Inserts usés non remplacés<br>• Capteurs de cote défaillants</div></div>
+          <div style="background:#f0fdf4;border-radius:8px;padding:.5rem;"><div style="font-size:.6rem;font-weight:800;color:#166534;margin-bottom:.3rem;">👷 MAIN D'ŒUVRE</div><div style="font-size:.6rem;color:#374151;line-height:1.6;">• Formation initiale insuffisante<br>• Turnover opérateurs élevé<br>• Fatigue en fin de poste<br>• Mauvaise lecture des plans</div></div>
+          <div style="background:#fef9ee;border-radius:8px;padding:.5rem;"><div style="font-size:.6rem;font-weight:800;color:#92400e;margin-bottom:.3rem;">📋 MÉTHODE</div><div style="font-size:.6rem;color:#374151;line-height:1.6;">• Gamme d'usinage non à jour<br>• Pas de contrôle en cours<br>• QRQC non appliqué<br>• Procédures obsolètes</div></div>
+          <div style="background:#fef2f2;border-radius:8px;padding:.5rem;"><div style="font-size:.6rem;font-weight:800;color:#991b1b;margin-bottom:.3rem;">🧱 MATIÈRE</div><div style="font-size:.6rem;color:#374151;line-height:1.6;">• Alliage Al-Ti non conforme<br>• Stockage inadapté (humidité)<br>• Fournisseur non qualifié<br>• Lot non contrôlé à réception</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">🔎 Approfondissement — 5 Pourquoi (extrait)</div>
+        <div style="font-size:.68rem;color:#374151;line-height:1.7;">
+          <div style="font-weight:800;color:#1d4ed8;margin-bottom:.3rem;">Cause : CNC mal calibrée</div>
+          <div style="padding-left:.6rem;border-left:2px solid #3b82f6;">
+            <div><strong>Pourquoi 1 :</strong> Pas de calibration depuis 6 mois</div>
+            <div><strong>Pourquoi 2 :</strong> Plan de maintenance non suivi</div>
+            <div><strong>Pourquoi 3 :</strong> Responsable maintenance absent (arrêt maladie)</div>
+            <div><strong>Pourquoi 4 :</strong> Pas de remplaçant désigné</div>
+            <div style="color:#059669;font-weight:700;"><strong>Cause racine :</strong> Absence de procédure de remplacement qualifié</div>
+          </div>
+        </div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">🏆 Causes racines identifiées</div>
+        <div style="display:flex;flex-direction:column;gap:.3rem;">
+          <div style="background:#fef9ee;border-radius:7px;padding:.4rem .6rem;font-size:.68rem;color:#92400e;border-left:3px solid #f59e0b;"><strong>#1 Machine</strong> — Calibration CNC mensuelle non réalisée → programme recalibration</div>
+          <div style="background:#fef2f2;border-radius:7px;padding:.4rem .6rem;font-size:.68rem;color:#991b1b;border-left:3px solid #ef4444;"><strong>#2 Main d'œuvre</strong> — Formation opérateurs lacunaire → session 2 jours + certification</div>
+          <div style="background:#f5f3ff;border-radius:7px;padding:.4rem .6rem;font-size:.68rem;color:#5b21b6;border-left:3px solid #8b5cf6;"><strong>#3 Méthode</strong> — Contrôle en cours absent → instaurer auto-contrôle toutes les 20 pièces</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S12 M3 RÉSULTATS ═══ -->
+<div class="slide bg-m3" id="s12">
+  <div class="stag st-green">🐟 Module 3 — Ishikawa · Résultats</div>
+  <h2 class="sh2">Validation &amp; <span style="color:#34d399;">Feedback IA</span></h2>
+  <div class="row">
+    <div class="col">
+      <div class="ai">
+        <div class="ai-hd">🤖 Analyse IA — Diagramme Ishikawa</div>
+        <div style="margin-bottom:.4rem;"><span class="score">✅ Score : 92 / 100</span></div>
+        <div style="margin-bottom:.4rem;"><strong>Points forts :</strong> Toutes les 5 familles de causes sont explorées. L'analyse "5 Pourquoi" est correctement appliquée sur la cause machine. Les causes racines sont bien hiérarchisées et les actions correctives sont concrètes.</div>
+        <div style="margin-bottom:.4rem;"><strong>Axes d'amélioration :</strong> La branche "Milieu" (environnement) mériterait d'être approfondie — la température et les vibrations de l'atelier peuvent influencer la précision dimensionnelle des pièces aéronautiques.</div>
+        <div><strong>Excellent travail :</strong> Les 3 causes racines identifiées sont cohérentes avec le secteur aéronautique et permettront d'agir efficacement sur les 8,2% de rebuts.</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#065f46,#059669);border-radius:10px;padding:.65rem 1rem;text-align:center;margin-top:.6rem;">
+        <div style="font-size:.72rem;font-weight:900;color:#fff;">✅ Module 3 — Ishikawa Validé ! Score 92%</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📊 Évaluation par critère</div>
+        <div style="display:flex;flex-direction:column;gap:.3rem;">
+          <div class="fsrow"><span style="font-size:.65rem;">Exhaustivité des 5M</span><div style="display:flex;align-items:center;gap:.4rem;"><div class="fsbw"><div style="width:100%;height:5px;background:#10b981;border-radius:3px;"></div></div><span style="font-size:.6rem;font-weight:700;color:#10b981;">20/20</span></div></div>
+          <div class="fsrow"><span style="font-size:.65rem;">Pertinence des causes</span><div style="display:flex;align-items:center;gap:.4rem;"><div class="fsbw"><div style="width:90%;height:5px;background:#10b981;border-radius:3px;"></div></div><span style="font-size:.6rem;font-weight:700;color:#10b981;">18/20</span></div></div>
+          <div class="fsrow"><span style="font-size:.65rem;">Analyse 5 Pourquoi</span><div style="display:flex;align-items:center;gap:.4rem;"><div class="fsbw"><div style="width:95%;height:5px;background:#10b981;border-radius:3px;"></div></div><span style="font-size:.6rem;font-weight:700;color:#10b981;">19/20</span></div></div>
+          <div class="fsrow"><span style="font-size:.65rem;">Identification cause racine</span><div style="display:flex;align-items:center;gap:.4rem;"><div class="fsbw"><div style="width:85%;height:5px;background:#f59e0b;border-radius:3px;"></div></div><span style="font-size:.6rem;font-weight:700;color:#f59e0b;">17/20</span></div></div>
+          <div class="fsrow"><span style="font-size:.65rem;">Actions correctives proposées</span><div style="display:flex;align-items:center;gap:.4rem;"><div class="fsbw"><div style="width:90%;height:5px;background:#10b981;border-radius:3px;"></div></div><span style="font-size:.6rem;font-weight:700;color:#10b981;">18/20</span></div></div>
+        </div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">🔗 Connexion avec le module suivant</div>
+        <div style="font-size:.72rem;color:#374151;line-height:1.6;background:#f0fdf4;border-radius:8px;padding:.6rem .8rem;border:1.5px solid #bbf7d0;">
+          Les <strong>3 causes racines</strong> identifiées ici (calibration, formation, méthode) seront utilisées dans le <strong>Module 4 — Pareto</strong> pour prioriser les actions selon leur impact sur les rebuts.
+          <div style="margin-top:.4rem;font-weight:700;color:#059669;">→ Causes Ishikawa → Données Pareto</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S13 M4 THÉORIE ═══ -->
+<div class="slide bg-m4" id="s13">
+  <div class="stag st-amber">📊 Module 4 — Pareto · Théorie</div>
+  <h2 class="sh2">Analyse de <span style="color:#fbbf24;">Pareto</span> — La Loi 80/20</h2>
+  <p style="font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:.9rem;">Le principe de Pareto (Vilfredo Pareto, 1906) : 80% des effets sont produits par 20% des causes. En industrie, 80% des défauts proviennent de 20% des causes racines.</p>
+  <div class="row">
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📈 Construction du diagramme en 5 étapes</div>
+        <div style="display:flex;flex-direction:column;gap:.35rem;font-size:.7rem;color:#374151;">
+          <div style="display:flex;gap:.5rem;"><span style="background:#fef3c7;color:#92400e;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;flex-shrink:0;">1</span><span><strong>Collecter les données</strong> : compter les occurrences de chaque cause de défaut</span></div>
+          <div style="display:flex;gap:.5rem;"><span style="background:#fef3c7;color:#92400e;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;flex-shrink:0;">2</span><span><strong>Trier par ordre décroissant</strong> de fréquence (de la plus grande à la plus petite)</span></div>
+          <div style="display:flex;gap:.5rem;"><span style="background:#fef3c7;color:#92400e;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;flex-shrink:0;">3</span><span><strong>Calculer les % cumulés</strong> pour chaque cause</span></div>
+          <div style="display:flex;gap:.5rem;"><span style="background:#fef3c7;color:#92400e;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;flex-shrink:0;">4</span><span><strong>Tracer le diagramme</strong> : barres décroissantes + courbe cumulative</span></div>
+          <div style="display:flex;gap:.5rem;"><span style="background:#fef3c7;color:#92400e;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;flex-shrink:0;">5</span><span><strong>Identifier la zone 80%</strong> et concentrer les actions sur ces causes prioritaires</span></div>
+        </div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">⚡ Spécificité de ce module</div>
+        <div style="display:flex;flex-direction:column;gap:.3rem;font-size:.7rem;color:#374151;">
+          <div style="display:flex;gap:.5rem;"><span>📥</span><span><strong>Saisie des données</strong> de fréquence de défauts en tableau</span></div>
+          <div style="display:flex;gap:.5rem;"><span>📊</span><span><strong>Graphique généré automatiquement</strong> avec barres et courbe cumulative</span></div>
+          <div style="display:flex;gap:.5rem;"><span>🔴</span><span><strong>Zone 80% tracée</strong> automatiquement avec ligne de seuil</span></div>
+          <div style="display:flex;gap:.5rem;"><span>🤖</span><span><strong>Validation IA</strong> : vérification de la conclusion et plan d'action prioritaire</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📊 Exemple de diagramme Pareto</div>
+        <div style="display:flex;align-items:flex-end;gap:.4rem;height:90px;padding-bottom:.5rem;border-bottom:2px solid #e2e8f0;margin-bottom:.35rem;">
+          <div style="height:95%;background:#ef4444;flex:2.2;border-radius:3px 3px 0 0;display:flex;justify-content:center;align-items:flex-end;padding-bottom:.2rem;font-size:.55rem;color:#fff;font-weight:700;">38%</div>
+          <div style="height:72%;background:#f97316;flex:1.8;border-radius:3px 3px 0 0;display:flex;justify-content:center;align-items:flex-end;padding-bottom:.2rem;font-size:.55rem;color:#fff;font-weight:700;">28%</div>
+          <div style="height:38%;background:#f59e0b;flex:1.2;border-radius:3px 3px 0 0;display:flex;justify-content:center;align-items:flex-end;padding-bottom:.2rem;font-size:.55rem;color:#fff;font-weight:700;">15%</div>
+          <div style="height:22%;background:#84cc16;flex:.9;border-radius:3px 3px 0 0;"></div>
+          <div style="height:14%;background:#22c55e;flex:.7;border-radius:3px 3px 0 0;"></div>
+          <div style="height:9%;background:#10b981;flex:.5;border-radius:3px 3px 0 0;"></div>
+        </div>
+        <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+          <span style="font-size:.55rem;color:#ef4444;font-weight:700;">■ Réglage CNC</span>
+          <span style="font-size:.55rem;color:#f97316;font-weight:700;">■ Insert usé</span>
+          <span style="font-size:.55rem;color:#f59e0b;font-weight:700;">■ Matière nc</span>
+          <span style="font-size:.55rem;color:#84cc16;font-weight:700;">■ Vibrations</span>
+          <span style="font-size:.55rem;color:#22c55e;font-weight:700;">■ Erreur opé.</span>
+          <span style="font-size:.55rem;color:#10b981;font-weight:700;">■ Autres</span>
+        </div>
+        <div style="margin-top:.5rem;background:#fef9ee;border-radius:7px;padding:.4rem .6rem;font-size:.68rem;color:#92400e;border:1px solid #fde68a;"><strong>Règle 80/20 :</strong> Top 3 causes = 81% des défauts — corriger ces 3 causes élimine la majorité des rebuts.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S14 M4 EXERCICE ═══ -->
+<div class="slide bg-m4" id="s14">
+  <div class="stag st-amber">📊 Module 4 — Pareto · Exercice</div>
+  <h2 class="sh2">Saisie des <span style="color:#fbbf24;">Données</span> &amp; Construction du Graphique</h2>
+  <div class="row">
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📥 Données de défauts saisies — PRECISION MAROC (sur 500 pièces)</div>
+        <table style="width:100%;font-size:.63rem;border-collapse:collapse;">
+          <tr style="background:#f8fafc;"><th style="padding:.28rem .5rem;text-align:left;color:#64748b;font-weight:800;border-bottom:1.5px solid #e2e8f0;">#</th><th style="padding:.28rem .5rem;text-align:left;color:#64748b;font-weight:800;border-bottom:1.5px solid #e2e8f0;">Cause de défaut</th><th style="text-align:center;padding:.28rem .5rem;color:#64748b;font-weight:800;border-bottom:1.5px solid #e2e8f0;">Freq.</th><th style="text-align:center;padding:.28rem .5rem;color:#64748b;font-weight:800;border-bottom:1.5px solid #e2e8f0;">%</th><th style="text-align:center;padding:.28rem .5rem;color:#64748b;font-weight:800;border-bottom:1.5px solid #e2e8f0;">% cumulé</th></tr>
+          <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:.25rem .5rem;color:#ef4444;font-weight:800;">1</td><td style="padding:.25rem .5rem;color:#374151;">Mauvais réglage CNC</td><td style="text-align:center;font-weight:700;color:#374151;">156</td><td style="text-align:center;font-weight:700;color:#ef4444;">38%</td><td style="text-align:center;font-weight:700;color:#ef4444;">38%</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:.25rem .5rem;color:#f97316;font-weight:800;">2</td><td style="padding:.25rem .5rem;color:#374151;">Insert usé non changé</td><td style="text-align:center;font-weight:700;color:#374151;">115</td><td style="text-align:center;font-weight:700;color:#f97316;">28%</td><td style="text-align:center;font-weight:700;color:#f97316;">66%</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:.25rem .5rem;color:#f59e0b;font-weight:800;">3</td><td style="padding:.25rem .5rem;color:#374151;">Matière non conforme</td><td style="text-align:center;font-weight:700;color:#374151;">62</td><td style="text-align:center;font-weight:700;color:#f59e0b;">15%</td><td style="text-align:center;font-weight:700;background:#fef9ee;color:#d97706;">81% ←</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:.25rem .5rem;color:#84cc16;font-weight:800;">4</td><td style="padding:.25rem .5rem;color:#374151;">Vibrations machine</td><td style="text-align:center;font-weight:700;color:#374151;">37</td><td style="text-align:center;font-weight:700;color:#84cc16;">9%</td><td style="text-align:center;font-weight:700;color:#84cc16;">90%</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:.25rem .5rem;color:#22c55e;font-weight:800;">5</td><td style="padding:.25rem .5rem;color:#374151;">Erreur opérateur</td><td style="text-align:center;font-weight:700;color:#374151;">25</td><td style="text-align:center;font-weight:700;color:#22c55e;">6%</td><td style="text-align:center;font-weight:700;color:#22c55e;">96%</td></tr>
+          <tr><td style="padding:.25rem .5rem;color:#10b981;font-weight:800;">6</td><td style="padding:.25rem .5rem;color:#374151;">Autres causes</td><td style="text-align:center;font-weight:700;color:#374151;">16</td><td style="text-align:center;font-weight:700;color:#10b981;">4%</td><td style="text-align:center;font-weight:700;color:#10b981;">100%</td></tr>
+        </table>
+        <div style="margin-top:.4rem;font-size:.6rem;color:#64748b;font-style:italic;">Total : 411 défauts sur 500 pièces = 8,2% de rebuts</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📈 Graphique généré automatiquement</div>
+        <div style="display:flex;align-items:flex-end;gap:.35rem;height:85px;padding-bottom:.4rem;border-bottom:2px solid #e2e8f0;margin-bottom:.3rem;position:relative;">
+          <div style="position:absolute;top:10%;left:0;right:0;height:1px;background:#ef4444;opacity:.4;border-top:1.5px dashed #ef4444;"></div>
+          <div style="height:95%;background:#ef4444;flex:2.2;border-radius:3px 3px 0 0;display:flex;justify-content:center;align-items:flex-end;padding-bottom:.15rem;font-size:.52rem;color:#fff;font-weight:700;">38%</div>
+          <div style="height:72%;background:#f97316;flex:1.8;border-radius:3px 3px 0 0;display:flex;justify-content:center;align-items:flex-end;padding-bottom:.15rem;font-size:.52rem;color:#fff;font-weight:700;">28%</div>
+          <div style="height:38%;background:#f59e0b;flex:1.2;border-radius:3px 3px 0 0;position:relative;"><div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#d97706;color:#fff;border-radius:4px;padding:.05rem .25rem;font-size:.5rem;font-weight:800;white-space:nowrap;">← 80%</div></div>
+          <div style="height:22%;background:#84cc16;flex:.9;border-radius:3px 3px 0 0;"></div>
+          <div style="height:14%;background:#22c55e;flex:.7;border-radius:3px 3px 0 0;"></div>
+          <div style="height:9%;background:#10b981;flex:.5;border-radius:3px 3px 0 0;"></div>
+        </div>
+        <div style="margin-bottom:.5rem;">
+          <div style="display:flex;justify-content:space-between;font-size:.63rem;margin-bottom:.18rem;"><span>Top 2 causes (réglage + insert)</span><span style="color:#ef4444;font-weight:800;">66%</span></div>
+          <div class="pbar-mini"><div class="pbar-fill-mini" style="width:66%;background:linear-gradient(90deg,#ef4444,#f97316);"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:.63rem;margin-top:.25rem;margin-bottom:.18rem;"><span>Top 3 causes (+ matière)</span><span style="color:#d97706;font-weight:800;">81% → Règle vérifiée ✅</span></div>
+          <div class="pbar-mini"><div class="pbar-fill-mini" style="width:81%;background:linear-gradient(90deg,#ef4444,#f59e0b);"></div></div>
+        </div>
+        <div style="background:#fef9ee;border-radius:8px;padding:.5rem .7rem;font-size:.68rem;color:#92400e;border:1.5px solid #fde68a;"><strong>Conclusion :</strong> En agissant uniquement sur réglage CNC + inserts + matière, on élimine 81% des rebuts. La règle de Pareto est vérifiée.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S15 M4 RÉSULTATS ═══ -->
+<div class="slide bg-m4" id="s15">
+  <div class="stag st-amber">📊 Module 4 — Pareto · Résultats</div>
+  <h2 class="sh2">Plan d'action <span style="color:#fbbf24;">Priorisé</span> &amp; Validation</h2>
+  <div class="row">
+    <div class="col">
+      <div class="ai">
+        <div class="ai-hd">🤖 Analyse IA — Pareto</div>
+        <div style="margin-bottom:.4rem;"><span class="score">✅ Score : 90 / 100</span></div>
+        <div style="margin-bottom:.4rem;"><strong>Points forts :</strong> Le tri décroissant est correct, les % cumulés sont bien calculés. La règle 80/20 est identifiée sur les 3 premières causes. La conclusion est cohérente et actionnable.</div>
+        <div><strong>Recommandation IA :</strong> Coupler cette analyse avec une carte SPC (Module 7) pour surveiller l'évolution du taux de rebuts après actions correctives.</div>
+      </div>
+      <div class="wc" style="margin-top:.6rem;">
+        <div class="wc-title">🎯 Plan d'action issu du Pareto</div>
+        <div style="display:flex;flex-direction:column;gap:.3rem;">
+          <div style="background:#fef2f2;border-radius:7px;padding:.4rem .6rem;font-size:.68rem;color:#991b1b;border-left:3px solid #ef4444;display:flex;justify-content:space-between;"><div><strong>Action 1 :</strong> Programme recalibration CNC mensuelle</div><span style="font-weight:700;color:#ef4444;flex-shrink:0;">Impact : 38%</span></div>
+          <div style="background:#fff7ed;border-radius:7px;padding:.4rem .6rem;font-size:.68rem;color:#c2410c;border-left:3px solid #f97316;display:flex;justify-content:space-between;"><div><strong>Action 2 :</strong> Remplacement inserts toutes les 200 pièces</div><span style="font-weight:700;color:#f97316;flex-shrink:0;">Impact : 28%</span></div>
+          <div style="background:#fef9ee;border-radius:7px;padding:.4rem .6rem;font-size:.68rem;color:#92400e;border-left:3px solid #f59e0b;display:flex;justify-content:space-between;"><div><strong>Action 3 :</strong> Contrôle réception matière (+ qualification fournisseur)</div><span style="font-weight:700;color:#f59e0b;flex-shrink:0;">Impact : 15%</span></div>
+        </div>
+        <div style="margin-top:.5rem;background:#f0fdf4;border-radius:8px;padding:.45rem .65rem;font-size:.7rem;color:#166534;font-weight:700;border:1.5px solid #bbf7d0;text-align:center;">🎯 Gain total attendu : éliminer 81% des rebuts → taux visé &lt; 1,6%</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📊 Synthèse modules 3 &amp; 4 — Cohérence</div>
+        <div style="font-size:.7rem;color:#374151;line-height:1.6;margin-bottom:.6rem;">Les causes identifiées en <strong>Ishikawa (M3)</strong> alimentent directement le <strong>Pareto (M4)</strong> — les deux outils se complètent : Ishikawa pour la cause, Pareto pour la priorité.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;">
+          <div style="background:#f0fdf4;border-radius:8px;padding:.5rem;text-align:center;border:1px solid #bbf7d0;"><div style="font-size:1rem;font-weight:900;color:#059669;">3</div><div style="font-size:.6rem;color:#374151;">Causes racines trouvées (Ishikawa)</div></div>
+          <div style="background:#fef9ee;border-radius:8px;padding:.5rem;text-align:center;border:1px solid #fde68a;"><div style="font-size:1rem;font-weight:900;color:#d97706;">81%</div><div style="font-size:.6rem;color:#374151;">Des rebuts adressés (Pareto)</div></div>
+          <div style="background:#eff6ff;border-radius:8px;padding:.5rem;text-align:center;border:1px solid #bfdbfe;"><div style="font-size:1rem;font-weight:900;color:#2563eb;">3</div><div style="font-size:.6rem;color:#374151;">Actions correctives priorisées</div></div>
+          <div style="background:#fef2f2;border-radius:8px;padding:.5rem;text-align:center;border:1px solid #fecaca;"><div style="font-size:1rem;font-weight:900;color:#dc2626;">&lt;1,6%</div><div style="font-size:.6rem;color:#374151;">Taux rebuts visé</div></div>
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg,#065f46,#059669);border-radius:10px;padding:.65rem 1rem;text-align:center;margin-top:.6rem;">
+        <div style="font-size:.72rem;font-weight:900;color:#fff;">✅ Module 4 — Pareto Validé ! Score 90%</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S16 M5 THÉORIE ═══ -->
+<div class="slide bg-m5" id="s16">
+  <div class="stag st-cyan">📋 Module 5 — Kanban · Théorie</div>
+  <h2 class="sh2">Tableau <span style="color:#22d3ee;">Kanban</span> — Flux Tiré &amp; Limites WIP</h2>
+  <p style="font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:.9rem;">Kanban (看板 = "panneau visuel") est un système de gestion de flux tiré, originaire de Toyota. Il limite le travail en cours (WIP) pour éviter les goulots d'étranglement.</p>
+  <div class="row">
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">🔄 Flux poussé vs Flux tiré</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem;">
+          <div style="background:#fef2f2;border-radius:8px;padding:.6rem;border:1.5px solid #fecaca;"><div style="font-size:.65rem;font-weight:800;color:#991b1b;margin-bottom:.3rem;">❌ Flux POUSSÉ</div><div style="font-size:.62rem;color:#374151;line-height:1.6;">Chaque poste produit au maximum → stocks intermédiaires saturés → délais non tenus → gaspillages</div></div>
+          <div style="background:#f0fdf4;border-radius:8px;padding:.6rem;border:1.5px solid #bbf7d0;"><div style="font-size:.65rem;font-weight:800;color:#166534;margin-bottom:.3rem;">✅ Flux TIRÉ (Kanban)</div><div style="font-size:.62rem;color:#374151;line-height:1.6;">On ne produit que ce que le client aval demande → zéro surproduction → flux régulier et prévisible</div></div>
+        </div>
+        <div style="font-size:.68rem;color:#374151;line-height:1.6;background:#f8fafc;border-radius:8px;padding:.5rem .7rem;border:1px solid #e2e8f0;"><strong>Règle Kanban :</strong> Aucune tâche ne peut entrer dans une colonne si la limite WIP est atteinte. On doit d'abord finir les tâches en cours avant d'en prendre de nouvelles.</div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">⚡ Spécificité de ce module</div>
+        <div style="display:flex;flex-direction:column;gap:.3rem;font-size:.7rem;color:#374151;">
+          <div style="display:flex;gap:.5rem;"><span>🃏</span><span><strong>Board interactif</strong> : glisser-déposer les cartes entre colonnes (Backlog → En cours → Contrôle → Terminé)</span></div>
+          <div style="display:flex;gap:.5rem;"><span>⚠️</span><span><strong>Alertes WIP</strong> automatiques si on dépasse la limite de tâches simultanées</span></div>
+          <div style="display:flex;gap:.5rem;"><span>🔴</span><span><strong>Cartes bloquées</strong> à signaler avec motif (matière, machine, humain)</span></div>
+          <div style="display:flex;gap:.5rem;"><span>📊</span><span><strong>Métriques</strong> : temps de cycle, débit, taux d'occupation par colonne</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📋 Structure d'un tableau Kanban</div>
+        <div style="display:flex;gap:.4rem;">
+          <div class="kb-col"><div class="kb-title">📥 BACKLOG</div><div class="kc">Tâche en attente A</div><div class="kc">Tâche en attente B</div><div class="kc">Tâche en attente C</div></div>
+          <div class="kb-col"><div class="kb-title">🔧 EN COURS <span class="wip">max: 3</span></div><div class="kc amber">Tâche active 1</div><div class="kc">Tâche active 2</div></div>
+          <div class="kb-col"><div class="kb-title">🔍 REVUE <span class="wip">max: 2</span></div><div class="kc green">En vérification</div></div>
+          <div class="kb-col"><div class="kb-title">✅ FAIT</div><div class="kc green">✅ Terminé A</div><div class="kc green">✅ Terminé B</div></div>
+        </div>
+        <div style="margin-top:.5rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:.4rem;">
+          <div style="background:#f0fdf4;border-radius:7px;padding:.4rem;text-align:center;border:1px solid #bbf7d0;"><div style="font-size:.9rem;font-weight:900;color:#059669;">↓</div><div style="font-size:.58rem;color:#374151;">Flux régulier</div></div>
+          <div style="background:#fef9ee;border-radius:7px;padding:.4rem;text-align:center;border:1px solid #fde68a;"><div style="font-size:.9rem;font-weight:900;color:#d97706;">WIP</div><div style="font-size:.58rem;color:#374151;">Limités</div></div>
+          <div style="background:#eff6ff;border-radius:7px;padding:.4rem;text-align:center;border:1px solid #bfdbfe;"><div style="font-size:.9rem;font-weight:900;color:#2563eb;">🚫</div><div style="font-size:.58rem;color:#374151;">0 Surproduction</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S17 M5 EXERCICE ═══ -->
+<div class="slide bg-m5" id="s17">
+  <div class="stag st-cyan">📋 Module 5 — Kanban · Exercice</div>
+  <h2 class="sh2">Gestion du <span style="color:#22d3ee;">Board</span> — Ligne d'usinage PRECISION MAROC</h2>
+  <div class="row">
+    <div class="col">
+      <div style="background:linear-gradient(135deg,#083344,#0c4a6e);border-radius:12px;padding:.8rem 1rem;border:1.5px solid rgba(34,211,238,.3);margin-bottom:.6rem;">
+        <div style="font-size:.6rem;font-weight:800;color:#67e8f9;letter-spacing:.8px;margin-bottom:.3rem;">📋 CONSIGNE EXERCICE</div>
+        <div style="font-size:.72rem;line-height:1.6;color:rgba(255,255,255,.85);">L'atelier PRECISION MAROC produit en flux poussé. <strong style="color:#fbbf24;">Rééquilibrez le tableau Kanban</strong> en respectant les limites WIP, résolvez les blocages et optimisez le flux de 12 ordres de fabrication.</div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">📋 Kanban Board — État à gérer</div>
+        <div style="display:flex;gap:.4rem;">
+          <div class="kb-col" style="flex:1.2;">
+            <div class="kb-title">📥 BACKLOG</div>
+            <div class="kc">OF-PM-447 — Fraisage</div>
+            <div class="kc">OF-PM-448 — Tournage</div>
+            <div class="kc">OF-PM-449 — Rectif.</div>
+            <div class="kc">OF-PM-450 — Perçage</div>
+          </div>
+          <div class="kb-col" style="flex:1.2;">
+            <div class="kb-title">🔧 EN COURS <span class="wip">max: 3</span></div>
+            <div class="kc amber">PM-441 — Fraisage ↺</div>
+            <div class="kc">PM-442 — Tournage</div>
+            <div class="kc red">⚠️ PM-443 — Bloqué (matière)</div>
+            <div style="background:#fef2f2;border-radius:5px;padding:.25rem .4rem;font-size:.58rem;color:#991b1b;font-weight:700;margin-top:.2rem;">⚠️ WIP dépassé (4/3)</div>
+          </div>
+          <div class="kb-col">
+            <div class="kb-title">🔍 CONTRÔLE <span class="wip">max: 2</span></div>
+            <div class="kc green">PM-439 ✓</div>
+            <div class="kc">PM-440 — En cours</div>
+          </div>
+          <div class="kb-col">
+            <div class="kb-title">✅ LIVRÉ</div>
+            <div class="kc green">✅ PM-435</div>
+            <div class="kc green">✅ PM-436</div>
+            <div class="kc green">✅ PM-437</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">🔧 Actions correctives de l'étudiant</div>
+        <div style="display:flex;flex-direction:column;gap:.35rem;font-size:.7rem;color:#374151;">
+          <div style="background:#fef2f2;border-radius:7px;padding:.4rem .6rem;border-left:3px solid #ef4444;"><strong>Problème 1 :</strong> WIP dépassé (4 tâches pour max 3) → <strong style="color:#059669;">Résolution : Suspendre PM-447 du backlog tant que PM-443 est bloqué</strong></div>
+          <div style="background:#fef9ee;border-radius:7px;padding:.4rem .6rem;border-left:3px solid #f59e0b;"><strong>Problème 2 :</strong> PM-443 bloqué (matière non livrée) → <strong style="color:#059669;">Résolution : Contacter fournisseur + signal rouge affiché</strong></div>
+          <div style="background:#f0fdf4;border-radius:7px;padding:.4rem .6rem;border-left:3px solid #10b981;"><strong>Optimisation :</strong> PM-441 en retard → <strong style="color:#059669;">Priorité accordée, ressource supplémentaire affectée</strong></div>
+        </div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">📊 Métriques de flux</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;">
+          <div style="background:#f8fafc;border-radius:7px;padding:.45rem;text-align:center;border:1px solid #e2e8f0;"><div style="font-size:.95rem;font-weight:900;color:#374151;">4,2h</div><div style="font-size:.58rem;color:#64748b;">Temps de cycle moyen</div></div>
+          <div style="background:#f8fafc;border-radius:7px;padding:.45rem;text-align:center;border:1px solid #e2e8f0;"><div style="font-size:.95rem;font-weight:900;color:#374151;">12/jour</div><div style="font-size:.58rem;color:#64748b;">Débit (throughput)</div></div>
+          <div style="background:#fef2f2;border-radius:7px;padding:.45rem;text-align:center;border:1px solid #fecaca;"><div style="font-size:.95rem;font-weight:900;color:#dc2626;">4/3</div><div style="font-size:.58rem;color:#64748b;">WIP actuel / Limite ⚠️</div></div>
+          <div style="background:#f0fdf4;border-radius:7px;padding:.45px;text-align:center;border:1px solid #bbf7d0;padding:.45rem;"><div style="font-size:.95rem;font-weight:900;color:#059669;">75%</div><div style="font-size:.58rem;color:#64748b;">Taux livraison à l'heure</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S18 M5 RÉSULTATS ═══ -->
+<div class="slide bg-m5" id="s18">
+  <div class="stag st-cyan">📋 Module 5 — Kanban · Résultats</div>
+  <h2 class="sh2">Board Optimisé &amp; <span style="color:#22d3ee;">Feedback IA</span></h2>
+  <div class="row">
+    <div class="col">
+      <div class="ai">
+        <div class="ai-hd">🤖 Analyse IA — Gestion Kanban</div>
+        <div style="margin-bottom:.4rem;"><span class="score">✅ Score : 85 / 100</span></div>
+        <div style="margin-bottom:.4rem;"><strong>Points forts :</strong> Le dépassement WIP est correctement identifié et traité. La gestion du blocage PM-443 est professionnelle (signalement fournisseur + signal visuel). Le principe de flux tiré est bien compris.</div>
+        <div style="margin-bottom:.4rem;"><strong>Axes d'amélioration :</strong> En production réelle, un kanban "urgence" aurait pu être créé pour PM-441 sans perturber le flux normal. La notion de Takt Time (cadence client) n'est pas abordée.</div>
+        <div><strong>Conseil :</strong> Coupler le Kanban avec des indicateurs OEE et un tableau de management visuel quotidien.</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#065f46,#059669);border-radius:10px;padding:.65rem 1rem;text-align:center;margin-top:.6rem;">
+        <div style="font-size:.72rem;font-weight:900;color:#fff;">✅ Module 5 — Kanban Validé ! Score 85%</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📋 Board après corrections — État optimal</div>
+        <div style="display:flex;gap:.35rem;">
+          <div class="kb-col" style="flex:1.1;"><div class="kb-title">📥 BACKLOG</div><div class="kc">PM-447</div><div class="kc">PM-448</div><div style="font-size:.55rem;color:#64748b;margin-top:.2rem;">PM-449, 450 en attente</div></div>
+          <div class="kb-col" style="flex:1.1;"><div class="kb-title">🔧 EN COURS <span class="wip">3/3</span></div><div class="kc amber">⭐ PM-441 prioritaire</div><div class="kc">PM-442</div><div class="kc red" style="opacity:.6;">🔴 PM-443 suspendu</div></div>
+          <div class="kb-col"><div class="kb-title">🔍 CTRL <span class="wip">2/2</span></div><div class="kc green">PM-439 ✓</div><div class="kc">PM-440</div></div>
+          <div class="kb-col"><div class="kb-title">✅ LIVRÉ</div><div class="kc green">✅ PM-435</div><div class="kc green">✅ PM-436</div><div class="kc green">✅ PM-437</div></div>
+        </div>
+        <div style="margin-top:.5rem;display:flex;gap:.4rem;">
+          <div style="flex:1;background:#f0fdf4;border-radius:7px;padding:.4rem;text-align:center;border:1px solid #bbf7d0;font-size:.65rem;"><span style="font-weight:900;color:#059669;display:block;">3/3</span>WIP respecté</div>
+          <div style="flex:1;background:#fef9ee;border-radius:7px;padding:.4rem;text-align:center;border:1px solid #fde68a;font-size:.65rem;"><span style="font-weight:900;color:#d97706;display:block;">🔴</span>Blocage signalé</div>
+          <div style="flex:1;background:#eff6ff;border-radius:7px;padding:.4rem;text-align:center;border:1px solid #bfdbfe;font-size:.65rem;"><span style="font-weight:900;color:#2563eb;display:block;">⭐</span>Priorité gérée</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S19 M6 THÉORIE ═══ -->
+<div class="slide bg-m6" id="s19">
+  <div class="stag st-purple">🗺️ Module 6 — VSM · Théorie</div>
+  <h2 class="sh2">Value Stream <span style="color:#a78bfa;">Mapping</span> — Cartographie des Flux</h2>
+  <p style="font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:.9rem;">La VSM (Value Stream Mapping) est un outil Lean qui cartographie l'ensemble des flux (matière et information) depuis le fournisseur jusqu'au client, pour identifier les gaspillages.</p>
+  <div class="row">
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">🗺️ Composantes d'une VSM</div>
+        <div style="display:flex;flex-direction:column;gap:.35rem;font-size:.7rem;color:#374151;">
+          <div style="background:#f5f3ff;border-radius:7px;padding:.45rem .65rem;border-left:3px solid #8b5cf6;"><strong>📦 Flux Matière</strong> — déplacement physique des produits entre postes (tournage → fraisage → contrôle)</div>
+          <div style="background:#eff6ff;border-radius:7px;padding:.45rem .65rem;border-left:3px solid #3b82f6;"><strong>📡 Flux Information</strong> — ordres de production, planification, commandes clients</div>
+          <div style="background:#fef9ee;border-radius:7px;padding:.45rem .65rem;border-left:3px solid #f59e0b;"><strong>⏱️ Lead Time</strong> — temps total écoulé entre la réception matière et la livraison client</div>
+          <div style="background:#f0fdf4;border-radius:7px;padding:.45rem .65rem;border-left:3px solid #10b981;"><strong>✅ Valeur Ajoutée</strong> — temps pendant lequel le produit est réellement transformé (VA)</div>
+          <div style="background:#fef2f2;border-radius:7px;padding:.45rem .65rem;border-left:3px solid #ef4444;"><strong>🗑️ MUDA (Gaspillages)</strong> — stocks, attentes, transports, surproduction, mouvements inutiles</div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📐 Les 8 gaspillages (MUDA)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.35rem;font-size:.65rem;">
+          <div style="background:#fef2f2;border-radius:6px;padding:.35rem .5rem;"><strong style="color:#991b1b;">1. Surproduction</strong><br><span style="color:#374151;">Produire + que la demande</span></div>
+          <div style="background:#fff7ed;border-radius:6px;padding:.35rem .5rem;"><strong style="color:#c2410c;">2. Attentes</strong><br><span style="color:#374151;">Opérateur ou machine idle</span></div>
+          <div style="background:#fef9ee;border-radius:6px;padding:.35rem .5rem;"><strong style="color:#92400e;">3. Transports</strong><br><span style="color:#374151;">Déplacements inutiles</span></div>
+          <div style="background:#f0fdf4;border-radius:6px;padding:.35rem .5rem;"><strong style="color:#166534;">4. Stocks</strong><br><span style="color:#374151;">En-cours excessifs</span></div>
+          <div style="background:#eff6ff;border-radius:6px;padding:.35rem .5rem;"><strong style="color:#1d4ed8;">5. Mouvements</strong><br><span style="color:#374151;">Gestes inutiles opérateur</span></div>
+          <div style="background:#f5f3ff;border-radius:6px;padding:.35rem .5rem;"><strong style="color:#5b21b6;">6. Sur-traitement</strong><br><span style="color:#374151;">Étapes sans valeur</span></div>
+          <div style="background:#fce7f3;border-radius:6px;padding:.35rem .5rem;"><strong style="color:#9d174d;">7. Défauts</strong><br><span style="color:#374151;">Rebuts et retouches</span></div>
+          <div style="background:#ecfdf5;border-radius:6px;padding:.35rem .5rem;"><strong style="color:#065f46;">8. Potentiel humain</strong><br><span style="color:#374151;">Compétences non utilisées</span></div>
+        </div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">⚡ Spécificité de ce module</div>
+        <div style="display:flex;flex-direction:column;gap:.3rem;font-size:.7rem;color:#374151;">
+          <div style="display:flex;gap:.5rem;"><span>🗺️</span><span><strong>Construction guidée</strong> de la cartographie état actuel (Current State Map)</span></div>
+          <div style="display:flex;gap:.5rem;"><span>🧮</span><span><strong>Calcul automatique</strong> du Lead Time, VA, NVA et Taux de Valeur Ajoutée (TVA)</span></div>
+          <div style="display:flex;gap:.5rem;"><span>🎯</span><span><strong>Identification des MUDA</strong> par poste et proposition d'état futur (Future State Map)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S20 M6 EXERCICE ═══ -->
+<div class="slide bg-m6" id="s20">
+  <div class="stag st-purple">🗺️ Module 6 — VSM · Exercice</div>
+  <h2 class="sh2">Cartographie <span style="color:#a78bfa;">État Actuel</span> — PRECISION MAROC</h2>
+  <div class="row">
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">🗺️ VSM — Flux matière (Current State Map)</div>
+        <div class="vsm">
+          <div style="text-align:center;"><div class="vbox red">🏭 Fournisseur<br><span style="font-size:.5rem;">Livraison hebdo</span></div></div>
+          <div class="varr">→</div>
+          <div style="text-align:center;"><div class="vbox red">📦 Stock MP<br><span style="font-size:.5rem;">8 jours</span></div><div class="vdata" style="margin-top:.2rem;">⚠️ MUDA Stock</div></div>
+          <div class="varr">→</div>
+          <div style="text-align:center;"><div class="vbox">⚙️ Tournage<br><span style="font-size:.5rem;">TC: 45s</span></div><div class="vdata" style="margin-top:.2rem;">VA: 45s</div></div>
+          <div class="varr">→</div>
+          <div style="text-align:center;"><div class="vbox red">📦 Encours 1<br><span style="font-size:.5rem;">2 jours</span></div><div class="vdata" style="margin-top:.2rem;">⚠️ MUDA Attente</div></div>
+          <div class="varr">→</div>
+          <div style="text-align:center;"><div class="vbox">🔧 Fraisage<br><span style="font-size:.5rem;">TC: 120s</span></div><div class="vdata" style="margin-top:.2rem;">VA: 120s</div></div>
+          <div class="varr">→</div>
+          <div style="text-align:center;"><div class="vbox red">📦 Encours 2<br><span style="font-size:.5rem;">3 jours</span></div><div class="vdata" style="margin-top:.2rem;">⚠️ MUDA Attente</div></div>
+          <div class="varr">→</div>
+          <div style="text-align:center;"><div class="vbox">🔍 Contrôle<br><span style="font-size:.5rem;">TC: 30s</span></div><div class="vdata" style="margin-top:.2rem;">VA: 30s</div></div>
+          <div class="varr">→</div>
+          <div style="text-align:center;"><div class="vbox green">🚚 Client</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-top:.6rem;">
+          <div style="background:#f0fdf4;border-radius:7px;padding:.45rem;text-align:center;border:1px solid #bbf7d0;"><div style="font-size:.95rem;font-weight:900;color:#059669;">195s</div><div style="font-size:.58rem;color:#374151;">Temps VA total</div></div>
+          <div style="background:#fef2f2;border-radius:7px;padding:.45rem;text-align:center;border:1px solid #fecaca;"><div style="font-size:.95rem;font-weight:900;color:#dc2626;">13 jours</div><div style="font-size:.58rem;color:#374151;">Lead Time total</div></div>
+          <div style="background:#fef9ee;border-radius:7px;padding:.45rem;text-align:center;border:1px solid #fde68a;"><div style="font-size:.95rem;font-weight:900;color:#d97706;">2,1%</div><div style="font-size:.58rem;color:#374151;">TVA (très faible)</div></div>
+          <div style="background:#fef2f2;border-radius:7px;padding:.45rem;text-align:center;border:1px solid #fecaca;"><div style="font-size:.95rem;font-weight:900;color:#dc2626;">3</div><div style="font-size:.58rem;color:#374151;">MUDA identifiés</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">🎯 MUDA identifiés par l'étudiant</div>
+        <div style="display:flex;flex-direction:column;gap:.35rem;">
+          <div style="background:#fef2f2;border-radius:8px;padding:.5rem .7rem;border-left:3px solid #ef4444;font-size:.7rem;"><strong style="color:#991b1b;">🗑️ MUDA 1 — Stock MP (8 jours)</strong><div style="color:#374151;margin-top:.2rem;">Livraison hebdomadaire vs besoin quotidien. Solution : passer à des livraisons journalières en flux tiré.</div></div>
+          <div style="background:#fff7ed;border-radius:8px;padding:.5rem .7rem;border-left:3px solid #f97316;font-size:.7rem;"><strong style="color:#c2410c;">🗑️ MUDA 2 — Encours entre postes (5 jours)</strong><div style="color:#374151;margin-top:.2rem;">Files d'attente entre tournage, fraisage et contrôle. Solution : équilibrage des cadences (Takt Time).</div></div>
+          <div style="background:#fef9ee;border-radius:8px;padding:.5rem .7rem;border-left:3px solid #f59e0b;font-size:.7rem;"><strong style="color:#92400e;">🗑️ MUDA 3 — Flux poussé (planification MRP)</strong><div style="color:#374151;margin-top:.2rem;">Ordres de production basés sur prévisions. Solution : passer à un système Kanban en flux tiré.</div></div>
+        </div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">🚀 État Futur (Future State Map) — Objectif</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;">
+          <div style="background:#f0fdf4;border-radius:7px;padding:.45rem;text-align:center;border:1px solid #bbf7d0;"><div style="font-size:.9rem;font-weight:900;color:#059669;">3 jours</div><div style="font-size:.58rem;color:#374151;">Lead Time cible (-77%)</div></div>
+          <div style="background:#eff6ff;border-radius:7px;padding:.45rem;text-align:center;border:1px solid #bfdbfe;"><div style="font-size:.9rem;font-weight:900;color:#2563eb;">8%</div><div style="font-size:.58rem;color:#374151;">TVA cible (+280%)</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S21 M6 RÉSULTATS ═══ -->
+<div class="slide bg-m6" id="s21">
+  <div class="stag st-purple">🗺️ Module 6 — VSM · Résultats</div>
+  <h2 class="sh2">Analyse TVA &amp; <span style="color:#a78bfa;">Plan d'amélioration</span></h2>
+  <div class="row">
+    <div class="col">
+      <div class="ai">
+        <div class="ai-hd">🤖 Analyse IA — VSM</div>
+        <div style="margin-bottom:.4rem;"><span class="score">✅ Score : 88 / 100</span></div>
+        <div style="margin-bottom:.4rem;"><strong>Points forts :</strong> Tous les postes sont cartographiés avec les temps de cycle exacts. Les 3 MUDA principaux sont correctement identifiés (stock, encours, flux poussé). Le calcul TVA de 2,1% révèle un potentiel d'amélioration important.</div>
+        <div style="margin-bottom:.4rem;"><strong>À améliorer :</strong> Le flux d'information (ordres MRP, planification) n'est pas représenté. La notion de Takt Time (195s / cycle demande) devrait apparaître comme contrainte de conception de l'état futur.</div>
+        <div><strong>Excellent diagnostic :</strong> La VSM a correctement mis en évidence que 97,9% du temps est non-valorisant — un potentiel énorme d'amélioration Lean.</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#065f46,#059669);border-radius:10px;padding:.65rem 1rem;text-align:center;margin-top:.6rem;">
+        <div style="font-size:.72rem;font-weight:900;color:#fff;">✅ Module 6 — VSM Validé ! Score 88%</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📊 Bilan VSM — État actuel vs futur</div>
+        <table style="width:100%;font-size:.65rem;border-collapse:collapse;">
+          <tr style="background:#f8fafc;"><th style="padding:.3rem .5rem;text-align:left;color:#64748b;font-weight:800;border-bottom:1.5px solid #e2e8f0;">Indicateur</th><th style="text-align:center;padding:.3rem .5rem;color:#64748b;font-weight:800;border-bottom:1.5px solid #e2e8f0;">Actuel</th><th style="text-align:center;padding:.3rem .5rem;color:#64748b;font-weight:800;border-bottom:1.5px solid #e2e8f0;">Futur</th><th style="text-align:center;padding:.3rem .5rem;color:#64748b;font-weight:800;border-bottom:1.5px solid #e2e8f0;">Gain</th></tr>
+          <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:.28rem .5rem;">Lead Time</td><td style="text-align:center;color:#dc2626;font-weight:700;">13 jours</td><td style="text-align:center;color:#059669;font-weight:700;">3 jours</td><td style="text-align:center;color:#7c3aed;font-weight:800;">-77%</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:.28rem .5rem;">TVA</td><td style="text-align:center;color:#dc2626;font-weight:700;">2,1%</td><td style="text-align:center;color:#059669;font-weight:700;">8%</td><td style="text-align:center;color:#7c3aed;font-weight:800;">+280%</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:.28rem .5rem;">Stock MP</td><td style="text-align:center;color:#dc2626;font-weight:700;">8 jours</td><td style="text-align:center;color:#059669;font-weight:700;">1 jour</td><td style="text-align:center;color:#7c3aed;font-weight:800;">-87%</td></tr>
+          <tr><td style="padding:.28rem .5rem;">Encours postes</td><td style="text-align:center;color:#dc2626;font-weight:700;">5 jours</td><td style="text-align:center;color:#059669;font-weight:700;">0,5 jour</td><td style="text-align:center;color:#7c3aed;font-weight:800;">-90%</td></tr>
+        </table>
+      </div>
+      <div class="wc">
+        <div class="wc-title">🔗 Connexion avec les modules suivants</div>
+        <div style="font-size:.7rem;color:#374151;line-height:1.6;background:#f5f3ff;border-radius:8px;padding:.55rem .75rem;border:1.5px solid #ddd6fe;">
+          La VSM a identifié des <strong>problèmes qualité (rebuts)</strong> sur la ligne → Module 7 SPC permettra de surveiller statistiquement la qualité. Les <strong>temps de setup</strong> impactent les encours → Module 8 SMED réduira ces temps.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S22 M7 THÉORIE ═══ -->
+<div class="slide bg-m7" id="s22">
+  <div class="stag st-pink">📈 Module 7 — SPC · Théorie</div>
+  <h2 class="sh2">Carte de Contrôle <span style="color:#f472b6;">SPC</span> — Maîtrise Statistique</h2>
+  <p style="font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:.9rem;">Le SPC (Statistical Process Control) utilise des outils statistiques pour surveiller la stabilité d'un processus et détecter les dérives avant qu'elles produisent des défauts.</p>
+  <div class="row">
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📊 La carte de contrôle X̄-R</div>
+        <div style="font-size:.7rem;color:#374151;line-height:1.7;margin-bottom:.5rem;">La carte X̄ surveille la <strong>moyenne</strong> du processus. La carte R surveille l'<strong>étendue</strong> (variabilité). Ensemble, elles détectent tout type de dérive.</div>
+        <div class="spc-wrap">
+          <div style="display:flex;justify-content:space-between;font-size:.57rem;font-weight:700;margin-bottom:.2rem;"><span style="color:#ef4444;">UCL (Limite de Contrôle Supérieure)</span><span style="color:#3b82f6;">X̄ (Moyenne)</span><span style="color:#ef4444;">LCL (Limite de Contrôle Inférieure)</span></div>
+          <div class="spc-body">
+            <div class="spc-line" style="top:8%;background:#ef4444;opacity:.6;"></div>
+            <div class="spc-line" style="top:50%;background:#3b82f6;opacity:.8;"></div>
+            <div class="spc-line" style="top:88%;background:#ef4444;opacity:.6;"></div>
+            <div class="spc-pts">
+              <div class="sdot" style="margin-top:-8px;"></div>
+              <div class="sdot" style="margin-top:5px;"></div>
+              <div class="sdot" style="margin-top:-3px;"></div>
+              <div class="sdot out" style="margin-top:-42px;"></div>
+              <div class="sdot" style="margin-top:7px;"></div>
+              <div class="sdot" style="margin-top:-5px;"></div>
+              <div class="sdot" style="margin-top:10px;"></div>
+              <div class="sdot out" style="margin-top:40px;"></div>
+              <div class="sdot" style="margin-top:-6px;"></div>
+              <div class="sdot" style="margin-top:4px;"></div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.52rem;color:#94a3b8;padding:0 .4rem;"><span>S1</span><span>S2</span><span>S3</span><span style="color:#ef4444;font-weight:700;">S4⚠️</span><span>S5</span><span>S6</span><span>S7</span><span style="color:#ef4444;font-weight:700;">S8⚠️</span><span>S9</span><span>S10</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">🧮 Indices de capabilité Cp &amp; Cpk</div>
+        <div style="display:flex;flex-direction:column;gap:.35rem;font-size:.7rem;color:#374151;margin-bottom:.5rem;">
+          <div style="background:#f8fafc;border-radius:7px;padding:.4rem .6rem;border:1px solid #e2e8f0;"><strong style="color:#1d4ed8;">Cp (Précision)</strong> = (USL - LSL) / (6σ)<br><span style="color:#64748b;">Mesure si le processus peut tenir dans les tolérances. Cp ≥ 1,33 → capable</span></div>
+          <div style="background:#f8fafc;border-radius:7px;padding:.4rem .6rem;border:1px solid #e2e8f0;"><strong style="color:#7c3aed;">Cpk (Justesse)</strong> = min[(USL-X̄)/3σ, (X̄-LSL)/3σ]<br><span style="color:#64748b;">Mesure si le processus est centré + capable. Cpk ≥ 1,33 → processus maîtrisé</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.35rem;text-align:center;font-size:.62rem;">
+          <div style="background:#fef2f2;border-radius:7px;padding:.4rem;border:1px solid #fecaca;"><div style="font-weight:800;color:#dc2626;">Cp &lt; 1</div><div style="color:#374151;">Non capable</div></div>
+          <div style="background:#fef9ee;border-radius:7px;padding:.4rem;border:1px solid #fde68a;"><div style="font-weight:800;color:#d97706;">1 ≤ Cp &lt; 1,33</div><div style="color:#374151;">Acceptable</div></div>
+          <div style="background:#f0fdf4;border-radius:7px;padding:.4rem;border:1px solid #bbf7d0;"><div style="font-weight:800;color:#059669;">Cp ≥ 1,33</div><div style="color:#374151;">Capable ✅</div></div>
+        </div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">⚡ Spécificité de ce module</div>
+        <div style="display:flex;flex-direction:column;gap:.3rem;font-size:.7rem;color:#374151;">
+          <div style="display:flex;gap:.5rem;"><span>📥</span><span><strong>Saisie des mesures</strong> de production (10 échantillons de 5 pièces)</span></div>
+          <div style="display:flex;gap:.5rem;"><span>🧮</span><span><strong>Calcul automatique</strong> de X̄, R̄, UCL, LCL, σ, Cp et Cpk</span></div>
+          <div style="display:flex;gap:.5rem;"><span>🔴</span><span><strong>Détection automatique</strong> des points hors limites avec alerte</span></div>
+          <div style="display:flex;gap:.5rem;"><span>🤖</span><span><strong>Interprétation IA</strong> : diagnostic du processus et recommandations</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S23 M7 EXERCICE ═══ -->
+<div class="slide bg-m7" id="s23">
+  <div class="stag st-pink">📈 Module 7 — SPC · Exercice</div>
+  <h2 class="sh2">Calcul des <span style="color:#f472b6;">Limites</span> &amp; Analyse de la Carte</h2>
+  <div class="row">
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📥 Données mesurées — Diamètre pièces (mm) · Spécification : 50,00 ± 0,50 mm</div>
+        <table style="width:100%;font-size:.6rem;border-collapse:collapse;">
+          <tr style="background:#f8fafc;"><th style="padding:.25rem .4rem;text-align:center;color:#64748b;font-weight:800;border-bottom:1.5px solid #e2e8f0;">Échant.</th><th style="text-align:center;padding:.25rem .4rem;color:#64748b;font-weight:800;border-bottom:1.5px solid #e2e8f0;">x1</th><th style="text-align:center;padding:.25rem .4rem;color:#64748b;font-weight:800;border-bottom:1.5px solid #e2e8f0;">x2</th><th style="text-align:center;padding:.25rem .4rem;color:#64748b;font-weight:800;border-bottom:1.5px solid #e2e8f0;">x3</th><th style="text-align:center;padding:.25rem .4rem;color:#64748b;font-weight:800;border-bottom:1.5px solid #e2e8f0;">X̄</th><th style="text-align:center;padding:.25rem .4rem;color:#64748b;font-weight:800;border-bottom:1.5px solid #e2e8f0;">R</th></tr>
+          <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:.22rem .4rem;text-align:center;">S1</td><td style="text-align:center;">50.12</td><td style="text-align:center;">49.98</td><td style="text-align:center;">50.05</td><td style="text-align:center;font-weight:700;">50.05</td><td style="text-align:center;font-weight:700;">0.14</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:.22rem .4rem;text-align:center;">S2</td><td style="text-align:center;">49.95</td><td style="text-align:center;">50.08</td><td style="text-align:center;">49.97</td><td style="text-align:center;font-weight:700;">50.00</td><td style="text-align:center;font-weight:700;">0.13</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9;background:#fef2f2;"><td style="padding:.22rem .4rem;text-align:center;font-weight:800;color:#dc2626;">S4⚠️</td><td style="text-align:center;color:#dc2626;font-weight:700;">50.48</td><td style="text-align:center;color:#dc2626;font-weight:700;">50.55</td><td style="text-align:center;color:#dc2626;font-weight:700;">50.51</td><td style="text-align:center;font-weight:800;color:#dc2626;">50.51⚠️</td><td style="text-align:center;font-weight:700;">0.07</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:.22rem .4rem;text-align:center;">S5</td><td style="text-align:center;">49.99</td><td style="text-align:center;">50.02</td><td style="text-align:center;">50.01</td><td style="text-align:center;font-weight:700;">50.01</td><td style="text-align:center;font-weight:700;">0.03</td></tr>
+          <tr style="background:#fef2f2;"><td style="padding:.22rem .4rem;text-align:center;font-weight:800;color:#dc2626;">S8⚠️</td><td style="text-align:center;color:#dc2626;font-weight:700;">49.42</td><td style="text-align:center;color:#dc2626;font-weight:700;">49.48</td><td style="text-align:center;color:#dc2626;font-weight:700;">49.45</td><td style="text-align:center;font-weight:800;color:#dc2626;">49.45⚠️</td><td style="text-align:center;font-weight:700;">0.06</td></tr>
+        </table>
+        <div style="font-size:.58rem;color:#64748b;margin-top:.2rem;font-style:italic;">10 échantillons complets — affichage partiel</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">🧮 Calcul des paramètres statistiques</div>
+        <div style="background:#f8fafc;border-radius:8px;padding:.6rem .8rem;border:1px solid #e2e8f0;font-family:monospace;font-size:.68rem;line-height:2;color:#374151;">
+          <div>X̄ global = 50.00 mm</div>
+          <div>R̄ moyen = 0.14 mm</div>
+          <div>A₂ (n=3) = 1.023</div>
+          <div style="color:#dc2626;font-weight:700;">UCL = X̄ + A₂·R̄ = <strong>50.14 mm</strong></div>
+          <div style="color:#dc2626;font-weight:700;">LCL = X̄ − A₂·R̄ = <strong>49.86 mm</strong></div>
+          <div style="color:#7c3aed;font-weight:700;">σ estimé = R̄/d₂ = 0.14/1.693 = <strong>0.083</strong></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-top:.4rem;">
+          <div style="background:#fef9ee;border-radius:7px;padding:.45rem;text-align:center;border:1px solid #fde68a;"><div style="font-size:1.1rem;font-weight:900;color:#d97706;">Cp = 1.00</div><div style="font-size:.58rem;color:#374151;">Précision — limite acceptable</div></div>
+          <div style="background:#fef2f2;border-radius:7px;padding:.45rem;text-align:center;border:1px solid #fecaca;"><div style="font-size:1.1rem;font-weight:900;color:#dc2626;">Cpk = 0.72</div><div style="font-size:.58rem;color:#374151;">Processus décentré ⚠️</div></div>
+        </div>
+      </div>
+      <div style="background:#fef2f2;border-radius:9px;padding:.55rem .8rem;border:1.5px solid #fecaca;font-size:.7rem;color:#991b1b;">
+        <strong>🔴 Diagnostic :</strong> 2 points hors limites (S4 au-dessus UCL, S8 en dessous LCL). Processus hors contrôle statistique. Action corrective immédiate requise sur les causes assignables.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S24 M7 RÉSULTATS ═══ -->
+<div class="slide bg-m7" id="s24">
+  <div class="stag st-pink">📈 Module 7 — SPC · Résultats</div>
+  <h2 class="sh2">Diagnostic Processus &amp; <span style="color:#f472b6;">Actions Correctives</span></h2>
+  <div class="row">
+    <div class="col">
+      <div class="ai">
+        <div class="ai-hd">🤖 Analyse IA — Carte de contrôle SPC</div>
+        <div style="margin-bottom:.4rem;"><span class="score">✅ Score : 86 / 100</span></div>
+        <div style="margin-bottom:.4rem;"><strong>Points forts :</strong> UCL et LCL calculés correctement. Les 2 points hors limites sont correctement identifiés (S4 et S8). Cpk = 0.72 correctement interprété comme processus décentré nécessitant une action.</div>
+        <div style="margin-bottom:.4rem;"><strong>Axes d'amélioration :</strong> L'analyse des "règles de Nelson" (8 points consécutifs du même côté de la moyenne, tendances, etc.) n'a pas été effectuée — plusieurs signaux supplémentaires auraient pu être détectés.</div>
+        <div><strong>Recommandation :</strong> Identifier la cause de S4 (dérive haute) et S8 (dérive basse) — probablement liées à l'usure progressive de l'insert (confirmé par Pareto M4).</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#065f46,#059669);border-radius:10px;padding:.65rem 1rem;text-align:center;margin-top:.6rem;">
+        <div style="font-size:.72rem;font-weight:900;color:#fff;">✅ Module 7 — SPC Validé ! Score 86%</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">🔧 Plan d'actions correctives SPC</div>
+        <div style="display:flex;flex-direction:column;gap:.35rem;font-size:.7rem;color:#374151;">
+          <div style="background:#fef2f2;border-radius:7px;padding:.4rem .6rem;border-left:3px solid #ef4444;"><strong>S4 — Point hors UCL :</strong> Mesures au-dessus de 50.14 mm → Recalibration immédiate du montage + vérification de l'usure de l'insert → Insert changé le jour S4</div>
+          <div style="background:#fef2f2;border-radius:7px;padding:.4rem .6rem;border-left:3px solid #dc2626;"><strong>S8 — Point hors LCL :</strong> Mesures en dessous de 49.86 mm → Correction des paramètres de coupe (vitesse avance trop faible) → Procédure de réglage mise à jour</div>
+          <div style="background:#f0fdf4;border-radius:7px;padding:.4rem .6rem;border-left:3px solid #10b981;"><strong>Action long terme :</strong> Instaurer un auto-contrôle SPC toutes les 20 pièces par l'opérateur avec traçabilité numérique → Cpk cible ≥ 1.33</div>
+        </div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">🔗 Cohérence avec Pareto (M4) &amp; Ishikawa (M3)</div>
+        <div style="background:#f5f3ff;border-radius:8px;padding:.55rem .75rem;font-size:.7rem;color:#5b21b6;border:1.5px solid #ddd6fe;line-height:1.6;">
+          Les <strong>inserts usés</strong> identifiés comme 2ème cause Pareto (28% des rebuts) sont confirmés comme cause des points hors limites S4 et S8. La carte SPC <strong>valide quantitativement</strong> les analyses qualitatives précédentes.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S25 M8 THÉORIE ═══ -->
+<div class="slide bg-m8" id="s25">
+  <div class="stag st-orange">⏱️ Module 8 — SMED · Théorie</div>
+  <h2 class="sh2">SMED — <span style="color:#fb923c;">Single Minute Exchange of Die</span></h2>
+  <p style="font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:.9rem;">Le SMED (Shigeo Shingo, Toyota) vise à réduire le temps de changement de série à moins de 10 minutes. Il s'appuie sur la distinction entre opérations internes et externes.</p>
+  <div class="row">
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">⚙️ Principe fondamental — Interne vs Externe</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem;">
+          <div style="background:#fef2f2;border-radius:8px;padding:.6rem;border:1.5px solid #fecaca;"><div style="font-size:.65rem;font-weight:800;color:#991b1b;margin-bottom:.3rem;">🔴 Opération INTERNE</div><div style="font-size:.62rem;color:#374151;line-height:1.6;">Ne peut être réalisée que machine <strong>à l'arrêt</strong>. Démontage de l'outillage, montage du nouveau, réglages.</div></div>
+          <div style="background:#f0fdf4;border-radius:8px;padding:.6rem;border:1.5px solid #bbf7d0;"><div style="font-size:.65rem;font-weight:800;color:#166534;margin-bottom:.3rem;">🟢 Opération EXTERNE</div><div style="font-size:.62rem;color:#374151;line-height:1.6;">Peut être réalisée machine <strong>en marche</strong>. Préparation de l'outillage, nettoyage du prochain lot.</div></div>
+        </div>
+        <div style="font-size:.68rem;color:#374151;line-height:1.5;background:#f8fafc;border-radius:8px;padding:.5rem .7rem;border:1px solid #e2e8f0;"><strong>Objectif :</strong> Convertir un maximum d'opérations internes en externes → réduire le temps d'arrêt machine → augmenter l'OEE.</div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">📋 Les 4 étapes de la méthode SMED</div>
+        <div style="display:flex;flex-direction:column;gap:.3rem;font-size:.7rem;color:#374151;">
+          <div style="display:flex;gap:.5rem;"><span style="background:#fff7ed;color:#c2410c;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;flex-shrink:0;">1</span><span><strong>Observer &amp; filmer</strong> le changement de série actuel (chronomètre par opération)</span></div>
+          <div style="display:flex;gap:.5rem;"><span style="background:#fff7ed;color:#c2410c;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;flex-shrink:0;">2</span><span><strong>Classifier</strong> chaque opération en Interne ou Externe</span></div>
+          <div style="display:flex;gap:.5rem;"><span style="background:#fff7ed;color:#c2410c;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;flex-shrink:0;">3</span><span><strong>Convertir</strong> les opérations internes en externes (pré-préparation)</span></div>
+          <div style="display:flex;gap:.5rem;"><span style="background:#fff7ed;color:#c2410c;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;flex-shrink:0;">4</span><span><strong>Optimiser</strong> les opérations restantes (standardisation, outillage rapide)</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📉 Impact typique du SMED en industrie</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-bottom:.5rem;">
+          <div style="background:#fef2f2;border-radius:8px;padding:.5rem;text-align:center;border:1px solid #fecaca;"><div style="font-size:1rem;font-weight:900;color:#dc2626;">60-90 min</div><div style="font-size:.58rem;color:#374151;">Changement série avant SMED (industrie)</div></div>
+          <div style="background:#f0fdf4;border-radius:8px;padding:.5rem;text-align:center;border:1px solid #bbf7d0;"><div style="font-size:1rem;font-weight:900;color:#059669;">&lt; 10 min</div><div style="font-size:.58rem;color:#374151;">Objectif SMED — moins de 10 minutes</div></div>
+        </div>
+        <div style="font-size:.7rem;color:#374151;line-height:1.6;background:#fff7ed;border-radius:8px;padding:.5rem .7rem;border:1.5px solid #fed7aa;"><strong>Bénéfices :</strong> Taille de lots réduite → flexibilité augmentée → stocks réduits → réponse plus rapide aux commandes clients. Le SMED est un enabler du flux tiré (Kanban).</div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">⚡ Spécificité de ce module</div>
+        <div style="display:flex;flex-direction:column;gap:.3rem;font-size:.7rem;color:#374151;">
+          <div style="display:flex;gap:.5rem;"><span>📋</span><span><strong>Classification interactive</strong> de 12 opérations en Interne ou Externe</span></div>
+          <div style="display:flex;gap:.5rem;"><span>🔄</span><span><strong>Glisser-déposer</strong> pour réorganiser la séquence optimisée</span></div>
+          <div style="display:flex;gap:.5rem;"><span>⏱️</span><span><strong>Calcul automatique</strong> du gain de temps et affichage du % de réduction</span></div>
+          <div style="display:flex;gap:.5rem;"><span>🤖</span><span><strong>Feedback IA</strong> sur la qualité de la conversion et les optimisations possibles</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S26 M8 EXERCICE ═══ -->
+<div class="slide bg-m8" id="s26">
+  <div class="stag st-orange">⏱️ Module 8 — SMED · Exercice</div>
+  <h2 class="sh2">Classification <span style="color:#fb923c;">Int./Ext.</span> &amp; Réorganisation</h2>
+  <div class="row">
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📹 Opérations observées — Changement de série CNC (avant SMED : 61 min)</div>
+        <div style="display:flex;flex-direction:column;gap:.28rem;">
+          <div class="smed-row"><div class="sint">INT</div><span style="flex:1;color:#374151;">Chercher les outils de serrage au magasin</span><div class="sbar"><div class="sbar-fill" style="width:59%;background:#ef4444;"></div></div><span style="font-size:.6rem;font-weight:700;color:#374151;min-width:28px;">18 min</span></div>
+          <div class="smed-row"><div class="sint">INT</div><span style="flex:1;color:#374151;">Démonter l'outillage précédent (8 vis)</span><div class="sbar"><div class="sbar-fill" style="width:45%;background:#ef4444;"></div></div><span style="font-size:.6rem;font-weight:700;color:#374151;min-width:28px;">14 min</span></div>
+          <div class="smed-row"><div class="sext">EXT</div><span style="flex:1;color:#374151;">Préparer le nouvel outillage</span><div class="sbar"><div class="sbar-fill" style="width:26%;background:#10b981;"></div></div><span style="font-size:.6rem;font-weight:700;color:#374151;min-width:28px;">8 min</span></div>
+          <div class="smed-row"><div class="sint">INT</div><span style="flex:1;color:#374151;">Monter le nouvel outillage</span><div class="sbar"><div class="sbar-fill" style="width:42%;background:#ef4444;"></div></div><span style="font-size:.6rem;font-weight:700;color:#374151;min-width:28px;">13 min</span></div>
+          <div class="smed-row"><div class="sint">INT</div><span style="flex:1;color:#374151;">Régler les paramètres de coupe</span><div class="sbar"><div class="sbar-fill" style="width:13%;background:#ef4444;"></div></div><span style="font-size:.6rem;font-weight:700;color:#374151;min-width:28px;">4 min</span></div>
+          <div class="smed-row"><div class="sext">EXT</div><span style="flex:1;color:#374151;">Lancer et vérifier pièce d'essai</span><div class="sbar"><div class="sbar-fill" style="width:13%;background:#10b981;"></div></div><span style="font-size:.6rem;font-weight:700;color:#374151;min-width:28px;">4 min</span></div>
+        </div>
+        <div style="background:#fef2f2;border-radius:8px;padding:.4rem .65rem;margin-top:.4rem;font-size:.68rem;color:#991b1b;font-weight:700;border:1px solid #fecaca;">⏱️ Total actuel : 61 min · Interne : 49 min · Externe : 12 min</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">✅ Actions SMED proposées par l'étudiant</div>
+        <div style="display:flex;flex-direction:column;gap:.35rem;font-size:.7rem;color:#374151;">
+          <div style="background:#f0fdf4;border-radius:7px;padding:.4rem .6rem;border-left:3px solid #10b981;"><strong>Externalisation 1 :</strong> Chercher outils AVANT l'arrêt → préparés dans kit dédié pendant production → <strong style="color:#059669;">-18 min</strong></div>
+          <div style="background:#f0fdf4;border-radius:7px;padding:.4rem .6rem;border-left:3px solid #10b981;"><strong>Externalisation 2 :</strong> Préparer le montage du prochain outillage pendant la fin de série → <strong style="color:#059669;">-8 min déjà externe (optimisé)</strong></div>
+          <div style="background:#eff6ff;border-radius:7px;padding:.4rem .6rem;border-left:3px solid #3b82f6;"><strong>Optimisation 1 :</strong> Remplacer 8 vis par connecteurs quart de tour → démontage : 14 min → <strong style="color:#2563eb;">4 min (-10 min)</strong></div>
+          <div style="background:#eff6ff;border-radius:7px;padding:.4rem .6rem;border-left:3px solid #3b82f6;"><strong>Optimisation 2 :</strong> Gamme de réglage standard pré-chargée en CNC → réglage : 4 min → <strong style="color:#2563eb;">0 min</strong></div>
+        </div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">📊 Résultat SMED</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.4rem;text-align:center;">
+          <div style="background:#fef2f2;border-radius:8px;padding:.5rem;border:1px solid #fecaca;"><div style="font-size:1.1rem;font-weight:900;color:#dc2626;">61 min</div><div style="font-size:.58rem;color:#374151;">Avant SMED</div></div>
+          <div style="background:#f0fdf4;border-radius:8px;padding:.5rem;border:1px solid #bbf7d0;"><div style="font-size:1.1rem;font-weight:900;color:#059669;">17 min</div><div style="font-size:.58rem;color:#374151;">Après SMED</div></div>
+          <div style="background:#f5f3ff;border-radius:8px;padding:.5rem;border:1px solid #ddd6fe;"><div style="font-size:1.1rem;font-weight:900;color:#7c3aed;">-72%</div><div style="font-size:.58rem;color:#374151;">Gain réalisé 🎯</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S27 M8 RÉSULTATS ═══ -->
+<div class="slide bg-m8" id="s27">
+  <div class="stag st-orange">⏱️ Module 8 — SMED · Résultats</div>
+  <h2 class="sh2">Gain de <span style="color:#fb923c;">-72%</span> sur le Temps de Changement</h2>
+  <div class="row">
+    <div class="col">
+      <div class="ai">
+        <div class="ai-hd">🤖 Analyse IA — SMED</div>
+        <div style="margin-bottom:.4rem;"><span class="score">✅ Score : 91 / 100</span></div>
+        <div style="margin-bottom:.4rem;"><strong>Points forts :</strong> Toutes les opérations sont correctement classifiées. L'externalisation de la recherche d'outils (18 min) est la meilleure décision — c'est une opération typiquement externalisable. Le remplacement des vis par des connecteurs rapides est une solution industrielle reconnue.</div>
+        <div style="margin-bottom:.4rem;"><strong>À améliorer :</strong> La standardisation des positions d'outillage (repères peints) aurait encore réduit le temps de montage. La notion de "staging area" (zone préparation) n'est pas mentionnée.</div>
+        <div><strong>Excellent résultat :</strong> 61 → 17 min = -72%. En dessous de 20 min, permettant des changements de série multiples par poste et par jour.</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#065f46,#059669);border-radius:10px;padding:.65rem 1rem;text-align:center;margin-top:.6rem;">
+        <div style="font-size:.72rem;font-weight:900;color:#fff;">✅ Module 8 — SMED Validé ! Score 91%</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📊 Séquence optimisée — Après SMED</div>
+        <div style="display:flex;flex-direction:column;gap:.25rem;">
+          <div class="smed-row"><div class="sext">EXT</div><span style="flex:1;color:#374151;">Kit outillage préparé pendant production</span><div class="sbar"><div class="sbar-fill" style="width:0%;background:#10b981;"></div></div><span style="font-size:.6rem;font-weight:700;color:#059669;min-width:38px;">0 min ✅</span></div>
+          <div class="smed-row"><div class="sint">INT</div><span style="flex:1;color:#374151;">Démonter outillage (connecteurs rapides)</span><div class="sbar"><div class="sbar-fill" style="width:13%;background:#f59e0b;"></div></div><span style="font-size:.6rem;font-weight:700;color:#374151;min-width:38px;">4 min</span></div>
+          <div class="smed-row"><div class="sint">INT</div><span style="flex:1;color:#374151;">Monter nouvel outillage (positions repérées)</span><div class="sbar"><div class="sbar-fill" style="width:26%;background:#f59e0b;"></div></div><span style="font-size:.6rem;font-weight:700;color:#374151;min-width:38px;">8 min</span></div>
+          <div class="smed-row"><div class="sint">INT</div><span style="flex:1;color:#374151;">Réglage paramètres (gamme préchargée)</span><div class="sbar"><div class="sbar-fill" style="width:5%;background:#10b981;"></div></div><span style="font-size:.6rem;font-weight:700;color:#059669;min-width:38px;">0 min ✅</span></div>
+          <div class="smed-row"><div class="sext">EXT</div><span style="flex:1;color:#374151;">Vérification pièce essai (lancée pendant montage)</span><div class="sbar"><div class="sbar-fill" style="width:16%;background:#10b981;"></div></div><span style="font-size:.6rem;font-weight:700;color:#374151;min-width:38px;">5 min</span></div>
+        </div>
+        <div style="margin-top:.4rem;display:flex;gap:.4rem;">
+          <div style="flex:1;background:#f0fdf4;border-radius:7px;padding:.4rem;text-align:center;border:1px solid #bbf7d0;font-size:.62rem;"><strong style="display:block;color:#059669;">17 min</strong>Temps total arrêt</div>
+          <div style="flex:1;background:#fef9ee;border-radius:7px;padding:.4rem;text-align:center;border:1px solid #fde68a;font-size:.62rem;"><strong style="display:block;color:#d97706;">2 séries/h</strong>Flexibilité accrue</div>
+          <div style="flex:1;background:#eff6ff;border-radius:7px;padding:.4rem;text-align:center;border:1px solid #bfdbfe;font-size:.62rem;"><strong style="display:block;color:#2563eb;">+44 min</strong>Machine gagnée/arrêt</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S28 M9 THÉORIE ═══ -->
+<div class="slide bg-m9" id="s28">
+  <div class="stag st-indigo">🎓 Module 9 — Quiz Final · Introduction</div>
+  <h2 class="sh2">Quiz de <span style="color:#818cf8;">Validation</span> Finale — 30 Questions</h2>
+  <p style="font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:.9rem;">Le quiz final évalue la maîtrise de l'ensemble du parcours Lean &amp; Six Sigma. Score minimum requis : 60% pour valider le certificat.</p>
+  <div class="row">
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📋 Structure du Quiz</div>
+        <div style="display:flex;flex-direction:column;gap:.35rem;font-size:.7rem;color:#374151;">
+          <div style="background:#f5f3ff;border-radius:7px;padding:.5rem .7rem;border-left:3px solid #6366f1;display:flex;justify-content:space-between;align-items:center;"><div><strong>M1 PDCA</strong> — 3 questions<br><span style="color:#64748b;font-size:.62rem;">Phases, objectif SMART, itérations</span></div><span style="font-size:.65rem;font-weight:700;color:#6366f1;">10%</span></div>
+          <div style="background:#fef2f2;border-radius:7px;padding:.5rem .7rem;border-left:3px solid #ef4444;display:flex;justify-content:space-between;align-items:center;"><div><strong>M2 5S</strong> — 3 questions<br><span style="color:#64748b;font-size:.62rem;">Les 5 S, audit, ordre des étapes</span></div><span style="font-size:.65rem;font-weight:700;color:#ef4444;">10%</span></div>
+          <div style="background:#f0fdf4;border-radius:7px;padding:.5rem .7rem;border-left:3px solid #10b981;display:flex;justify-content:space-between;align-items:center;"><div><strong>M3 &amp; M4 Ishikawa + Pareto</strong> — 6 questions<br><span style="color:#64748b;font-size:.62rem;">5M, règle 80/20, construction diagramme</span></div><span style="font-size:.65rem;font-weight:700;color:#10b981;">20%</span></div>
+          <div style="background:#cffafe;border-radius:7px;padding:.5rem .7rem;border-left:3px solid #06b6d4;display:flex;justify-content:space-between;align-items:center;"><div><strong>M5 &amp; M6 Kanban + VSM</strong> — 6 questions<br><span style="color:#64748b;font-size:.62rem;">WIP, flux tiré, TVA, MUDA, Lead Time</span></div><span style="font-size:.65rem;font-weight:700;color:#0891b2;">20%</span></div>
+          <div style="background:#fce7f3;border-radius:7px;padding:.5rem .7rem;border-left:3px solid #ec4899;display:flex;justify-content:space-between;align-items:center;"><div><strong>M7 &amp; M8 SPC + SMED</strong> — 6 questions<br><span style="color:#64748b;font-size:.62rem;">UCL/LCL, Cp/Cpk, opérations int/ext</span></div><span style="font-size:.65rem;font-weight:700;color:#ec4899;">20%</span></div>
+          <div style="background:#ecfdf5;border-radius:7px;padding:.5rem .7rem;border-left:3px solid #6366f1;display:flex;justify-content:space-between;align-items:center;"><div><strong>Questions transversales</strong> — 6 questions<br><span style="color:#64748b;font-size:.62rem;">Lien entre outils, cas pratiques intégrés</span></div><span style="font-size:.65rem;font-weight:700;color:#6366f1;">20%</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">🎯 Règles du Quiz</div>
+        <div style="display:flex;flex-direction:column;gap:.35rem;font-size:.72rem;color:#374151;">
+          <div style="display:flex;gap:.5rem;align-items:flex-start;"><span style="background:#ecfdf5;color:#065f46;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;flex-shrink:0;">✓</span><span>Questions à choix multiples (QCM) — 1 seule bonne réponse par question</span></div>
+          <div style="display:flex;gap:.5rem;align-items:flex-start;"><span style="background:#ecfdf5;color:#065f46;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;flex-shrink:0;">✓</span><span>Score minimum <strong>60%</strong> (18/30) pour valider et débloquer le certificat</span></div>
+          <div style="display:flex;gap:.5rem;align-items:flex-start;"><span style="background:#ecfdf5;color:#065f46;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;flex-shrink:0;">✓</span><span>Correction immédiate après chaque réponse avec explication</span></div>
+          <div style="display:flex;gap:.5rem;align-items:flex-start;"><span style="background:#ecfdf5;color:#065f46;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;flex-shrink:0;">✓</span><span>Possibilité de relancer le quiz avec <strong>nouvelles questions</strong> générées par l'IA</span></div>
+          <div style="display:flex;gap:.5rem;align-items:flex-start;"><span style="background:#fef9ee;color:#92400e;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;flex-shrink:0;">⏱️</span><span>Pas de limite de temps — l'étudiant peut réviser les modules avant de lancer</span></div>
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg,#1e1b4b,#312e81);border-radius:12px;padding:.8rem 1.1rem;border:1.5px solid rgba(129,140,248,.3);margin-top:.5rem;">
+        <div style="font-size:.65rem;font-weight:800;color:#a5b4fc;letter-spacing:.6px;margin-bottom:.3rem;">🤖 IA DANS LE QUIZ</div>
+        <div style="font-size:.7rem;color:rgba(255,255,255,.8);line-height:1.6;">L'IA peut générer de nouvelles questions à chaque tentative, adaptées au niveau de l'étudiant. Les questions portent sur les cas de PRECISION MAROC étudiés tout au long du parcours.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S29 M9 QUESTIONS ═══ -->
+<div class="slide bg-m9" id="s29">
+  <div class="stag st-indigo">🎓 Module 9 — Quiz Final · Questions</div>
+  <h2 class="sh2">Exemples de <span style="color:#818cf8;">Questions</span> du Quiz</h2>
+  <div class="row">
+    <div class="col">
+      <div class="qq">
+        <div class="qt">1. Dans la méthode PDCA, quelle est la bonne séquence d'actions ?</div>
+        <div class="qopt ok"><div class="qr ok"></div><span>Plan → Do → Check → Act ✓</span></div>
+        <div class="qopt"><div class="qr"></div><span>Plan → Check → Do → Act</span></div>
+        <div class="qopt"><div class="qr"></div><span>Do → Plan → Act → Check</span></div>
+      </div>
+      <div class="qq">
+        <div class="qt">2. "Seiri" dans la méthode 5S signifie :</div>
+        <div class="qopt"><div class="qr"></div><span>Ranger et organiser les outils</span></div>
+        <div class="qopt ok"><div class="qr ok"></div><span>Trier et éliminer le superflu ✓</span></div>
+        <div class="qopt"><div class="qr"></div><span>Nettoyer le poste de travail</span></div>
+      </div>
+      <div class="qq">
+        <div class="qt">3. La règle de Pareto (80/20) stipule que :</div>
+        <div class="qopt sel"><div class="qr f"></div><span>80% des effets proviennent de 20% des causes</span></div>
+        <div class="qopt"><div class="qr"></div><span>80% du temps est improductif en industrie</span></div>
+        <div class="qopt"><div class="qr"></div><span>On doit agir sur 80% des causes pour résoudre le problème</span></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="qq">
+        <div class="qt">4. Dans un tableau Kanban, WIP signifie :</div>
+        <div class="qopt"><div class="qr"></div><span>Work In Progress — tâches planifiées</span></div>
+        <div class="qopt ok"><div class="qr ok"></div><span>Work In Progress — tâches en cours (limité) ✓</span></div>
+        <div class="qopt"><div class="qr"></div><span>Work In Process — temps de cycle</span></div>
+      </div>
+      <div class="qq">
+        <div class="qt">5. Un Cpk = 0,72 indique que le processus est :</div>
+        <div class="qopt ok"><div class="qr ok"></div><span>Non centré et partiellement incapable (Cpk &lt; 1) ✓</span></div>
+        <div class="qopt"><div class="qr"></div><span>Parfaitement centré et capable</span></div>
+        <div class="qopt"><div class="qr"></div><span>Hors contrôle statistique</span></div>
+      </div>
+      <div class="qq">
+        <div class="qt">6. En SMED, une opération "Externe" est :</div>
+        <div class="qopt"><div class="qr"></div><span>Une opération réalisée par un technicien externe</span></div>
+        <div class="qopt"><div class="qr"></div><span>Une opération réalisée machine à l'arrêt uniquement</span></div>
+        <div class="qopt ok"><div class="qr ok"></div><span>Une opération pouvant être réalisée machine en marche ✓</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S30 M9 RÉSULTATS ═══ -->
+<div class="slide bg-m9" id="s30">
+  <div class="stag st-indigo">🎓 Module 9 — Quiz Final · Résultats</div>
+  <h2 class="sh2">Score Final &amp; <span style="color:#818cf8;">Déblocage du Certificat</span></h2>
+  <div class="row">
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📊 Résultats détaillés par module</div>
+        <div style="display:flex;flex-direction:column;gap:.28rem;">
+          <div class="fsrow"><span style="font-size:.65rem;">🔄 M1 PDCA</span><div style="display:flex;align-items:center;gap:.4rem;"><div class="fsbw"><div style="width:100%;height:5px;background:#10b981;border-radius:3px;"></div></div><span style="font-size:.6rem;font-weight:700;color:#10b981;">3/3</span></div></div>
+          <div class="fsrow"><span style="font-size:.65rem;">🧹 M2 5S</span><div style="display:flex;align-items:center;gap:.4rem;"><div class="fsbw"><div style="width:67%;height:5px;background:#f59e0b;border-radius:3px;"></div></div><span style="font-size:.6rem;font-weight:700;color:#f59e0b;">2/3</span></div></div>
+          <div class="fsrow"><span style="font-size:.65rem;">🐟 M3 Ishikawa &amp; 📊 M4 Pareto</span><div style="display:flex;align-items:center;gap:.4rem;"><div class="fsbw"><div style="width:100%;height:5px;background:#10b981;border-radius:3px;"></div></div><span style="font-size:.6rem;font-weight:700;color:#10b981;">6/6</span></div></div>
+          <div class="fsrow"><span style="font-size:.65rem;">📋 M5 Kanban &amp; 🗺️ M6 VSM</span><div style="display:flex;align-items:center;gap:.4rem;"><div class="fsbw"><div style="width:83%;height:5px;background:#10b981;border-radius:3px;"></div></div><span style="font-size:.6rem;font-weight:700;color:#10b981;">5/6</span></div></div>
+          <div class="fsrow"><span style="font-size:.65rem;">📈 M7 SPC &amp; ⏱️ M8 SMED</span><div style="display:flex;align-items:center;gap:.4rem;"><div class="fsbw"><div style="width:83%;height:5px;background:#10b981;border-radius:3px;"></div></div><span style="font-size:.6rem;font-weight:700;color:#10b981;">5/6</span></div></div>
+          <div class="fsrow"><span style="font-size:.65rem;">🌐 Questions transversales</span><div style="display:flex;align-items:center;gap:.4rem;"><div class="fsbw"><div style="width:100%;height:5px;background:#10b981;border-radius:3px;"></div></div><span style="font-size:.6rem;font-weight:700;color:#10b981;">6/6</span></div></div>
+        </div>
+        <div style="margin-top:.6rem;background:#f0fdf4;border-radius:9px;padding:.7rem;text-align:center;border:1.5px solid #bbf7d0;">
+          <div style="font-size:2rem;font-weight:900;color:#059669;">27 / 30</div>
+          <div style="font-size:.68rem;color:#374151;margin-top:.15rem;">Score final · <strong>90%</strong> · Seuil requis : 60%</div>
+          <div class="pbar-mini" style="margin:.4rem 0;"><div class="pbar-fill-mini" style="width:90%;background:linear-gradient(90deg,#059669,#10b981);"></div></div>
+          <div style="font-size:.72rem;font-weight:800;color:#059669;">✅ PARCOURS VALIDÉ — Certificat débloqué !</div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="cert">
+        <div style="position:relative;z-index:1;">
+          <div style="font-size:.6rem;font-weight:800;letter-spacing:1.5px;color:rgba(245,158,11,.6);text-transform:uppercase;margin-bottom:.25rem;">Certificat de Réussite</div>
+          <div style="width:35px;height:2px;background:#f59e0b;margin:.3rem auto .5rem;"></div>
+          <div style="font-size:.68rem;color:rgba(255,255,255,.45);margin-bottom:.2rem;">Décerné à</div>
+          <div style="font-size:1.3rem;font-weight:900;color:#fff;margin-bottom:.25rem;">Youssef Tahir</div>
+          <div style="font-size:.75rem;font-weight:900;color:#f59e0b;margin-bottom:.15rem;">Outil Pédagogique Amélioration Continue</div>
+          <div style="font-size:.6rem;color:rgba(255,255,255,.45);margin-bottom:.6rem;">FST Tanger · Lean &amp; Six Sigma · Génie Industriel</div>
+          <div style="display:flex;justify-content:center;gap:.6rem;margin-bottom:.6rem;">
+            <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:.3rem .55rem;text-align:center;"><div style="font-size:.85rem;font-weight:900;color:#f59e0b;">9/9</div><div style="font-size:.52rem;color:rgba(255,255,255,.4);">Modules</div></div>
+            <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:.3rem .55rem;text-align:center;"><div style="font-size:.85rem;font-weight:900;color:#f59e0b;">90%</div><div style="font-size:.52rem;color:rgba(255,255,255,.4);">Score moyen</div></div>
+            <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:.3rem .55rem;text-align:center;"><div style="font-size:.85rem;font-weight:900;color:#f59e0b;">4h30</div><div style="font-size:.52rem;color:rgba(255,255,255,.4);">Formation</div></div>
+          </div>
+          <div style="display:flex;justify-content:center;gap:.5rem;flex-wrap:wrap;">
+            <span class="cert-seal">🏭 Lean Mfg</span>
+            <span class="cert-seal">📊 Six Sigma</span>
+            <span class="cert-seal">🤖 IA Groq</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:.6rem;display:flex;gap:.5rem;justify-content:center;">
+        <span class="bm bm-a">📥 Télécharger PDF</span>
+        <span class="bm bm-v">📤 Envoyer au prof</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S31 RAPPORT PDF ═══ -->
+<div class="slide bg-hero" id="s31">
+  <div class="stag st-amber" style="margin-bottom:.4rem;">Rapport &amp; Certification</div>
+  <h2 class="sh2">Rapport PDF — <span class="hl">2 pages complètes</span></h2>
+  <p style="font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:.9rem;">À la validation du parcours, l'étudiant télécharge un rapport complet et nominatif incluant tous ses scores, feedbacks IA et le certificat.</p>
+  <div class="row">
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📄 Page 1 — Tableau de bord &amp; Scores</div>
+        <div style="font-size:.7rem;color:#374151;line-height:1.7;">
+          <div style="display:flex;gap:.4rem;align-items:flex-start;margin-bottom:.3rem;"><span style="color:#f59e0b;font-weight:800;">▸</span><span><strong>En-tête :</strong> Logo FST Tanger, nom étudiant, date, secteur/poste</span></div>
+          <div style="display:flex;gap:.4rem;align-items:flex-start;margin-bottom:.3rem;"><span style="color:#f59e0b;font-weight:800;">▸</span><span><strong>Statistiques globales :</strong> 9/9 modules, score moyen 90%, temps total 4h30</span></div>
+          <div style="display:flex;gap:.4rem;align-items:flex-start;margin-bottom:.3rem;"><span style="color:#f59e0b;font-weight:800;">▸</span><span><strong>Tableau détaillé :</strong> Score par module (M1 à M9), statut validé/à reprendre</span></div>
+          <div style="display:flex;gap:.4rem;align-items:flex-start;"><span style="color:#f59e0b;font-weight:800;">▸</span><span><strong>Barre de progression :</strong> Représentation graphique visuelle du niveau</span></div>
+        </div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">📄 Page 2 — Temps &amp; Détail formation</div>
+        <div style="font-size:.7rem;color:#374151;line-height:1.7;">
+          <div style="display:flex;gap:.4rem;align-items:flex-start;margin-bottom:.3rem;"><span style="color:#7c3aed;font-weight:800;">▸</span><span><strong>Temps passé par module :</strong> Tableau chronométré module par module</span></div>
+          <div style="display:flex;gap:.4rem;align-items:flex-start;margin-bottom:.3rem;"><span style="color:#7c3aed;font-weight:800;">▸</span><span><strong>Feedbacks IA :</strong> Extraits des analyses Groq pour les modules clés</span></div>
+          <div style="display:flex;gap:.4mm;align-items:flex-start;margin-bottom:.3rem;"><span style="color:#7c3aed;font-weight:800;">▸</span><span><strong>Compétences acquises :</strong> Liste des outils Lean maîtrisés</span></div>
+          <div style="display:flex;gap:.4rem;align-items:flex-start;"><span style="color:#7c3aed;font-weight:800;">▸</span><span><strong>Pied de page :</strong> Signature numérique FST Tanger, date de certification</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="cert" style="margin-bottom:.6rem;">
+        <div style="position:relative;z-index:1;font-size:.65rem;color:rgba(255,255,255,.6);margin-bottom:.4rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;">📊 Aperçu — Page 1 du rapport</div>
+        <table style="width:100%;font-size:.6rem;border-collapse:collapse;">
+          <tr style="background:rgba(255,255,255,.06);"><th style="padding:.2rem .4rem;text-align:left;color:rgba(255,255,255,.5);">Module</th><th style="text-align:center;padding:.2rem .4rem;color:rgba(255,255,255,.5);">Score</th><th style="text-align:center;padding:.2rem .4rem;color:rgba(255,255,255,.5);">Statut</th></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.06);"><td style="padding:.18rem .4rem;color:rgba(255,255,255,.75);">M1 — PDCA</td><td style="text-align:center;font-weight:700;color:#f59e0b;">88%</td><td style="text-align:center;color:#34d399;font-weight:700;">✅ Validé</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.06);"><td style="padding:.18rem .4rem;color:rgba(255,255,255,.75);">M2 — 5S</td><td style="text-align:center;font-weight:700;color:#f59e0b;">75%</td><td style="text-align:center;color:#34d399;font-weight:700;">✅ Validé</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.06);"><td style="padding:.18rem .4rem;color:rgba(255,255,255,.75);">M3 — Ishikawa</td><td style="text-align:center;font-weight:700;color:#f59e0b;">92%</td><td style="text-align:center;color:#34d399;font-weight:700;">✅ Validé</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.06);"><td style="padding:.18rem .4rem;color:rgba(255,255,255,.75);">M9 — Quiz Final</td><td style="text-align:center;font-weight:700;color:#f59e0b;">90%</td><td style="text-align:center;color:#34d399;font-weight:700;">✅ Validé</td></tr>
+          <tr><td style="padding:.18rem .4rem;color:#f59e0b;font-weight:800;">Score moyen</td><td style="text-align:center;font-weight:900;color:#f59e0b;">90%</td><td style="text-align:center;color:#f59e0b;font-weight:800;">9/9 ✅</td></tr>
+        </table>
+      </div>
+      <div class="dc">
+        <div style="font-size:.65rem;font-weight:800;color:rgba(255,255,255,.4);letter-spacing:.6px;margin-bottom:.4rem;">💾 SESSION &amp; PARTAGE</div>
+        <div style="display:flex;flex-direction:column;gap:.3rem;font-size:.7rem;color:rgba(255,255,255,.7);">
+          <div>📥 <strong>Code de session</strong> = son prénom (pour reprendre sur le même ordinateur)</div>
+          <div>📤 <strong>Code prof</strong> = code chiffré à envoyer à l'enseignant pour le suivi</div>
+          <div>📄 <strong>Rapport PDF</strong> = exporté localement depuis le navigateur (jsPDF)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S32 ESPACE PROF ACCÈS ═══ -->
+<div class="slide bg-admin" id="s32">
+  <div class="stag st-purple">🔑 Espace Enseignant · Accès</div>
+  <h2 class="sh2">Dashboard Professeur — <span style="color:#a78bfa;">Accès Sécurisé</span></h2>
+  <p style="font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:.9rem;">Le professeur dispose d'un dashboard discret accessible via un raccourci clavier pour suivre la progression de toute sa classe en temps réel.</p>
+  <div class="row">
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">🔐 Accès au Dashboard</div>
+        <div style="text-align:center;margin-bottom:.8rem;">
+          <div style="font-size:.72rem;color:#374151;margin-bottom:.6rem;">Depuis n'importe quelle page du site :</div>
+          <div style="background:#f5f3ff;border-radius:12px;padding:.8rem 1.2rem;border:2px solid #ddd6fe;display:inline-block;">
+            <span class="key">Ctrl</span> + <span class="key">Shift</span> + <span class="key">A</span>
+          </div>
+          <div style="font-size:.65rem;color:#7c3aed;font-weight:700;margin-top:.4rem;">→ Saisir le mot de passe administrateur</div>
+        </div>
+        <div style="background:#f8fafc;border-radius:10px;padding:.7rem;border:1.5px solid #e2e8f0;margin-bottom:.5rem;">
+          <div style="font-size:.65rem;font-weight:800;color:#64748b;margin-bottom:.3rem;">Exemple — Modal de connexion admin :</div>
+          <div style="background:#fff;border-radius:8px;padding:.5rem .7rem;border:1px solid #e2e8f0;font-size:.7rem;color:#374151;">
+            🔐 Mode Administrateur — Outil Pédagogique<br>
+            <span style="color:#64748b;">Mot de passe :</span> <span style="letter-spacing:3px;font-family:monospace;">••••••••</span>
+          </div>
+        </div>
+        <div style="font-size:.7rem;color:#374151;line-height:1.6;">L'accès est <strong>totalement invisible</strong> pour les étudiants — le raccourci n'est pas affiché dans l'interface.</div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">📤 Codes envoyés par les étudiants</div>
+        <div style="font-size:.7rem;color:#374151;line-height:1.6;margin-bottom:.4rem;">Chaque étudiant génère son code prof depuis son tableau de bord (section Session &amp; Progression) et l'envoie par email ou messagerie.</div>
+        <div style="background:#f8fafc;border-radius:8px;padding:.5rem .7rem;border:1px solid #e2e8f0;">
+          <div style="font-size:.6rem;font-weight:700;color:#64748b;margin-bottom:.2rem;">Exemple de code étudiant :</div>
+          <code style="font-size:.6rem;color:#7c3aed;word-break:break-all;">WW91c3NlZiAtIE0xOjg4JSBNMjo3NSUgTTM6OTIlIE00Ojkw...</code>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">⚙️ 3 onglets du Dashboard Professeur</div>
+        <div style="display:flex;flex-direction:column;gap:.5rem;">
+          <div style="background:#f5f3ff;border-radius:9px;padding:.6rem .8rem;border-left:4px solid #7c3aed;">
+            <div style="font-size:.68rem;font-weight:800;color:#5b21b6;margin-bottom:.25rem;">👥 Onglet 1 — Étudiants (Roster)</div>
+            <div style="font-size:.64rem;color:#374151;line-height:1.5;">Vue tableau de tous les étudiants importés : scores M1→M9, nombre de modules validés, score moyen, date de mise à jour. Bouton export CSV.</div>
+          </div>
+          <div style="background:#eff6ff;border-radius:9px;padding:.6rem .8rem;border-left:4px solid #3b82f6;">
+            <div style="font-size:.68rem;font-weight:800;color:#1d4ed8;margin-bottom:.25rem;">📥 Onglet 2 — Importer codes</div>
+            <div style="font-size:.64rem;color:#374151;line-height:1.5;">Zone de saisie pour coller les codes des étudiants (un par ligne). Import individuel ou en masse. Les données s'ajoutent au roster automatiquement.</div>
+          </div>
+          <div style="background:#f0fdf4;border-radius:9px;padding:.6rem .8rem;border-left:4px solid #10b981;">
+            <div style="font-size:.68rem;font-weight:800;color:#166534;margin-bottom:.25rem;">🔓 Onglet 3 — Accès modules</div>
+            <div style="font-size:.64rem;color:#374151;line-height:1.5;">Contrôle de l'accès aux modules (débloquer tous, réinitialiser la progression). Utile pour les séances en salle ou les examens.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S33 ESPACE PROF ROSTER ═══ -->
+<div class="slide bg-admin" id="s33">
+  <div class="stag st-purple">🔑 Espace Enseignant · Tableau de bord</div>
+  <h2 class="sh2">Suivi de <span style="color:#a78bfa;">Classe</span> — Roster &amp; Export CSV</h2>
+  <div class="row">
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">👥 Roster — Vue de la classe complète</div>
+        <div class="atab"><div class="at on">👥 Étudiants</div><div class="at">📥 Importer</div><div class="at">🔓 Accès</div></div>
+        <table class="rtable">
+          <tr><th>Étudiant</th><th>M1</th><th>M2</th><th>M3</th><th>M4</th><th>M5</th><th>M6</th><th>M7</th><th>M8</th><th>M9</th><th>Moy.</th><th>Statut</th></tr>
+          <tr><td style="font-weight:700;">Youssef Tahir</td><td style="text-align:center;color:#059669;">88</td><td style="text-align:center;color:#059669;">75</td><td style="text-align:center;color:#059669;">92</td><td style="text-align:center;color:#059669;">90</td><td style="text-align:center;color:#059669;">85</td><td style="text-align:center;color:#059669;">88</td><td style="text-align:center;color:#059669;">86</td><td style="text-align:center;color:#059669;">91</td><td style="text-align:center;color:#059669;">90</td><td style="text-align:center;font-weight:800;color:#059669;">87%</td><td><span class="pill p-green" style="font-size:.55rem;">9/9 ✅</span></td></tr>
+          <tr><td style="font-weight:700;">Ali Bensalem</td><td style="text-align:center;color:#059669;">95</td><td style="text-align:center;color:#059669;">88</td><td style="text-align:center;color:#059669;">90</td><td style="text-align:center;color:#059669;">92</td><td style="text-align:center;color:#059669;">85</td><td style="text-align:center;color:#059669;">88</td><td style="text-align:center;color:#64748b;">—</td><td style="text-align:center;color:#64748b;">—</td><td style="text-align:center;color:#64748b;">—</td><td style="text-align:center;font-weight:800;color:#2563eb;">90%</td><td><span class="pill p-blue" style="font-size:.55rem;">6/9</span></td></tr>
+          <tr><td style="font-weight:700;">Sara Idrissi</td><td style="text-align:center;color:#059669;">70</td><td style="text-align:center;color:#059669;">65</td><td style="text-align:center;color:#64748b;">—</td><td style="text-align:center;color:#64748b;">—</td><td style="text-align:center;color:#64748b;">—</td><td style="text-align:center;color:#64748b;">—</td><td style="text-align:center;color:#64748b;">—</td><td style="text-align:center;color:#64748b;">—</td><td style="text-align:center;color:#64748b;">—</td><td style="text-align:center;font-weight:800;color:#d97706;">68%</td><td><span class="pill p-amber" style="font-size:.55rem;">2/9 ⚠️</span></td></tr>
+          <tr><td style="font-weight:700;">Karim Zanoun</td><td style="text-align:center;color:#059669;">80</td><td style="text-align:center;color:#059669;">78</td><td style="text-align:center;color:#059669;">85</td><td style="text-align:center;color:#059669;">72</td><td style="text-align:center;color:#059669;">76</td><td style="text-align:center;color:#059669;">80</td><td style="text-align:center;color:#059669;">74</td><td style="text-align:center;color:#059669;">82</td><td style="text-align:center;color:#059669;">78</td><td style="text-align:center;font-weight:800;color:#059669;">78%</td><td><span class="pill p-green" style="font-size:.55rem;">9/9 ✅</span></td></tr>
+        </table>
+        <div style="margin-top:.5rem;display:flex;gap:.4rem;align-items:center;">
+          <span class="bm bm-g" style="font-size:.62rem;">📤 Exporter CSV</span>
+          <span style="font-size:.62rem;color:#64748b;">greenlab_etudiants_2024-11-15.csv</span>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="wc">
+        <div class="wc-title">📊 Statistiques de classe</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.6rem;">
+          <div style="background:#f0fdf4;border-radius:8px;padding:.5rem;text-align:center;border:1px solid #bbf7d0;"><div style="font-size:1.1rem;font-weight:900;color:#059669;">2/4</div><div style="font-size:.6rem;color:#374151;">Parcours complets</div></div>
+          <div style="background:#eff6ff;border-radius:8px;padding:.5rem;text-align:center;border:1px solid #bfdbfe;"><div style="font-size:1.1rem;font-weight:900;color:#2563eb;">81%</div><div style="font-size:.6rem;color:#374151;">Score moyen classe</div></div>
+          <div style="background:#fef9ee;border-radius:8px;padding:.5rem;text-align:center;border:1px solid #fde68a;"><div style="font-size:1.1rem;font-weight:900;color:#d97706;">Sara</div><div style="font-size:.6rem;color:#374151;">⚠️ Étudiant en difficulté</div></div>
+          <div style="background:#f0fdf4;border-radius:8px;padding:.5rem;text-align:center;border:1px solid #bbf7d0;"><div style="font-size:1.1rem;font-weight:900;color:#059669;">Ali</div><div style="font-size:.6rem;color:#374151;">🏆 Meilleure progression</div></div>
+        </div>
+      </div>
+      <div class="wc">
+        <div class="wc-title">📄 Export CSV — Colonnes disponibles</div>
+        <div style="background:#f8fafc;border-radius:8px;padding:.5rem .7rem;border:1px solid #e2e8f0;font-family:monospace;font-size:.6rem;color:#374151;line-height:1.8;">
+          Nom, M1-PDCA, M2-5S, M3-Ishikawa,<br>M4-Pareto, M5-Kanban, M6-VSM,<br>M7-SPC, M8-SMED, M9-Quiz,<br>Modules_complétés, Score_moyen, Date
+        </div>
+        <div style="font-size:.68rem;color:#374151;margin-top:.4rem;line-height:1.5;">Le fichier CSV est directement importable dans <strong>Excel</strong> ou <strong>Google Sheets</strong> pour une analyse de classe approfondie.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S34 CONCLUSION ═══ -->
+<div class="slide bg-hero" id="s34">
+  <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none;">
+    <div style="position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(245,158,11,.1),transparent 70%);top:-80px;right:-80px;"></div>
+    <div style="position:absolute;width:300px;height:300px;background:radial-gradient(circle,rgba(59,130,246,.08),transparent 70%);bottom:-60px;left:-60px;"></div>
+  </div>
+  <div style="text-align:center;position:relative;z-index:1;max-width:750px;">
+    <img src="fst_logo.png" alt="FST" style="height:72px;margin-bottom:1rem;filter:drop-shadow(0 4px 20px rgba(0,0,0,.5));">
+    <div class="stag st-amber" style="margin:0 auto .5rem;">Merci de votre attention</div>
+    <h2 class="sh1" style="font-size:2rem;">Outil Pédagogique<br><span class="hl">Amélioration Continue</span></h2>
+    <p class="sub" style="margin:0 auto 1.2rem;">Plateforme Lean &amp; Six Sigma interactive · 9 modules · IA Groq · FST Tanger · Génie Industriel</p>
+    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:.8rem 1.3rem;margin-bottom:1rem;">
+      <div style="font-size:.6rem;font-weight:800;letter-spacing:.8px;color:rgba(255,255,255,.35);text-transform:uppercase;margin-bottom:.35rem;">🌐 Accès en ligne</div>
+      <div style="font-family:monospace;font-size:.75rem;color:#60a5fa;word-break:break-all;">https://nono612.github.io/Module-Pedagogique-Amelioration-Continue-FST/</div>
+    </div>
+    <div style="display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap;">
+      <span class="pill p-blue">🔄 M1 PDCA</span>
+      <span class="pill p-red">🧹 M2 5S</span>
+      <span class="pill p-green">🐟 M3 Ishikawa</span>
+      <span class="pill p-amber">📊 M4 Pareto</span>
+      <span class="pill" style="background:#cffafe;color:#164e63;">📋 M5 Kanban</span>
+      <span class="pill p-purple">🗺️ M6 VSM</span>
+      <span class="pill" style="background:#fce7f3;color:#9d174d;">📈 M7 SPC</span>
+      <span class="pill" style="background:#fff7ed;color:#c2410c;">⏱️ M8 SMED</span>
+      <span class="pill" style="background:#ecfdf5;color:#065f46;">🎓 M9 Quiz</span>
+    </div>
+  </div>
+</div>
+
+
+</div><!-- /deck -->
+
+<div class="navctrl">
+  <button class="nbtn" id="pb" onclick="prev()" disabled>← Précédent</button>
+  <div class="dots" id="dr"></div>
+  <button class="nbtn" id="nb" onclick="next()">Suivant →</button>
+</div>
+
+<script>
+const TOTAL=34;let cur=0;
+function buildDots(){const r=document.getElementById('dr');for(let i=0;i<TOTAL;i++){const d=document.createElement('div');d.className='dot';d.onclick=()=>go(i);r.appendChild(d);}}
+function go(n){if(n<0||n>=TOTAL)return;const ss=document.querySelectorAll('.slide');ss[cur].classList.remove('active');ss[cur].classList.add('exit');setTimeout(()=>ss[cur].classList.remove('exit'),380);cur=n;ss[cur].classList.add('active');upd();}
+function next(){go(cur+1);}function prev(){go(cur-1);}
+function upd(){document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===cur));document.getElementById('pb').disabled=cur===0;document.getElementById('nb').disabled=cur===TOTAL-1;document.getElementById('sc').textContent=(cur+1)+' / '+TOTAL;document.getElementById('pf').style.width=((cur+1)/TOTAL*100)+'%';}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')next();if(e.key==='ArrowLeft')prev();});
+buildDots();upd();
+</script>
+</body>
+</html>
